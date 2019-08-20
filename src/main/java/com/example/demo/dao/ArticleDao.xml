@@ -3,4 +3,24 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.dao.ArticleDao">
+	<select id="getArticleList" parameterType="map" resultMap="article">
+		SELECT A.*, IFNULL(M.loginId, '존재하지 않는 사용자') AS writer
+		FROM article AS A
+		LEFT OUTER JOIN `member` AS M
+		ON M.id = A.memberId
+		WHERE A.boardId = #{boardId}
+	</select>
+	
+	<resultMap type="com.example.demo.dto.Article" id="article">
+		<id property="id" column="id"/>
+		<id property="regDate" column="regDate"/>
+		<id property="title" column="title"/>
+		<id property="body" column="body"/>
+		<id property="memberId" column="memberId"/>
+		<id property="boardId" column="boardId"/>
+		<id property="view" column="view"/>
+		<association property="extra" javaType="map">
+			<id property="writer" column="writer"/>
+		</association>
+	</resultMap>
 </mapper>

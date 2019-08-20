@@ -13,7 +13,7 @@ public class Article {
 	private int id;
 	private String regDate;
 	private String title;
-	private String obdy;
+	private String body;
 	private int memberId;
 	private int boardId;
 	private int view;
