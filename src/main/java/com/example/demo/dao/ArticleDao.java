@@ -10,4 +10,6 @@ import com.example.demo.dto.Article;
 @Mapper
 public interface ArticleDao {
 	public List<Article> getArticleList(Map<String, Object> param);
+
+	public int getTotalCount(Map<String, Object> param);
 }

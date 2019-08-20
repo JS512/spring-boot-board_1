@@ -20,4 +20,17 @@
   	</tr>
   </c:forEach>
 </table>
+<ul>
+	<c:if test="${page.prev }">
+		<li><a href="/article/list?boardId=${param.boardId}&cPage=${page.startPage-1}"><</a></li>
+	</c:if>
+	<c:forEach begin="${page.startPage }" end="${page.endPage }" var="idx">
+		<li>
+			<a href="/article/list?boardId=${param.boardId }&cPage=${idx }"><c:out value="${idx}"/></a>
+		</li>
+	</c:forEach>
+	<c:if test="${page.next }">
+		<li><a href="/article/list?boardId=${param.boardId}&cPage=${page.endPage+1}">></a></li>
+	</c:if>
+</ul>
 <%@ include file="../part/foot.jspf" %>

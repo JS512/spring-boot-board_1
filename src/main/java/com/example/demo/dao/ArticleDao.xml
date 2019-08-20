@@ -9,6 +9,12 @@
 		LEFT OUTER JOIN `member` AS M
 		ON M.id = A.memberId
 		WHERE A.boardId = #{boardId}
+		LIMIT #{startNum}, #{perPageNum}
+	</select>
+	
+	<select id="getTotalCount" parameterType="map" resultType="Integer">
+		SELECT COUNT(id) FROM article
+		WHERE boardId = #{boardId}
 	</select>
 	
 	<resultMap type="com.example.demo.dto.Article" id="article">

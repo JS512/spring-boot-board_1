@@ -24,9 +24,14 @@ public class ArticleController {
 	
 	@RequestMapping("/list")
 	public String list(Model model,@RequestParam Map<String, Object> param) {
-		List<Article> list = articleService.getArticleList(param);
-		Log.info(param.get("boardId"));
-		model.addAttribute("list", list);
+		if(param.get("cPage") == null) {
+			param.put("cPage", 1);
+		}
+		Map<String, Object> rs = articleService.getArticleList(param);
+		
+		model.addAttribute("list", rs.get("list"));
+		model.addAttribute("page", rs.get("page"));
+		
 		return "article/list";
 	}
 }
