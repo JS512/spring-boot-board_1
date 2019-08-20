@@ -9,12 +9,25 @@
 		LEFT OUTER JOIN `member` AS M
 		ON M.id = A.memberId
 		WHERE A.boardId = #{boardId}
+		<if test="searchType != null and searchType != '' and searchKeyword != null and searchKeyword != ''">
+			<if test="searchType == 'title'"> AND A.title LIKE CONCAT('%', #{searchKeyword}, '%')</if>
+			<if test="searchType == 'body'"> AND A.body LIKE CONCAT('%', #{searchKeyword}, '%')</if>
+			<if test="searchType == 'writer'"> AND M.loginId LIKE CONCAT('%', #{searchKeyword}, '%')</if>
+		</if>
 		LIMIT #{startNum}, #{perPageNum}
 	</select>
 	
 	<select id="getTotalCount" parameterType="map" resultType="Integer">
-		SELECT COUNT(id) FROM article
-		WHERE boardId = #{boardId}
+		SELECT COUNT(A.id)
+		FROM article AS A
+		LEFT OUTER JOIN `member` AS M
+		ON M.id = A.memberId
+		WHERE A.boardId = #{boardId}		
+		<if test="searchType != null and searchType != '' and searchKeyword != null and searchKeyword != ''">
+			<if test="searchType == 'title'"> AND A.title LIKE CONCAT('%', #{searchKeyword}, '%')</if>
+			<if test="searchType == 'body'"> AND A.body LIKE CONCAT('%', #{searchKeyword}, '%')</if>
+			<if test="searchType == 'writer'"> AND M.loginId LIKE CONCAT('%', #{searchKeyword}, '%')</if>
+		</if>
 	</select>
 	
 	<resultMap type="com.example.demo.dto.Article" id="article">

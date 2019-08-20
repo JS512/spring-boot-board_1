@@ -2,6 +2,14 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
+<c:url value="" var="url">
+	<c:forEach items="${param }" var="entry">
+		<c:if test="${entry.key !=  'cPage'}">
+			<c:param name="${entry.key }" value="${entry.value }"/>
+		</c:if>
+	</c:forEach>
+</c:url>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -10,3 +18,5 @@
 		<title>${title}</title>
 	</head>
 	<body>
+		<a href="/article/list?boardId=1">자유게시판</a>
+		<a href="/article/list?boardId=2">공지사항</a>

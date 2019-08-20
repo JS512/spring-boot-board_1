@@ -12,7 +12,11 @@ import com.example.demo.Utils;
 import com.example.demo.dao.ArticleDao;
 import com.example.demo.dto.Article;
 
+import groovy.util.logging.Slf4j;
+import jline.internal.Log;
+
 @Service
+@Slf4j
 public class ArticleServiceImpl implements ArticleService{
 	@Autowired
 	private ArticleDao articleDao;
@@ -42,7 +46,8 @@ public class ArticleServiceImpl implements ArticleService{
 		if (endPage > limitPage) {
 			endPage = limitPage;
 		}
-
+		Log.info(endPage);
+		Log.info(limitPage);
 		prev = startPage == 1 ? false : true;
 		next = endPage == limitPage ? false : true;
 

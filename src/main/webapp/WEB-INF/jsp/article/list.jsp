@@ -3,6 +3,24 @@
 <c:set var="title" value="리스트 페이지"/>
 <%@ include file="../part/head.jspf" %>
 <h1>${title}</h1>
+
+<form action="/article/list" method="get">
+	<input type="hidden" name="boardId" value="${param.boardId }">	
+	<select name="searchType">
+		<option value="title">제목</option>
+		<option value="body">내용</option>
+		<option value="writer">작성자</option>
+	</select>
+	<c:if test="${param.searchType != null && param.searchType != '' }">
+		<script>
+			$("select[name='searchType']").val("${param.searchType}");
+		</script>
+	</c:if>	
+	
+	<input type="text" name="searchKeyword" value="${param.searchKeyword }">
+	<button>검색</button>
+</form>
+
 <table>
   <tr>
     <th>번호</th>
@@ -22,15 +40,15 @@
 </table>
 <ul>
 	<c:if test="${page.prev }">
-		<li><a href="/article/list?boardId=${param.boardId}&cPage=${page.startPage-1}"><</a></li>
+		<li><a href="/article/list${url }&cPage=${page.startPage-1}"><</a></li>
 	</c:if>
 	<c:forEach begin="${page.startPage }" end="${page.endPage }" var="idx">
 		<li>
-			<a href="/article/list?boardId=${param.boardId }&cPage=${idx }"><c:out value="${idx}"/></a>
+			<a href="/article/list${url }&cPage=${idx }"><c:out value="${idx}"/></a>
 		</li>
 	</c:forEach>
 	<c:if test="${page.next }">
-		<li><a href="/article/list?boardId=${param.boardId}&cPage=${page.endPage+1}">></a></li>
+		<li><a href="/article/list${url }&cPage=${page.endPage+1}">></a></li>
 	</c:if>
 </ul>
 <%@ include file="../part/foot.jspf" %>
