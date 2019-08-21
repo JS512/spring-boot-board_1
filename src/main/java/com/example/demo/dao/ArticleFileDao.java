@@ -19,5 +19,7 @@ public interface ArticleFileDao {
 
 	public void modifyArticleFiles(Map<String, Object> param, MultipartFile multipartFile, Integer fileId,
 			String type2, String[] fileNames);
+
+	public void deleteArticleFiles(Map<String, Object> param, List<Integer> deleteFileIds);
 	
 }

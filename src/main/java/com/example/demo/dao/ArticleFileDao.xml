@@ -36,6 +36,15 @@
 		WHERE id = #{fileId} AND articleId = #{param.id}
 	</update>
 	
+	<delete id="deleteArticleFiles">
+		DELETE FROM articleFile
+		WHERE id IN
+		<foreach collection="deleteFileIds" item="value" separator=" , " open="(" close=")">
+			#{value}
+		</foreach>
+		AND articleId = #{param.id}
+	</delete>
+	
 	<resultMap type="com.example.demo.dto.ArticleFile" id="articleFile">
 		<id property="id" column="id"/>
 		<id property="regDate" column="regDate"/>
