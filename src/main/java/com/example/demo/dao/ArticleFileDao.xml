@@ -13,10 +13,28 @@
 		type2 = #{type2}		
 	</insert>
 	
-	<select id="getArticleFiles" parameterType="map" resultMap="articleFile">
+	<select id="getArticleAllFiles" parameterType="map" resultMap="articleFile">
 		SELECT * FROM articleFile
 		WHERE articleId = #{id}
+	</select>	
+	
+	<select id="getArticleFiles" parameterType="list" resultMap="articleFile">
+		SELECT * FROM articleFile
+		WHERE id IN
+		<foreach collection="fileIds" item="value" separator=" , " open="(" close=")">
+			#{value}
+		</foreach>
+		AND articleId = #{param.id}
 	</select>
+	
+	<update id="modifyArticleFiles">
+		UPDATE articleFile
+		SET regDate = NOW(),		
+		prefix = #{fileNames[0]},
+		originFileName = #{fileNames[1]},		
+		type2 = #{type2}
+		WHERE id = #{fileId} AND articleId = #{param.id}
+	</update>
 	
 	<resultMap type="com.example.demo.dto.ArticleFile" id="articleFile">
 		<id property="id" column="id"/>

@@ -110,10 +110,18 @@ public class ArticleController {
 	
 	@RequestMapping("/deleteOneArticle")
 	public String deleteOneArticle(Model model, @RequestParam Map<String, Object> param) {
-		Map<String, Object> rs = articleService.deleteOneArticle(param);
 		
-		model.addAttribute("msg", rs.get("msg"));
+		Map<String, Object> rs = articleFileService.deleteOneArticleAllFiles(param);
 		String resultCode = (String) rs.get("resultCode");
+		if(!resultCode.startsWith("S-")) {
+			model.addAttribute("msg", rs.get("msg"));
+			model.addAttribute("historyBack", true);
+			return "common/redirect";
+		}
+		
+		rs = articleService.deleteOneArticle(param);
+		model.addAttribute("msg", rs.get("msg"));
+		resultCode = (String) rs.get("resultCode");
 		
 		if(resultCode.startsWith("S-")) {
 			StringBuffer redirectUrl = new StringBuffer();
@@ -132,17 +140,38 @@ public class ArticleController {
 	@RequestMapping("/modifyArticle")
 	public String modifyArticle(Model model, @RequestParam Map<String, Object> param) {
 		Article article = articleService.getOneArticleById(param);
+		List<ArticleFile> files = articleFileService.getArticleFiles(param);
+		
 		model.addAttribute("article", article);
+		model.addAttribute("files", files);
 		
 		return "article/modify";
 	}
 	
 	@RequestMapping("/doModifyArticle")
-	public String doModifyArticle(Model model, @RequestParam Map<String, Object> param) {
-		Map<String, Object> rs = articleService.modifyArticle(param);
+	public String doModifyArticle(Model model,
+								@RequestParam Map<String, Object> param,
+								@RequestParam(value="modifyFile") List<MultipartFile> modifyFiles,
+								@RequestParam(value="modifyFileId", required=false) List<Integer> fileIds,
+								@RequestParam(value="modifyType2", required=false) List<String> modifyTypes2)
+	{
+		Map<String, Object> rs = null;
+		String resultCode = null;
+		if(fileIds != null && fileIds.size() > 0) {
+			rs = articleFileService.modifyArticleFiles(param, modifyFiles, fileIds, modifyTypes2);
+			model.addAttribute("msg", rs.get("msg"));
+			resultCode = (String) rs.get("resultCode");
+			
+			if(!resultCode.startsWith("S-")) {
+				model.addAttribute("historyBack", true);
+				return "common/redirect";
+			}
+		}
+		
+		rs = articleService.modifyArticle(param);
 		
 		model.addAttribute("msg", rs.get("msg"));
-		String resultCode = (String) rs.get("resultCode");
+		resultCode = (String) rs.get("resultCode");
 		
 		if(resultCode.startsWith("S-")) {
 			String redirectUrl = "/article/detail?id="+param.get("id")+"&boardId="+param.get("boardId");

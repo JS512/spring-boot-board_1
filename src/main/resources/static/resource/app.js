@@ -1,11 +1,12 @@
-function checkFileTypeImg(file){
+function checkFileTypeImg(input){
 	var type = ["image/jpeg", "image/gif", "image/png"];
 	
-	if(!type.includes(file.type)){		
+	if(!type.includes(input.files[0].type)){		
 		alert("이미지 파일이 아닙니다.");
-		return false;
+		input.value = "";		
+	}else{
+		$(input).siblings(".type2").attr("value", input.files[0].type);
 	}
-	return true;
 }
 
 function ArticleAdd__checkForm(form){
@@ -36,11 +37,8 @@ function ArticleAdd__addFile(locationType){
 	file.setAttribute("type", "file");
 	file.setAttribute("name", "addFiles");
 	file.addEventListener("change", function(){
-		if(checkFileTypeImg(this.files[0])){
-			type2.setAttribute("value", this.files[0].type);
-		}else{
-			this.value = "";
-		}
+		checkFileTypeImg(this);
+		
 	});
 	
 	var button = document.createElement("button");
@@ -57,6 +55,7 @@ function ArticleAdd__addFile(locationType){
 	var type2 = document.createElement("input");
 	type2.setAttribute("type", "hidden");
 	type2.setAttribute("name", "type2");
+	type2.setAttribute("class", "type2");
 	
 	container.append(file, button ,type, type2);
 	
@@ -79,4 +78,21 @@ function ArticleDetail__modifyArticleCheck(id, boardId){
 
 function ArticleModify__checkForm(form){
 	ArticleAdd__checkForm(form);
+}
+
+function ArticleModify__check(btn){
+	$(btn).attr("disabled", false);
+	if(btn.checked){
+		if($(btn).attr("name") == "modify"){
+			$(btn).siblings(".modifyFile").show();
+		}
+		$(btn).siblings("input[type='checkbox']").attr("disabled" ,true);
+	}else{
+		
+		if($(btn).attr("name") == "modify"){
+			$(btn).siblings(".modifyFile").find("input[type='file']").val("");
+			$(btn).siblings(".modifyFile").hide();
+		}
+		$(btn).siblings("input[type='checkbox']").attr("disabled" ,false);
+	}	
 }

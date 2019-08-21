@@ -14,4 +14,9 @@ public interface ArticleFileService {
 
 	public List<ArticleFile> getArticleFiles(Map<String, Object> param);
 
+	public Map<String, Object> deleteOneArticleAllFiles(Map<String, Object> param);
+
+	public Map<String, Object> modifyArticleFiles(Map<String, Object> param, List<MultipartFile> modifyFiles,
+			List<Integer> fileIds, List<String> modifyTypes2);
+
 }

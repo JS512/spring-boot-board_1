@@ -44,9 +44,57 @@ public class ArticleFileServiceImpl implements ArticleFileService{
 	}
 	
 	public List<ArticleFile> getArticleFiles(Map<String, Object> param){
-		return articleFileDao.getArticleFiles(param);
+		return articleFileDao.getArticleAllFiles(param);
 	}
 	
+	public Map<String, Object> deleteOneArticleAllFiles(Map<String, Object> param){
+		String msg = "";
+		String resultCode = "";
+		try {
+			deleteArticleFiles(articleFileDao.getArticleAllFiles(param));			
+			resultCode = "S-1";
+		} catch (Exception e) {
+			msg = "파일 삭제 중 오류";
+			resultCode = "F-1";
+			e.printStackTrace();
+		}
+		return Maps.of("msg", msg, "resultCode", resultCode);
+	}
+	
+	public Map<String, Object> modifyArticleFiles(Map<String, Object> param, List<MultipartFile> modifyFiles,
+			List<Integer> fileIds, List<String> modifyTypes2)
+	{
+		String msg = "";
+		String resultCode = "";
+		
+		List<ArticleFile> files = articleFileDao.getArticleFiles(param ,fileIds);
+		deleteArticleFiles(files);
+		
+		try {
+			List<String[]> fileNames = uploadFiles(modifyFiles);
+			for(int i=0 ;i<fileNames.size() ;i++) {
+				articleFileDao.modifyArticleFiles(param, modifyFiles.get(i), fileIds.get(i), modifyTypes2.get(i), fileNames.get(i));
+			}
+			msg="파일 수정 성공";
+			resultCode="S-1";
+		} catch (Exception e) {
+			msg="파일 수정 실패";
+			resultCode="F-1";
+			e.printStackTrace();
+		}
+		
+		return Maps.of("msg", msg, "resultCode", resultCode);
+	}
+	
+	private void deleteArticleFiles(List<ArticleFile> articleFiles) {
+		for(ArticleFile file : articleFiles) {
+			File target = new File(uploadDir, file.getPrefix() + file.getOriginFileName());
+			if(target.exists()) {
+				target.delete();
+			}
+		}		
+	}
+
 	private List<String[]> uploadFiles(List<MultipartFile> files) throws Exception{
 		List<String[]> fileNames = new ArrayList<>();
 		for(MultipartFile file : files) {

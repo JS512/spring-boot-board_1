@@ -6,13 +6,25 @@
 
 
 
-<form onsubmit="ArticleModify__checkForm(this); return false;" action="/article/doModifyArticle" method="post">
+<form onsubmit="ArticleModify__checkForm(this); return false;" action="/article/doModifyArticle" method="post" enctype="multipart/form-data">
 	<input type="hidden" name="id" value="${param.id }">
 	<input type="hidden" name="boardId" value="${param.boardId }">
 	제목 : <input type="text" name="title" value="${article.title }"><br>
 	내용 : <textarea rows="30" cols="20" name="body" >${article.body}</textarea><br>
 	<button>작성 완료</button>
 	<a href="javascript:history.back();">취소</a>
+	<c:forEach items="${files }" var="file">
+		<div>
+			<img src="/article/showImg?fileName=${file.prefix }${file.originFileName}"><br>
+			삭제하기 : <input class="delete" type="checkbox" name="delete" value="${file.id }" onclick="ArticleModify__check(this);"><br>
+			수정하기 : <input class="modify" type="checkbox" name="modify" onclick="ArticleModify__check(this);"><br>
+			<div class="modifyFile" hidden>
+				<input type="hidden" name="modifyFileId" value="${file.id }">
+				<input type="file" name="modifyFile" onchange="checkFileTypeImg(this);">
+				<input class="type2" type="hidden" name="modifyType2" value="">				
+			</div>
+		</div>
+	</c:forEach>
 </form>
 
 <%@ include file="../part/foot.jspf" %>
