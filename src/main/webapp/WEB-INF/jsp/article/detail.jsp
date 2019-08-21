@@ -6,6 +6,7 @@
 
 <a href="/article/list${url }&cPage=${param.cPage}">목록으로</a>
 <a href="javascript:ArticleDetail__deleteArticleCheck(${article.id }, ${param.boardId })">삭제하기</a>
+<a href="javascript:ArticleDetail__modifyArticleCheck(${article.id }, ${param.boardId })">수정하기</a>
 
 <table>
 	<tr>

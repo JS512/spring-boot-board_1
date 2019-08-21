@@ -84,4 +84,30 @@ public class ArticleController {
 		
 		return "common/redirect";
 	}
+	
+	@RequestMapping("/modifyArticle")
+	public String modifyArticle(Model model, @RequestParam Map<String, Object> param) {
+		Article article = articleService.getOneArticleById(param);
+		model.addAttribute("article", article);
+		
+		return "article/modify";
+	}
+	
+	@RequestMapping("/doModifyArticle")
+	public String doModifyArticle(Model model, @RequestParam Map<String, Object> param) {
+		Map<String, Object> rs = articleService.modifyArticle(param);
+		
+		model.addAttribute("msg", rs.get("msg"));
+		String resultCode = (String) rs.get("resultCode");
+		
+		if(resultCode.startsWith("S-")) {
+			String redirectUrl = "/article/detail?id="+param.get("id")+"&boardId="+param.get("boardId");
+			model.addAttribute("redirectUrl", redirectUrl);
+			
+		}else {
+			model.addAttribute("historyBack", true);
+		}
+		
+		return "common/redirect";
+	}
 }

@@ -54,6 +54,13 @@
 		WHERE id = #{id} AND boardId = #{boardId}
 	</delete>
 	
+	<update id="modifyArticle" parameterType="map">
+		UPDATE article
+		SET title = #{title},
+		body = #{body}
+		WHERE id = #{id} AND boardId = #{boardId}
+	</update>
+	
 	<resultMap type="com.example.demo.dto.Article" id="article">
 		<id property="id" column="id"/>
 		<id property="regDate" column="regDate"/>
