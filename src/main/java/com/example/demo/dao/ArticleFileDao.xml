@@ -45,6 +45,11 @@
 		AND articleId = #{param.id}
 	</delete>
 	
+	<select id="getArticleOneFile" parameterType="map" resultMap="articleFile">
+		SELECT * FROM articleFile
+		WHERE id = #{id}
+	</select>
+	
 	<resultMap type="com.example.demo.dto.ArticleFile" id="articleFile">
 		<id property="id" column="id"/>
 		<id property="regDate" column="regDate"/>

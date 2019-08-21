@@ -21,5 +21,7 @@ public interface ArticleFileDao {
 			String type2, String[] fileNames);
 
 	public void deleteArticleFiles(Map<String, Object> param, List<Integer> deleteFileIds);
+
+	public ArticleFile getArticleOneFile(Map<String, Object> param);
 	
 }

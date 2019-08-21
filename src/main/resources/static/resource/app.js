@@ -59,7 +59,7 @@ function ArticleAdd__addFile(locationType){
 	
 	container.append(file, button ,type, type2);
 	
-	$(".ArticleAdd__fileList").append(container);
+	$(".fileList").append(container);
 }
 
 function ArticleDetail__deleteArticleCheck(id, boardId){
@@ -78,6 +78,10 @@ function ArticleDetail__modifyArticleCheck(id, boardId){
 
 function ArticleModify__checkForm(form){
 	ArticleAdd__checkForm(form);
+}
+
+function ArticleModify__addFile(locationType){
+	ArticleAdd__addFile(locationType);
 }
 
 function ArticleModify__check(btn){

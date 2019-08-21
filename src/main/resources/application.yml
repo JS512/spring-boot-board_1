@@ -5,6 +5,9 @@ server:
 mybatis:
   type-aliases-package: com.example.demo.dto
 spring:
+  http:    encoding:      charset: UTF-8
+      enabled: true
+      force: true
   mvc:
     view:
       prefix: /WEB-INF/jsp/

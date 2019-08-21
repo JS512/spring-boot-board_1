@@ -106,6 +106,9 @@ public class ArticleFileServiceImpl implements ArticleFileService{
 		return Maps.of("msg", msg, "resultCode", resultCode);
 		
 	}
+	public ArticleFile getArticleOneFile(Map<String, Object> param) {
+		return articleFileDao.getArticleOneFile(param);
+	}
 	
 	private void deleteArticleFiles(List<ArticleFile> articleFiles) {
 		for(ArticleFile file : articleFiles) {

@@ -13,7 +13,7 @@
 	<button>작성 완료</button>
 	<a href="javascript:history.back();">취소</a><br>
 	<button type="button" onclick="ArticleAdd__addFile('body')">파일 추가하기</button>
-	<div class="ArticleAdd__fileList">
+	<div class="fileList">
 		
 	</div>
 </form>
