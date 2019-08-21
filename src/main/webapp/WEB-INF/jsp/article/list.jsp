@@ -4,6 +4,7 @@
 <%@ include file="../part/head.jspf" %>
 <h1>${title}</h1>
 
+<a href="/article/addArticle?boardId=${param.boardId }">글쓰기</a>
 <form action="/article/list" method="get">
 	<input type="hidden" name="boardId" value="${param.boardId }">	
 	<select name="searchType">

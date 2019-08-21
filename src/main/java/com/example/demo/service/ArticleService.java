@@ -10,4 +10,6 @@ public interface ArticleService {
 
 	public Article getOneArticleById(Map<String, Object> param);
 
+	public Map<String, Object> addOneArticle(Map<String, Object> param);
+
 }

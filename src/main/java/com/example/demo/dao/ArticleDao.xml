@@ -14,7 +14,9 @@
 			<if test="searchType == 'body'"> AND A.body LIKE CONCAT('%', #{searchKeyword}, '%')</if>
 			<if test="searchType == 'writer'"> AND M.loginId LIKE CONCAT('%', #{searchKeyword}, '%')</if>
 		</if>
+		ORDER BY A.id DESC
 		LIMIT #{startNum}, #{perPageNum}
+		
 	</select>
 	
 	<select id="getTotalCount" parameterType="map" resultType="Integer">
@@ -37,6 +39,15 @@
 		ON M.id = A.memberId
 		WHERE A.id = #{id} AND A.boardId = #{boardId}
 	</select>
+	
+	<insert id="addOneArticle" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO article
+		SET regDate = NOW(),
+		title = #{title},
+		body = #{body},
+		boardId = #{boardId},
+		memberId = 10000
+	</insert>
 	
 	<resultMap type="com.example.demo.dto.Article" id="article">
 		<id property="id" column="id"/>

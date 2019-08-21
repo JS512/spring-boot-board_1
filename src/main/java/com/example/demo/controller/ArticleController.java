@@ -20,7 +20,7 @@ import jline.internal.Log;
 @RequestMapping("/article")
 public class ArticleController {
 	@Autowired
-	private ArticleService articleService;
+	private ArticleService articleService;	
 	
 	@RequestMapping("/list")
 	public String list(Model model,@RequestParam Map<String, Object> param) {
@@ -41,5 +41,26 @@ public class ArticleController {
 		model.addAttribute("article", article);
 		
 		return "article/detail";
+	}
+	
+	@RequestMapping("/addArticle")
+	public String addArticle() {
+		return "article/add";
+	}
+	
+	@RequestMapping("/doAddArticle")
+	public String doAddArticle(Model model, @RequestParam Map<String, Object> param) {
+		Map<String, Object> rs = articleService.addOneArticle(param);
+		model.addAttribute("msg", rs.get("msg"));
+		String resultCode = (String) rs.get("resultCode");
+		
+		if(resultCode.startsWith("S-")) {
+			String redirectUrl = "/article/detail?id="+param.get("id")+"&boardId="+param.get("boardId");
+			model.addAttribute("redirectUrl", redirectUrl);
+		}else {
+			model.addAttribute("historyBack", true);
+		}
+		
+		return "common/redirect";
 	}
 }

@@ -25,7 +25,7 @@
 	</tr>
 	<tr>
 		<th>내용</th>
-		<td>${article.body }</td>
+		<td><pre>${article.body }</pre></td>
 	</tr>  
   
 </table>
