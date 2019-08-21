@@ -16,4 +16,6 @@ public interface ArticleDao {
 	public Article getOneArticleById(Map<String, Object> param);
 	
 	public void addOneArticle(Map<String, Object> param);
+	
+	public void deleteOneArticle(Map<String, Object> param);
 }
