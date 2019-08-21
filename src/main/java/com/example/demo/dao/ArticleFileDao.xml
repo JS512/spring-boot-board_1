@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.ArticleFileDao">
+	<insert id="addArticleFiles" parameterType="map">
+		INSERT INTO articleFile
+		SET regDate = NOW(),
+		articleId = #{param.id},
+		prefix = #{fileNames[0]},
+		originFileName = #{fileNames[1]},
+		type = #{type},
+		type2 = #{type2}		
+	</insert>
+	
+	<resultMap type="com.example.demo.dto.Article" id="article">
+		<id property="id" column="id"/>
+		<id property="regDate" column="regDate"/>
+		<id property="title" column="title"/>
+		<id property="body" column="body"/>
+		<id property="memberId" column="memberId"/>
+		<id property="boardId" column="boardId"/>
+		<id property="view" column="view"/>
+		<association property="extra" javaType="map">
+			<id property="writer" column="writer"/>
+		</association>
+	</resultMap>
+</mapper>
