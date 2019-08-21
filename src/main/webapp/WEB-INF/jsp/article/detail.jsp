@@ -31,5 +31,9 @@
 	</tr>  
   
 </table>
+<c:forEach items="${files }" var="file">
+	<img src="/article/showImg?fileName=${file.prefix }${file.originFileName}"><br>
+	<a href="/article/downloadImg?fileName=${file.prefix }${file.originFileName}">${file.originFileName }</a><br>
+</c:forEach>
 
 <%@ include file="../part/foot.jspf" %>

@@ -13,16 +13,18 @@
 		type2 = #{type2}		
 	</insert>
 	
-	<resultMap type="com.example.demo.dto.Article" id="article">
+	<select id="getArticleFiles" parameterType="map" resultMap="articleFile">
+		SELECT * FROM articleFile
+		WHERE articleId = #{id}
+	</select>
+	
+	<resultMap type="com.example.demo.dto.ArticleFile" id="articleFile">
 		<id property="id" column="id"/>
 		<id property="regDate" column="regDate"/>
-		<id property="title" column="title"/>
-		<id property="body" column="body"/>
-		<id property="memberId" column="memberId"/>
-		<id property="boardId" column="boardId"/>
-		<id property="view" column="view"/>
-		<association property="extra" javaType="map">
-			<id property="writer" column="writer"/>
-		</association>
+		<id property="articleId" column="articleId"/>
+		<id property="prefix" column="prefix"/>
+		<id property="originFileName" column="originFileName"/>
+		<id property="type" column="type"/>
+		<id property="type2" column="type2"/>		
 	</resultMap>
 </mapper>

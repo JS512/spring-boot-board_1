@@ -1,17 +1,28 @@
 package com.example.demo.controller;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.dto.Article;
+import com.example.demo.dto.ArticleFile;
 import com.example.demo.service.ArticleFileService;
 import com.example.demo.service.ArticleService;
 
@@ -45,7 +56,10 @@ public class ArticleController {
 	@RequestMapping("/detail")
 	public String detail(Model model,@RequestParam Map<String, Object> param) {
 		Article article = articleService.getOneArticleById(param);
+		List<ArticleFile> files = articleFileService.getArticleFiles(param);
+		
 		model.addAttribute("article", article);
+		model.addAttribute("files", files);
 		
 		return "article/detail";
 	}
@@ -62,7 +76,7 @@ public class ArticleController {
 							@RequestParam(value="type", required=false) List<String> types,
 							@RequestParam(value="type2", required=false) List<String> types2)
 	{
-		Log.info(files.size());
+		
 		String resultCode = "";
 		String redirectUrl = "";
 		Map<String, Object> rs = null;		
@@ -140,4 +154,62 @@ public class ArticleController {
 		
 		return "common/redirect";
 	}
+	
+	@RequestMapping("/downloadImg")
+	@ResponseBody
+	public ResponseEntity<Resource> downloadImg(@RequestParam Map<String, Object> param){
+		File target = new File(uploadDir, (String)param.get("fileName"));		
+		HttpHeaders header = new HttpHeaders();		
+		Resource rs = null;
+		
+		if(target.exists()) {
+			try {				
+				String mimeType = Files.probeContentType(Paths.get(target.getAbsolutePath()));			
+				
+				if(mimeType == null) {
+					mimeType = "octet-stream";
+				}
+				
+				rs = new UrlResource(Paths.get(target.getAbsolutePath()).toUri());
+				
+				header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+ rs.getFilename() +"\"");				
+				header.setContentType(MediaType.parseMediaType(mimeType));
+				
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return new ResponseEntity<Resource>(rs, header, HttpStatus.OK);
+	}
+	
+	@RequestMapping("/showImg")
+	@ResponseBody
+	public ResponseEntity<Resource> showImg(@RequestParam Map<String, Object> param){
+		
+		File target = new File(uploadDir, (String)param.get("fileName"));		
+		HttpHeaders header = new HttpHeaders();		
+		Resource rs = null;
+		
+		if(target.exists()) {
+			try {				
+				String mimeType = Files.probeContentType(Paths.get(target.getAbsolutePath()));			
+				
+				if(mimeType == null) {
+					mimeType = "octet-stream";
+				}
+				
+				rs = new UrlResource(Paths.get(target.getAbsolutePath()).toUri());				
+								
+				header.setContentType(MediaType.parseMediaType(mimeType));
+				
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return new ResponseEntity<Resource>(rs, header, HttpStatus.OK);
+	}
+	
+	
 }

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.dao.ArticleFileDao;
+import com.example.demo.dto.ArticleFile;
 
 @Service
 public class ArticleFileServiceImpl implements ArticleFileService{
@@ -40,6 +41,10 @@ public class ArticleFileServiceImpl implements ArticleFileService{
 			e.printStackTrace();
 		}
 		return Maps.of("msg", msg, "resultCode", resultCode);
+	}
+	
+	public List<ArticleFile> getArticleFiles(Map<String, Object> param){
+		return articleFileDao.getArticleFiles(param);
 	}
 	
 	private List<String[]> uploadFiles(List<MultipartFile> files) throws Exception{
