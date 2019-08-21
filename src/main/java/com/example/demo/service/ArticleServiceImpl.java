@@ -27,6 +27,10 @@ public class ArticleServiceImpl implements ArticleService{
 		return Maps.of("list", list, "page", page);
 	}
 	
+	public Article getOneArticleById(Map<String, Object> param) {
+		return articleDao.getOneArticleById(param);
+	}
+	
 	private Map<String, Object> calcData(Map<String, Object> param) {
 		Map<String, Object> rs = new HashMap<>();
 
@@ -46,8 +50,7 @@ public class ArticleServiceImpl implements ArticleService{
 		if (endPage > limitPage) {
 			endPage = limitPage;
 		}
-		Log.info(endPage);
-		Log.info(limitPage);
+		
 		prev = startPage == 1 ? false : true;
 		next = endPage == limitPage ? false : true;
 

@@ -24,7 +24,7 @@ public class ArticleController {
 	
 	@RequestMapping("/list")
 	public String list(Model model,@RequestParam Map<String, Object> param) {
-		if(param.get("cPage") == null) {
+		if(param.get("cPage") == null || param.get("cPage").equals("")) {
 			param.put("cPage", 1);
 		}
 		Map<String, Object> rs = articleService.getArticleList(param);
@@ -33,5 +33,13 @@ public class ArticleController {
 		model.addAttribute("page", rs.get("page"));
 		
 		return "article/list";
+	}
+	
+	@RequestMapping("/detail")
+	public String detail(Model model,@RequestParam Map<String, Object> param) {
+		Article article = articleService.getOneArticleById(param);
+		model.addAttribute("article", article);
+		
+		return "article/detail";
 	}
 }

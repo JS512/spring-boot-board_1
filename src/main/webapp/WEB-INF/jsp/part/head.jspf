@@ -4,7 +4,7 @@
 
 <c:url value="" var="url">
 	<c:forEach items="${param }" var="entry">
-		<c:if test="${entry.key !=  'cPage'}">
+		<c:if test="${entry.key !=  'cPage' && entry.key != 'id'}">
 			<c:param name="${entry.key }" value="${entry.value }"/>
 		</c:if>
 	</c:forEach>

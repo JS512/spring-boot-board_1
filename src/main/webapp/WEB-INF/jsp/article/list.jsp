@@ -33,7 +33,7 @@
   	<tr>
   		<td>${article.id }</td>
   		<td>${article.regDate }</td>
-  		<td>${article.title }</td>
+  		<td><a href="/article/detail${url }&id=${article.id}&cPage=${param.cPage}">${article.title }</a></td>
   		<td>${article.extra.writer }</td>
   	</tr>
   </c:forEach>

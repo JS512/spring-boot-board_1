@@ -6,7 +6,11 @@ public class Utils {
 		if (object instanceof Integer) {
 			return (int) object;
 		} else if (object instanceof String) {
-			return Integer.parseInt((String) object);
+			try {
+				return Integer.parseInt((String) object);
+			}catch(Exception e) {
+				return -1;
+			}
 		}
 
 		return -1;

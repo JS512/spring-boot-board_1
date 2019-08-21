@@ -30,6 +30,14 @@
 		</if>
 	</select>
 	
+	<select id="getOneArticleById" parameterType="map" resultMap="article">
+		SELECT A.*, IFNULL(M.loginId, '존재하지 않는 사용자') AS writer
+		FROM article AS A
+		LEFT OUTER JOIN `member` AS M
+		ON M.id = A.memberId
+		WHERE A.id = #{id} AND A.boardId = #{boardId}
+	</select>
+	
 	<resultMap type="com.example.demo.dto.Article" id="article">
 		<id property="id" column="id"/>
 		<id property="regDate" column="regDate"/>
