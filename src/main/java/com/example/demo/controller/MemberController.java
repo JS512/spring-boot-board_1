@@ -58,7 +58,7 @@ public class MemberController {
 		if(resultCode.startsWith("S-")) {
 			String redirectUrl = "/";
 			model.addAttribute("redirectUrl", redirectUrl);
-			session.setAttribute("member", (Member)rs.get("member"));
+			session.setAttribute("loginedMemberId", (int)rs.get("loginedMemberId"));
 		}else {
 			model.addAttribute("historyBack", true);
 		}
@@ -89,8 +89,7 @@ public class MemberController {
 	
 	@RequestMapping("/loginIdDoubleCheck")
 	@ResponseBody
-	public Map<String, Object> loginIdDoubleCheck(@RequestParam Map<String, Object> param){
-		Log.info("여기는 아이디");
+	public Map<String, Object> loginIdDoubleCheck(@RequestParam Map<String, Object> param){		
 		Map<String, Object> rs = memberService.doubleCheckLoginId(param);		
 		
 		String resultCode = (String) rs.get("resultCode");

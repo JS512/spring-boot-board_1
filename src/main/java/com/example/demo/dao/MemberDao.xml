@@ -39,6 +39,11 @@
 		WHERE loginId = #{loginId} AND loginPw = #{loginPw}
 	</select>
 	
+	<select id="getOneMemberById" parameterType="Integer" resultMap="member">
+		SELECT * FROM `member`
+		WHERE id = #{loginedMemberId}
+	</select>
+	
 	<resultMap id="member" type="com.example.demo.dto.Member">
 		<id property="id" column="id"/>
 		<id property="regDate" column="regDate"/>

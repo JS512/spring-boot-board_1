@@ -20,4 +20,6 @@ public interface MemberDao {
 	public void memberEmailAuth(Map<String, Object> param);
 
 	public Member getOneMemberByIdPw(Map<String, Object> param);
+	
+	public Member getOneMemberById(int loginedMemberId);
 }

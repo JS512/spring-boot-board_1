@@ -127,7 +127,7 @@ public class MemberServiceImpl implements MemberService{
 		try {
 			member = memberDao.getOneMemberByIdPw(param);
 			if(member == null) {
-				msg = "존재하지 않는 회워 정보입니다.";
+				msg = "존재하지 않는 회원 정보입니다.";
 				resultCode = "F-1";
 				
 			}else {		
@@ -140,6 +140,10 @@ public class MemberServiceImpl implements MemberService{
 			resultCode = "F-1";
 		}
 		
-		return Maps.of("msg", msg, "resultCode", resultCode, "member", member);
+		return Maps.of("msg", msg, "resultCode", resultCode, "loginedMemberId", member.getId());
+	}
+	
+	public Member getOneMemberById(int loginedMemberId) {
+		return memberDao.getOneMemberById(loginedMemberId);
 	}
 }
