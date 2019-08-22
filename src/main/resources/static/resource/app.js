@@ -9,13 +9,23 @@ function checkFileTypeImg(input){
 	}
 }
 
-function ArticleAdd__checkForm(form){
-	form.title.value = form.title.value.trim();
-	form.body.value = form.body.value.trim();
-	var title = form.title.value;
-	var body = form.body.value;
+function checkEmpty(input){
+	input.value = input.value.trim();
+	if(input.value.length == 0){
+		return false;
+	}
 	
-	if(title.length == 0 || body.length == 0){
+	return true;
+}
+
+function checkEmailPattern(input){
+	var pattern = /\w+@\w+\.\w+\.?\w*/;
+	return pattern.test(input.value);	
+}
+
+function ArticleAdd__checkForm(form){	
+	
+	if(!checkEmpty(form.body) || !checkEmpty(form.title)){
 		alert("빈칸 없이 채워주세요.");
 		return false;
 	}
@@ -99,4 +109,80 @@ function ArticleModify__check(btn){
 		}
 		$(btn).siblings("input[type='checkbox']").attr("disabled" ,false);
 	}	
+}
+
+var idCheck = false;
+var emailCheck = false;
+function MemberJoin__checkForm(form){	
+	
+	if(!checkEmpty(form.loginId) || !checkEmpty(form.loginPw)
+			|| !checkEmpty(form.name) || !checkEmpty(form.email))
+	{
+		alert("빈칸없이 채워주세요");
+		return ;
+	}	
+	
+	if(!checkEmailPattern(form.email)){
+		alert("이메일 형식에 맞지 않습니다.");
+		return ;
+	}
+	
+	if(!idCheck || !emailCheck){
+		alert("중복체크를 모두 완료해주세요");
+		return ;
+	}
+	
+	form.submit();
+}
+
+function MemberJoin__loginIdDoubleCheck(btn){
+	$(btn).prev().find("input").val($(btn).prev().find("input").val().trim());
+	var loginId = $(btn).prev().find("input").val();
+	if(loginId.length == 0){
+		alert("빈칸없이 채워주세요");
+		return ;
+	}
+	
+	$.get("/member/loginIdDoubleCheck",
+		{
+			loginId : loginId
+		},
+		function(data){
+			$(btn).next().html(data.msg);
+			if(data.success){
+				idCheck = true;
+			}
+		},
+		"json"
+	);
+}
+
+function MemberJoin__emailDoubleCheck(btn){
+	$(btn).prev().find("input").val($(btn).prev().find("input").val().trim());
+	var email = $(btn).prev().find("input").val();
+	if(email.length == 0){
+		alert("빈칸없이 채워주세요");
+		return ;
+	}
+	
+	$.get("/member/emailDoubleCheck",
+		{
+			email : email
+		},
+		function(data){
+			$(btn).next().html(data.msg);
+			if(data.success){
+				emailCheck = true;
+			}
+		},
+		"json"
+	);
+}
+
+function MemberJoin__resetEmail(){	
+	emailCheck = false;
+}
+
+function MemberJoin__resetLoginId(){	
+	idCheck = false;
 }

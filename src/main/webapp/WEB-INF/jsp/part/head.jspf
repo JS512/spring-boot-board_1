@@ -21,3 +21,5 @@
 	<body>
 		<a href="/article/list?boardId=1">자유게시판</a>
 		<a href="/article/list?boardId=2">공지사항</a>
+		
+		<a href="/member/join">회원가입</a>
