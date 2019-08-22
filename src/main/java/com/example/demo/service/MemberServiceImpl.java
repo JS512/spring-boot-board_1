@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.Utils;
 import com.example.demo.dao.MemberDao;
+import com.example.demo.dto.Member;
 import com.example.demo.handler.MailHandler;
 
 @Service
@@ -117,5 +118,28 @@ public class MemberServiceImpl implements MemberService{
 		}
 		
 		return Maps.of("msg", msg, "resultCode", resultCode);
+	}
+	
+	public Map<String, Object> checkMember(Map<String, Object> param){
+		String msg ="";
+		String resultCode = "";
+		Member member = null;
+		try {
+			member = memberDao.getOneMemberByIdPw(param);
+			if(member == null) {
+				msg = "존재하지 않는 회워 정보입니다.";
+				resultCode = "F-1";
+				
+			}else {		
+				msg = "로그인에 성공했습니다.";
+				resultCode = "S-1";
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+			msg = "로그인에 실패했습니다.";
+			resultCode = "F-1";
+		}
+		
+		return Maps.of("msg", msg, "resultCode", resultCode, "member", member);
 	}
 }

@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.groovy.util.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.demo.dto.Member;
 import com.example.demo.service.MemberService;
 
 import jline.internal.Log;
@@ -38,8 +41,35 @@ public class MemberController {
 			model.addAttribute("historyBack", true);
 		}
 		
-		return "common/redirect";
+		return "common/redirect";		
+	}
+	
+	@RequestMapping("/login")
+	public String login() {
+		return "member/login";
+	}
+	
+	@RequestMapping("/doLogin")
+	public String doLogin(Model model, @RequestParam Map<String, Object> param, HttpSession session) {
+		Map<String, Object> rs = memberService.checkMember(param);
+		model.addAttribute("msg", rs.get("msg"));
+		String resultCode = (String)rs.get("resultCode");
 		
+		if(resultCode.startsWith("S-")) {
+			String redirectUrl = "/";
+			model.addAttribute("redirectUrl", redirectUrl);
+			session.setAttribute("member", (Member)rs.get("member"));
+		}else {
+			model.addAttribute("historyBack", true);
+		}
+		
+		return "common/redirect";
+	}
+	
+	@RequestMapping("/logout")
+	public String logout(HttpSession session) {
+		session.removeAttribute("member");
+		return "redirect:/";
 	}
 	
 	@RequestMapping("/emailDoubleCheck")
