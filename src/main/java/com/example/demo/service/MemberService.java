@@ -24,4 +24,6 @@ public interface MemberService {
 
 	public Map<String, Object> findLoginPw(Map<String, Object> param);
 
+	public Map<String, Object> changeLoginPw(Map<String, Object> param);
+
 }

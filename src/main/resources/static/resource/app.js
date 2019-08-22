@@ -1,5 +1,5 @@
 function encodeSHA1(input){	
-   var hash = CryptoJS.SHA1(input.value);
+   var hash = CryptoJS.SHA1(input.value.trim());
    var result = CryptoJS.enc.Hex.stringify(hash);
    return result;
 }
@@ -141,7 +141,7 @@ function MemberJoin__checkForm(form){
 	form.loginPw.value = encodeSHA1(form.temp_loginPw);
 	$(form).find("button").attr("disabled", true);
 	$(form).hide();
-	$(".statusMsg").html("회원가입 중......");
+	$(".statusMsg").html("회원가입  진행중......");
 	
 	form.submit();
 }
@@ -260,5 +260,17 @@ function MemberFindLoginPw__checkForm(form){
 			$("div").html("");
 			$(form).find("button").attr("disabled", false);
 		}
-	)
+	);
+}
+
+function MemberChangeLoginPw__checkForm(form){
+	if(!checkEmpty(form.temp_origin_loginPw) || !checkEmpty(form.temp_loginPw)){
+		alert("빈칸을 채워주세요");
+		return ;
+	}
+	
+	form.origin_loginPw.value = encodeSHA1(form.temp_origin_loginPw);
+	form.loginPw.value = encodeSHA1(form.temp_loginPw);
+	
+	form.submit();
 }

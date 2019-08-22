@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.service.MemberService;
 
+import jline.internal.Log;
+
 @Controller
 @RequestMapping("/member")
 public class MemberController {
@@ -154,5 +156,28 @@ public class MemberController {
 	public Map<String, Object> doFindLoginPw(@RequestParam Map<String, Object> param, HttpSession session){
 		Map<String, Object> rs = memberService.findLoginPw(param);
 		return Maps.of("msg", rs.get("msg"));		
+	}
+	
+	@RequestMapping("/changeLoginPw")
+	public String changeLoginPw() {
+		return "member/changeLoginPw";
+	}
+	
+	@RequestMapping("/doChangeLoginPw")
+	public String doChangeLoginPw(Model model, @RequestParam Map<String, Object> param, HttpSession session) {
+		Log.info(param.get("origin_loginPw"));
+		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));		
+		Map<String, Object> rs = memberService.changeLoginPw(param);		
+		model.addAttribute("msg", rs.get("msg"));		
+		String resultCode = (String) rs.get("resultCode");		
+		
+		if(resultCode.startsWith("S-")) {
+			String redirectUrl = "/member/myPage";
+			model.addAttribute("redirectUrl", redirectUrl);
+		}else {
+			model.addAttribute("historyBack", true);
+		}
+		
+		return "common/redirect";
 	}
 }

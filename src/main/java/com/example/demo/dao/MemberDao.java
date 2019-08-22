@@ -19,7 +19,7 @@ public interface MemberDao {
 
 	public void memberEmailAuth(Map<String, Object> param);
 
-	public Member getOneMemberByIdPw(Map<String, Object> param);
+	public Member getOneMemberByLoginIdPw(Map<String, Object> param);
 	
 	public Member getOneMemberById(int loginedMemberId);
 
@@ -30,4 +30,8 @@ public interface MemberDao {
 	public String findLoginPw(Map<String, Object> param);
 
 	public void changeTempPw(Map<String, Object> param);
+
+	public Member getOneMemberByIdPw(Map<String, Object> param);
+
+	public void changeLoginPw(Map<String, Object> param);
 }
