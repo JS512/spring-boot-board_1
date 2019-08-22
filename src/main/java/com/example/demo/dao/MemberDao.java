@@ -22,4 +22,12 @@ public interface MemberDao {
 	public Member getOneMemberByIdPw(Map<String, Object> param);
 	
 	public Member getOneMemberById(int loginedMemberId);
+
+	public void deleteOneMember(int loginedMemberId);
+
+	public String findLoginId(Map<String, Object> param);
+
+	public String findLoginPw(Map<String, Object> param);
+
+	public void changeTempPw(Map<String, Object> param);
 }

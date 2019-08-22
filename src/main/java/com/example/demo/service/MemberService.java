@@ -18,4 +18,10 @@ public interface MemberService {
 	
 	public Member getOneMemberById(int loginedMemberId);
 
+	public Map<String, Object> MemberWithdrawal(int loginedMemberId);
+
+	public Map<String, Object> findLoginId(Map<String, Object> param);
+
+	public Map<String, Object> findLoginPw(Map<String, Object> param);
+
 }

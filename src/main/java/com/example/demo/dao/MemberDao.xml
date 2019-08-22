@@ -44,6 +44,27 @@
 		WHERE id = #{loginedMemberId}
 	</select>
 	
+	<delete id="deleteOneMember" parameterType="Integer">
+		DELETE FROM `member`
+		WHERE id = #{loginedMemberId}
+	</delete>
+	
+	<select id="findLoginId" parameterType="map" resultType="string">
+		SELECT loginId FROM `member`
+		WHERE name = #{name} AND email = #{email}
+	</select>
+	
+	<select id="findLoginPw" parameterType="map" resultType="string">
+		SELECT email FROM `member`
+		WHERE loginId = #{loginId} AND email = #{email}
+	</select>
+	
+	<update id="changeTempPw" parameterType="map">
+		UPDATE `member`
+		SET loginPw = #{tempPw}
+		WHERE loginId = #{loginId} AND email = #{email} 
+	</update>
+	
 	<resultMap id="member" type="com.example.demo.dto.Member">
 		<id property="id" column="id"/>
 		<id property="regDate" column="regDate"/>

@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.util.Random;
 
 public class Utils {
@@ -33,5 +35,19 @@ public class Utils {
 		}
 		
 		return buffer.toString();
+	}
+	
+	public static String getEncodedSHA1(String value) {
+		String sha1 = null;
+		try {
+			MessageDigest digest = MessageDigest.getInstance("SHA-1");
+			digest.reset();
+			digest.update(value.getBytes("utf8"));
+			sha1 = String.format("%040x", new BigInteger(1, digest.digest()));			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return sha1;
 	}
 }

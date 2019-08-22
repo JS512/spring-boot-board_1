@@ -2,6 +2,8 @@ package com.example.demo.service;
 
 import java.util.Map;
 
+import javax.mail.MessagingException;
+
 import org.apache.groovy.util.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -35,12 +37,19 @@ public class MemberServiceImpl implements MemberService{
 			resultCode = "F-1";
 			return Maps.of("msg", msg, "resultCode", resultCode);
 		}
-		
-		try {
-			String authKey = Utils.getTempKey(-1);
-			String memberMail = (String)param.get("email");
+		String authKey = Utils.getTempKey(-1);
+		try {			
 			param.put("authKey", authKey);
 			memberDao.addMember(param);
+		}catch(Exception e) {
+			msg = "회원가입 실패";
+			resultCode = "F-1";
+			e.printStackTrace();
+		}
+		try {
+			
+			String memberMail = (String)param.get("email");
+			
 			
 			MailHandler mail = new MailHandler(sender);
 			mail.setFrom("0000000");
@@ -57,8 +66,8 @@ public class MemberServiceImpl implements MemberService{
 			resultCode = "S-1";
 		}catch(Exception e) {
 			e.printStackTrace();
-			msg = "회원가입 실패";
-			resultCode = "F-1";
+			msg = "회원가입 성공.. 인증메일 전송 중 오류";
+			resultCode = "S-1";
 		}
 		
 		return Maps.of("msg", msg, "resultCode", resultCode);
@@ -133,6 +142,7 @@ public class MemberServiceImpl implements MemberService{
 			}else {		
 				msg = "로그인에 성공했습니다.";
 				resultCode = "S-1";
+				return Maps.of("msg", msg, "resultCode", resultCode, "loginedMemberId", member.getId());
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -140,10 +150,64 @@ public class MemberServiceImpl implements MemberService{
 			resultCode = "F-1";
 		}
 		
-		return Maps.of("msg", msg, "resultCode", resultCode, "loginedMemberId", member.getId());
+		return Maps.of("msg", msg, "resultCode", resultCode);
 	}
 	
 	public Member getOneMemberById(int loginedMemberId) {
 		return memberDao.getOneMemberById(loginedMemberId);
+	}
+	
+	public Map<String, Object> MemberWithdrawal(int loginedMemberId){
+		String msg = "";
+		String resultCode = "";
+		try {			
+			memberDao.deleteOneMember(loginedMemberId);
+			msg = "회원탈퇴가 되었습니다.";
+			resultCode = "S-1";
+		}catch(Exception e) {
+			msg = "회원탈퇴중 오류가 발생 되었습니다.";
+			resultCode = "F-1";
+			e.printStackTrace();
+		}
+		
+		return Maps.of("msg", msg, "resultCode", resultCode);		
+	}
+	
+	public Map<String, Object> findLoginId(Map<String, Object> param){
+		
+		String msg = memberDao.findLoginId(param);
+		
+		return Maps.of("msg", msg);
+	}
+	
+	public Map<String, Object> findLoginPw(Map<String, Object> param){		
+		String msg = "";		
+		try {
+			String key = Utils.getTempKey(8);
+			String tempPw = Utils.getEncodedSHA1(key);
+			if(tempPw != null) {
+				param.put("tempPw", tempPw);
+				String email = memberDao.findLoginPw(param);
+				if(email != null) {
+					memberDao.changeTempPw(param);
+					MailHandler mail = new MailHandler(sender);
+					mail.setSubject("임시 비밀번호 발급");
+					mail.setTo(email);
+					mail.setText("<h1>임시 비밀번호 입니다.</h1>" + key);
+					mail.send();
+					msg = "회원가입시 작성하신 이메일로 임시 비밀번호를 발급해였습니다.";
+				}else {
+					msg = "정보와 일치하는 회원이 없습니다.";
+				}
+			}else {
+				msg = "키 생성 오류";
+			}
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			msg = "패스워드 찾기 실패";
+			e.printStackTrace();
+		}
+		
+		return Maps.of("msg", msg);
 	}
 }

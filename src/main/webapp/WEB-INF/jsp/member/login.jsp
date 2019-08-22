@@ -14,4 +14,7 @@
 	<button>로그인</button>
 </form>
 
+<a href="/member/findLoginId">아이디 찾기</a>
+<a href="/member/findLoginPw">비밀번호 찾기</a>
+
 <%@ include file="../part/foot.jspf" %>

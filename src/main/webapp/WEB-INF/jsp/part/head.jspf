@@ -25,6 +25,7 @@
 		
 		<c:if test="${isLogined }">			
 			<a href="/member/logout">로그아웃</a>
+			<a href="/member/myPage">마이페이지</a>
 		</c:if>
 		<c:if test="${!isLogined}">
 			<a href="/member/login">로그인</a>

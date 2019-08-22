@@ -1,3 +1,8 @@
+function encodeSHA1(input){	
+   var hash = CryptoJS.SHA1(input.value);
+   var result = CryptoJS.enc.Hex.stringify(hash);
+   return result;
+}
 function checkFileTypeImg(input){
 	var type = ["image/jpeg", "image/gif", "image/png"];
 	
@@ -23,11 +28,6 @@ function checkEmailPattern(input){
 	return pattern.test(input.value);	
 }
 
-function encodeSHA1(value){
-   var hash = CryptoJS.SHA1(value);
-   var result = CryptoJS.enc.Hex.stringify(hash);
-   return result;
-}
 
 function ArticleAdd__checkForm(form){	
 	
@@ -143,7 +143,6 @@ function MemberJoin__checkForm(form){
 	$(form).hide();
 	$(".statusMsg").html("회원가입 중......");
 	
-	
 	form.submit();
 }
 
@@ -208,7 +207,58 @@ function MemberLogin__checkForm(form){
 		return ;
 	}
 	
-	form.loginPw.value = encodeSHA1(form.temp_loginPw);
+	form.loginPw.value = encodeSHA1(form.temp_loginPw);	
 	
 	form.submit();
+}
+
+function MemberMyPage__withdrawal(){
+	if(confirm("정말 탈퇴 하시겠습니까?")){
+		location.href = "/member/withdrawal";
+	}
+}
+
+function MemberFindLoginId__checkForm(form){
+	if(!checkEmpty(form.name) || !checkEmpty(form.email)){
+		alert("빈칸을 채워주세요");
+		return ;
+	}
+	$(form).find("button").attr("disabled", true);
+	$("div").html("<h1>찾는중..</h1>");
+	$.get("/member/doFindLoginId",
+		{
+			name : form.name.value.trim(),
+			email : form.email.value.trim()
+		},
+		function(data){
+			if(data.success){
+				$("div").html("<h2>아이디</h2>" + data.msg);
+			}else{
+				$("div").html("");
+				alert(data.msg);
+			}
+			
+			$(form).find("button").attr("disabled", false);
+		}
+	)
+}
+
+function MemberFindLoginPw__checkForm(form){
+	if(!checkEmpty(form.loginId) || !checkEmpty(form.email)){
+		alert("빈칸을 채워주세요");
+		return ;
+	}
+	$(form).find("button").attr("disabled", true);
+	$("div").html("<h1>찾는중..</h1>");
+	$.get("/member/doFindLoginPw",
+		{
+			loginId : form.loginId.value.trim(),
+			email : form.email.value.trim()
+		},
+		function(data){							
+			alert(data.msg);			
+			$("div").html("");
+			$(form).find("button").attr("disabled", false);
+		}
+	)
 }
