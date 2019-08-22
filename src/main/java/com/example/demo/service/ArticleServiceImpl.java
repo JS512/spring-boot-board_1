@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.groovy.util.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +15,6 @@ import com.example.demo.dao.ArticleDao;
 import com.example.demo.dto.Article;
 
 import groovy.util.logging.Slf4j;
-import jline.internal.Log;
 
 @Service
 @Slf4j
@@ -51,9 +52,14 @@ public class ArticleServiceImpl implements ArticleService{
 		String msg = "";
 		String resultCode = "";
 		try {
-			articleDao.deleteOneArticle(param);
-			msg = "게시물 삭제 성공";
-			resultCode = "S-1";
+			if(!checkArticleAuthentication(param)) {
+				msg = "권한이 없습니다.";
+				resultCode = "F-1";
+			}else {
+				articleDao.deleteOneArticle(param);
+				msg = "게시물 삭제 성공";
+				resultCode = "S-1";
+			}
 		}catch(Exception e) {
 			msg = "게시물 삭제 실패";
 			resultCode = "F-1";
@@ -67,9 +73,14 @@ public class ArticleServiceImpl implements ArticleService{
 		String msg = "";
 		String resultCode = "";
 		try {
-			articleDao.modifyArticle(param);
-			msg = "게시물 수 정 성공";
-			resultCode = "S-1";
+			if(!checkArticleAuthentication(param)) {
+				msg = "권한이 없습니다.";
+				resultCode = "F-1";
+			}else {
+				articleDao.modifyArticle(param);
+				msg = "게시물 수 정 성공";
+				resultCode = "S-1";
+			}
 		}catch(Exception e) {
 			msg = "게시물 수정 실패";
 			resultCode = "F-1";
@@ -77,6 +88,16 @@ public class ArticleServiceImpl implements ArticleService{
 		}
 		
 		return Maps.of("msg", msg, "resultCode", resultCode);
+	}
+	
+	public boolean checkArticleAuthentication(Map<String, Object> param) {
+		Article article = articleDao.getOneArticleById(param);
+		int loginedMemberId = (int)param.get("loginedMemberId");
+		if(article.getId() != loginedMemberId) {
+			return false;
+		}else {
+			return true;
+		}
 	}
 	
 	private Map<String, Object> calcData(Map<String, Object> param) {

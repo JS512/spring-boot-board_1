@@ -46,7 +46,7 @@
 		title = #{title},
 		body = #{body},
 		boardId = #{boardId},
-		memberId = 10000
+		memberId = #{loginedMemberId}
 	</insert>
 	
 	<delete id="deleteOneArticle" parameterType="map">
