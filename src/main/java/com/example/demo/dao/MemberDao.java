@@ -12,4 +12,8 @@ public interface MemberDao {
 	public int doubleCheckEmail(Map<String, Object> param);
 
 	public int doubleCheckLoginId(Map<String, Object> param);
+
+	public int getOneMemberByAuthKeyEmail(Map<String, Object> param);
+
+	public void memberEmailAuth(Map<String, Object> param);
 }

@@ -70,6 +70,13 @@ public class MemberController {
 		}else {
 			return Maps.of("msg", rs.get("msg"), "success", false);
 		}		
-		
+	}
+	
+	@RequestMapping("/auth")
+	public String auth(Model model, @RequestParam Map<String, Object> param) {
+		Map<String ,Object> rs = memberService.memberEmailAuth(param);
+		model.addAttribute("msg", rs.get("msg"));
+		model.addAttribute("redirectUrl", "/");
+		return "common/redirect";
 	}
 }

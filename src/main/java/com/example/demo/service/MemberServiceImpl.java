@@ -96,4 +96,26 @@ public class MemberServiceImpl implements MemberService{
 		
 		return Maps.of("msg", msg, "resultCode", resultCode);
 	}
+	
+	public Map<String, Object> memberEmailAuth(Map<String, Object> param){
+		String msg ="";
+		String resultCode = "";
+		try {
+			int num = memberDao.getOneMemberByAuthKeyEmail(param);
+			if(num <= 0) {
+				msg = "메일 인증에 실패했습니다.";
+				resultCode = "F-1";
+				return Maps.of("msg", msg, "resultCode", resultCode);
+			}
+			memberDao.memberEmailAuth(param);
+			msg = "메일 인증에 성공했습니다.";
+			resultCode = "S-1";
+		}catch(Exception e) {
+			e.printStackTrace();
+			msg = "메일 인증에 실패했습니다.";
+			resultCode = "F-1";
+		}
+		
+		return Maps.of("msg", msg, "resultCode", resultCode);
+	}
 }

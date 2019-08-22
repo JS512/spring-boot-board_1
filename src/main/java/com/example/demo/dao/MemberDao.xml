@@ -23,6 +23,17 @@
 		WHERE loginId = #{loginId}
 	</select>
 	
+	<select id="getOneMemberByAuthKeyEmail" parameterType="map" resultType="Integer">
+		SELECT COUNT(*) FROM `member`
+		WHERE email = #{email} AND authKey = #{authKey}
+	</select>
+	
+	<update id="memberEmailAuth" parameterType="map">
+		UPDATE `member`
+		SET emailAuthStatus = TRUE
+		WHERE email = #{email} AND authKey = #{authKey}
+	</update>
+	
 	<resultMap id="member" type="com.example.demo.dto.Member">
 		<id property="id" column="id"/>
 		<id property="regDate" column="regDate"/>
