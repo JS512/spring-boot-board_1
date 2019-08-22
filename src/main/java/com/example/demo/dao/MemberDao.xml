@@ -10,7 +10,7 @@
 		loginPw = #{loginPw},
 		name = #{name},
 		email = #{email},
-		authKey = '1234545'
+		authKey = #{authKey}
 	</insert>
 	
 	<select id="doubleCheckEmail" parameterType="map" resultType="Integer">
