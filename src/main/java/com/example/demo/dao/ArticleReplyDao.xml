@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.ArticleReplyDao">
+	<insert id="addReply" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO articleReply
+		SET regDate = NOW(),
+		articleId = #{articleId},
+		memberId = #{loginedMemberId},
+		`body` = #{body},
+		boardId = #{boardId};
+	</insert>
+	
+	<select id="getOneArticleAllReplies" parameterType="map" resultMap="articleReply">
+		SELECT AR.*, IFNULL(M.loginId, '존재하지 않는 사용자') AS writer
+		FROM articleReply AS AR
+		LEFT OUTER JOIN `member` AS M
+		ON M.id = AR.memberId
+		WHERE AR.articleId = #{articleId} AND AR.boardId = #{boardId}		
+	</select>
+	
+	<select id="getOneArticleOneReplyByIdArticleIdBoardId" parameterType="map" resultMap="articleReply">
+		SELECT AR.*, IFNULL(M.loginId, '존재하지 않는 사용자') AS writer
+		FROM articleReply AS AR
+		LEFT OUTER JOIN `member` AS M
+		ON M.id = AR.memberId
+		WHERE AR.articleId = #{articleId} AND AR.boardId = #{boardId} AND AR.id = #{id}		
+	</select>
+	
+	<delete id="deleteOneArticleOneReplyByIdArticleIdBoardId" parameterType="map">
+		DELETE FROM articleReply
+		WHERE id = #{id} AND articleId = #{articleId} AND boardId = #{boardId}
+	</delete>
+	
+	<update id="modifyReplyByIdArticleIdBoardId" parameterType="map">
+		UPDATE articleReply
+		SET regDate = NOW(),
+		body = #{body}
+		WHERE id = #{id} AND articleId = #{articleId} AND boardId = #{boardId}
+	</update>
+	
+	<resultMap id="articleReply" type="com.example.demo.dto.ArticleReply">
+		<id property="id" column="id"/>
+		<id property="regDate" column="regDate"/>
+		<id property="articleId" column="articleId"/>
+		<id property="memberId" column="memberId"/>
+		<id property="body" column="body"/>
+		<id property="boardId" column="boardId"/>
+		<association property="extra" javaType="map">
+			<id property="writer" column="writer"/>
+		</association>
+	</resultMap>
+</mapper>

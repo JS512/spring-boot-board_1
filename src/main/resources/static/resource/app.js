@@ -92,6 +92,156 @@ function ArticleDetail__modifyArticleCheck(id, boardId){
 	location.href="/article/modifyArticle?id="+id+"&boardId="+boardId;
 }
 
+function ArticleDetail__checkAddReplyForm(form){
+	if(!checkEmpty(form.body)){
+		alert("빈칸없이 채워주세요");
+		return ;
+	}
+	$.post("/article/addReply",
+		{
+			articleId : form.articleId.value,
+			boardId : form.boardId.value,
+			body : form.body.value
+		},
+		function(data){
+			alert(data.msg);
+			if(data.success){
+				form.body.value = "";
+				ArticleDetail__drawReply(data.reply);
+			}
+		},
+		"json"
+	)
+}
+
+function ArticleDetail__drawReply(data){
+	var html = `
+	<div>	
+		<table>
+			<tr>
+				<th>번호</th> <td class="replyId" data-id="${data.id}"> ${data.id}</td>
+			</tr>
+			<tr>
+				<th>날짜</th> <td class="replyRegDate"> ${data.regDate}</td>
+			</tr>
+			<tr>
+				<th>작성자</th> <td> ${data.extra.writer}</td>
+			</tr>											
+		</table>
+		<pre class="replyBody">${data.body}</pre>`;
+		if($("#memberId") && $("#memberId").val() == data.memberId){
+			html += `<button type="button" onclick="ArticleDetail__deleteReply(this);">삭제</button>
+			<button type="button" onclick="ArticleDetail__showReplyModifyForm(this);">수정</button>`
+		}
+		html += `	
+		<hr>
+	</div>`;
+	$(".replyList").prepend(html);
+}
+
+function ArticleDetail__getAllReplies(){
+	var id = $("#articleId").val();
+	var boardId = $("#boardId").val();
+	$.post("/article/getOneArticleAllReplies",
+		{
+			articleId : id,
+			boardId : boardId
+		},
+		function(data){			
+			if(data.success){
+				for(var i=0; i<data.replies.length ;i++){
+					ArticleDetail__drawReply(data.replies[i]);
+				}
+			}else{
+				$(".replyList").html(data.msg);
+			}
+		}
+	)
+}
+
+function ArticleDetail__deleteReply(btn){
+	var articleId = $("#articleId").val();
+	var boardId = $("#boardId").val();
+	var id = $(btn).parent().find(".replyId").attr("data-id");		
+	
+	if(confirm("선택하신 댓글을 삭제하시겠습니까?")){
+		$(btn).parent().hide();
+		$.get("/article/deleteOneArticleOneReply",
+			{
+				articleId : articleId,
+				boardId : boardId,
+				id : id
+			},
+			function(data){
+				alert(data.msg);
+				if(data.success){
+					$(btn).parent().remove();
+				}else{
+					$(btn).parent().show();	
+				}
+			},
+			"json"
+		);
+	}
+}
+
+function ArticleDetail__modifyReply(form){
+	if(!checkEmpty(form.body)){
+		alert("빈칸없이 채워주세요.");
+		return ;
+	}
+	var replyContainer = hide;
+	$.post("/article/modifyReply",
+		{
+			id : form.id.value,
+			articleId : form.articleId.value,
+			boardId : form.boardId.value,
+			body : form.body.value
+		},
+		function(data){
+			alert(data.msg);
+			if(data.success){
+				$("#replyModifyForm").find("iput[name='id']").val("");
+				$("#replyModifyForm").find("textarea[name='body']").val("");
+				
+				replyContainer.find(".replyRegDate").html(data.reply.regDate);
+				replyContainer.find(".replyBody").html(data.reply.body);
+				replyContainer.show();
+			}
+		},
+		"json"
+	);
+}
+
+var hide;
+function ArticleDetail__showReplyModifyForm(btn){
+	
+	if(hide != null)
+		hide.show();
+	
+	hide = $(btn).parent();
+	hide.hide();
+	
+	$("#replyModifyForm").show();
+	$("#replyAddForm").hide();
+	
+	$("#replyModifyForm").find("input[name='id']").val(hide.find(".replyId").attr("data-id"));
+	$("#replyModifyForm").find("textarea[name='body']").val(hide.find(".replyBody").html());
+	$("#replyModifyForm").find("textarea[name='body']").focus();	
+	
+}
+
+function ArticleDetail__hideReplyModifyForm(btn){
+	
+	$("#replyModifyForm").find("iput[name='id']").val("");
+	$("#replyModifyForm").find("textarea[name='body']").val("");
+	
+	$("#replyAddForm").show();
+	$("#replyModifyForm").hide();
+	
+	hide.show();
+}
+
 function ArticleModify__checkForm(form){
 	ArticleAdd__checkForm(form);
 }
@@ -274,3 +424,10 @@ function MemberChangeLoginPw__checkForm(form){
 	
 	form.submit();
 }
+
+$(function(){
+	
+	if($(".replyList") != null){
+		ArticleDetail__getAllReplies();
+	}
+})

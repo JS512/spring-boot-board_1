@@ -23,7 +23,8 @@
 		<a href="/article/list?boardId=1">자유게시판</a>
 		<a href="/article/list?boardId=2">공지사항</a>
 		
-		<c:if test="${isLogined }">			
+		<c:if test="${isLogined }">
+			<input type="hidden" id="memberId" value="${loginedMemberId }">	
 			<a href="/member/logout">로그아웃</a>
 			<a href="/member/myPage">마이페이지</a>
 		</c:if>
