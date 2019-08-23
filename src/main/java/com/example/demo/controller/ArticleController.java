@@ -35,6 +35,7 @@ import com.example.demo.service.ArticleService;
 import com.example.demo.service.MemberService;
 
 import groovy.util.logging.Slf4j;
+import jline.internal.Log;
 
 @Slf4j
 @Controller
@@ -58,9 +59,6 @@ public class ArticleController {
 		}
 		
 		if(!Utils.needParamCheck(param, new String[] {"boardId"}) || !Utils.isNumeric(param, new String[] {"boardId"})) {
-			model.addAttribute("historyBack", true);
-			return "common/redirect";
-		}else if(Integer.parseInt((String)param.get("boardId")) > 1){
 			model.addAttribute("historyBack", true);
 			return "common/redirect";
 		}
@@ -90,6 +88,7 @@ public class ArticleController {
 	
 	@RequestMapping("/addArticle")
 	public String addArticle() {
+		
 		return "article/add";
 	}
 	
@@ -104,11 +103,11 @@ public class ArticleController {
 		String resultCode = "";
 		String redirectUrl = "";
 		Map<String, Object> rs = null;		
-		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));
+		param.put("loginedMemberId", (int)session.getAttribute("loginedMemberId"));
 		rs = articleService.addOneArticle(param);	
 		resultCode = (String) rs.get("resultCode");
 		model.addAttribute("msg", rs.get("msg"));
-		
+		Log.info(rs.get("msg"));
 		if(!resultCode.startsWith("S-")) {			
 			model.addAttribute("historyBack", true);
 			return "common/redirect";

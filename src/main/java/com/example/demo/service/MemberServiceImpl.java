@@ -237,7 +237,7 @@ public class MemberServiceImpl implements MemberService{
 		String resultCode = "";
 		try {
 			String role = memberDao.getMemberRole((int)param.get("loginedMemberId"));
-			if(!role.equals("admin")) {
+			if(role == null || !role.equals("admin")) {
 				msg = "권한이 없습니다.";
 				resultCode = "F-1";
 			}else {
@@ -259,7 +259,7 @@ public class MemberServiceImpl implements MemberService{
 		List<Member> members = null;
 		try {
 			String role = memberDao.getMemberRole((int)param.get("loginedMemberId"));
-			if(!role.equals("admin")) {
+			if(role == null || !role.equals("admin")) {
 				msg = "권한이 없습니다.";
 				resultCode = "F-1";
 			}else {

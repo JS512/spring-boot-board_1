@@ -57,7 +57,7 @@ public class ArticleFileServiceImpl implements ArticleFileService{
 		String resultCode = "";
 		try {
 			String role = memberDao.getMemberRole((int)param.get("loginedMemberId"));
-			if(!checkArticleAuthentication(param) && !role.equals("admin")) {
+			if(!checkArticleAuthentication(param) && (role == null || !role.equals("admin"))) {
 				msg = "권한이 없습니다.";
 				resultCode = "F-1";
 			}else {

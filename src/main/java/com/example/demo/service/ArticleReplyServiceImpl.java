@@ -80,7 +80,7 @@ public class ArticleReplyServiceImpl implements ArticleReplyService{
 				resultCode = "F-1";
 			}else {
 				String role = memberDao.getMemberRole((int)param.get("loginedMemberId"));
-				if((reply.getMemberId() != (int)param.get("loginedMemberId")) && !role.equals("admin")) {
+				if((reply.getMemberId() != (int)param.get("loginedMemberId")) && (role == null || !role.equals("admin"))) {
 					msg = "권한이 없습니다.";
 					resultCode = "F-1";
 				}else {
@@ -109,7 +109,7 @@ public class ArticleReplyServiceImpl implements ArticleReplyService{
 				msg = "존재하지 않는 댓글입니다.";
 				resultCode = "F-1";
 			}else {
-				if((reply.getMemberId() != (int)param.get("loginedMemberId")) && !role.equals("admin")) {
+				if((reply.getMemberId() != (int)param.get("loginedMemberId")) && (role == null || !role.equals("admin"))) {
 					msg = "권한이 없습니다.";
 					resultCode = "F-1";
 				}else {

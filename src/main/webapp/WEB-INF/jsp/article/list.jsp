@@ -10,7 +10,7 @@
 			<a href="/article/addArticle?boardId=${param.boardId }">글쓰기</a>
 		</c:when>
 		<c:when test="${param.boardId == 1}">
-			<a href="/admin/addArticle?boardId=${param.boardId }">글쓰기</a>
+			<a href="/article/addArticle?boardId=${param.boardId }">글쓰기</a>
 		</c:when>
 	</c:choose>
 </c:if>
