@@ -119,7 +119,11 @@ function ArticleDetail__drawReply(data){
 	<div>	
 		<table>
 			<tr>
-				<th>번호</th> <td class="replyId" data-id="${data.id}"> ${data.id}</td>
+				<td><button data-type="reply" class="like" type="button" onclick="ArticleDetail__updateLike(this, true);">좋아요</button> <span>0</span></td>
+				<td><button data-type="reply" class="like" type="button" onclick="ArticleDetail__updateLike(this, false);">싫어요</button> <span>0</span></td>
+			</tr>
+			<tr>
+				<th>번호</th> <td class="replyId id" data-id="${data.id}"> ${data.id}</td>
 			</tr>
 			<tr>
 				<th>날짜</th> <td class="replyRegDate"> ${data.regDate}</td>
@@ -136,11 +140,14 @@ function ArticleDetail__drawReply(data){
 		html += `	
 		<hr>
 	</div>`;
+	
+	$.parseHTML(html);
 	$(".replyList").prepend(html);
+	
 }
 
 function ArticleDetail__getAllReplies(){	
-	var id = $("#articleId").val();
+	var id = $(".articleId").attr("data-id");
 	var boardId = $("#boardId").val();
 	$.post("/article/getOneArticleAllReplies",
 		{
@@ -151,7 +158,13 @@ function ArticleDetail__getAllReplies(){
 			if(data.success){
 				for(var i=0; i<data.replies.length ;i++){
 					ArticleDetail__drawReply(data.replies[i]);
+					
 				}
+				$(".replyList").find("table").each(function(index, item){
+					ArticleDetail__getLikes($(this), "reply");
+				});
+				
+				
 			}else{
 				$(".replyList").html(data.msg);
 			}
@@ -160,7 +173,7 @@ function ArticleDetail__getAllReplies(){
 }
 
 function ArticleDetail__deleteReply(btn){
-	var articleId = $("#articleId").val();
+	var articleId = $(".articleId").attr("data-id");
 	var boardId = $("#boardId").val();
 	var id = $(btn).parent().find(".replyId").attr("data-id");		
 	
@@ -173,7 +186,7 @@ function ArticleDetail__deleteReply(btn){
 				id : id
 			},
 			function(data){
-				alert(data.msg);
+				
 				if(data.success){
 					$(btn).parent().remove();
 				}else{
@@ -240,6 +253,69 @@ function ArticleDetail__hideReplyModifyForm(btn){
 	$("#replyModifyForm").hide();
 	
 	hide.show();
+}
+
+function ArticleDetail__getLikes(table, type){
+	var articleId = table.find(".id").attr("data-id");
+	var boardId = $("#boardId").val();
+	
+	$.get("/article/getLikes",
+		{
+			relId : articleId,
+			boardId : boardId,
+			type : type
+		},
+		function(data){
+			
+			if(!data.success){
+				alert(data.msg);
+			}						
+			ArticleDetail__drawArticleLike(table, data);
+		},
+		"json"
+	);
+}
+
+function ArticleDetail__updateLike(btn, val){
+	var articleId = $(btn).parent().parent().parent().find(".id").attr("data-id");
+	var boardId = $("#boardId").val();
+	var type = $(btn).attr("data-type");
+	
+	$.get("/article/updateLike",
+		{
+			relId : articleId,
+			boardId : boardId,
+			type : type,
+			val : val
+		},
+		function(data){
+			alert(data.msg);
+			if(data.success){
+				ArticleDetail__getLikes($(btn).parent().parent().parent(), type);
+			}
+		},
+		"json"
+	);
+}
+
+function ArticleDetail__drawArticleLike(table, data){
+	table.find(".like").css("background-color","");
+	
+	table.find(".like").each(function(index, item){	
+		
+		if(index == 0){
+			$(item).next().html(data.like);
+			if(data.checkType == "like"){
+				$(item).css("background-color", "yellow");
+			}
+		}else if(index == 1){			
+			$(item).next().html(data.disLike);
+			if(data.checkType == "disLike"){
+				$(item).css("background-color", "yellow");
+			}
+		}		
+	});
+	
 }
 
 function ArticleModify__checkForm(form){
@@ -428,5 +504,6 @@ function MemberChangeLoginPw__checkForm(form){
 $(function(){	
 	if($(".replyList").length){
 		ArticleDetail__getAllReplies();
+		ArticleDetail__getLikes($(".article"), "article");
 	}
 })

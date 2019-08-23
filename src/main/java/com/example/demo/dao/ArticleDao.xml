@@ -61,6 +61,35 @@
 		WHERE id = #{id} AND boardId = #{boardId}
 	</update>
 	
+	<select id="getArticleLikes" parameterType="map" resultType="Integer">
+		SELECT SUM(val) FROM `like`
+		WHERE relType=#{type} AND relId = #{relId}
+		GROUP BY val
+	</select>
+	
+	<select id="getArticleLikeByMemberId" parameterType="map" resultType="Like">
+		SELECT * FROM `like`
+		WHERE relType=#{type} AND relId = #{relId} AND memberId = #{loginedMemberId}
+	</select>
+	
+	<insert id="addArticleLike" parameterType="map">
+		INSERT INTO `like`
+		SET regDate = NOW(),
+		relType = #{type},
+		relId = #{relId},
+		memberId = #{loginedMemberId},
+		val = #{val}
+	</insert>
+	<delete id="deleteArticleLike" parameterType="map">
+		DELETE FROM `like`
+		WHERE relType=#{type} AND relId = #{relId} AND memberId = #{loginedMemberId} 	
+	</delete>
+	<update id="updateArticleLike" parameterType="map">
+		UPDATE `like`
+		SET regDate = NOW(),
+		val = #{val}
+		WHERE relType=#{type} AND relId = #{relId} AND memberId = #{loginedMemberId}
+	</update>
 	<resultMap type="com.example.demo.dto.Article" id="article">
 		<id property="id" column="id"/>
 		<id property="regDate" column="regDate"/>

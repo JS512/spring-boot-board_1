@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -352,6 +353,45 @@ public class ArticleController {
 		}
 		
 		return Maps.of("msg", rs.get("msg"), "success", success, "reply", rs.get("reply"));
+	}
+	
+	@RequestMapping("/getLikes")
+	@ResponseBody
+	public Map<String, Object> getLikes(@RequestParam Map<String, Object> param, HttpSession session){
+		
+		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));
+		
+		
+		Map<String, Object> rs = new HashMap<>();		
+		rs = articleService.getArticleLikes(param);
+
+		boolean success = false;
+		String resultCode = (String)rs.get("resultCode");
+
+		if(resultCode.startsWith("S-")) {
+			success = true;
+		}
+		
+		return Maps.of("msg", rs.get("msg"), "success", success, "disLike", rs.get("disLike"), "like", rs.get("like"), "checkType", rs.get("checkType"));
+	}
+	
+	@RequestMapping("/updateLike")
+	@ResponseBody
+	public Map<String, Object> updateLike(@RequestParam Map<String, Object> param, HttpSession session){
+		
+		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));		
+		
+		Map<String, Object> rs = new HashMap<>();		
+		rs = articleService.updateArticleLike(param);
+
+		boolean success = false;
+		String resultCode = (String)rs.get("resultCode");
+
+		if(resultCode.startsWith("S-")) {
+			success = true;
+		}
+		
+		return Maps.of("msg", rs.get("msg"), "success", success);
 	}
 	
 }

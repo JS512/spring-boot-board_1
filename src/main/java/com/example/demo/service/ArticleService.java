@@ -18,4 +18,8 @@ public interface ArticleService {
 
 	public boolean checkArticleAuthentication(Map<String, Object> param);
 
+	public Map<String, Object> getArticleLikes(Map<String, Object> param);
+
+	public Map<String, Object> updateArticleLike(Map<String, Object> param);
+
 }

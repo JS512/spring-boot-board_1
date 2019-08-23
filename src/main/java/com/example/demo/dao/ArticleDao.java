@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.example.demo.dto.Article;
+import com.example.demo.dto.Like;
 
 @Mapper
 public interface ArticleDao {
@@ -20,4 +21,14 @@ public interface ArticleDao {
 	public void deleteOneArticle(Map<String, Object> param);
 	
 	public void modifyArticle(Map<String, Object> param);
+
+	public List<Integer> getArticleLikes(Map<String, Object> param);
+
+	public Like getArticleLikeByMemberId(Map<String, Object> param);
+
+	public void addArticleLike(Map<String, Object> param);
+
+	public void deleteArticleLike(Map<String, Object> param);
+
+	public void updateArticleLike(Map<String, Object> param);
 }

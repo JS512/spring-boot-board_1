@@ -11,13 +11,16 @@
 	<a href="javascript:ArticleDetail__modifyArticleCheck(${article.id }, ${param.boardId })">수정하기</a>
 </c:if>
 
-<input type="hidden" id="articleId" value="${article.id }">
 <input type="hidden" id="boardId" value="${article.boardId}">
 
-<table>
+<table class="article">
+	<tr>
+		<td><button data-type="article" class="like" type="button" onclick="ArticleDetail__updateLike(this, true);">좋아요</button> <span>0</span></td>
+		<td><button data-type="article" class="like" type="button" onclick="ArticleDetail__updateLike(this, false);">싫어요</button> <span>0</span></td>
+	</tr>
 	<tr>
     	<th>번호</th>
-		<td>${article.id }</td>
+		<td class="articleId id" data-id="${article.id }">${article.id }</td>
 	</tr>
 	<tr>
 		<th>날짜</th>
@@ -57,6 +60,7 @@
 		<input type="hidden" name="boardId" value="${article.boardId }">
 		수정내용 : <textarea name="body"></textarea>
 		<button>수정</button><button type="button" onclick="ArticleDetail__hideReplyModifyForm(this);">취소</button>
+		
 	</form>
 </c:if>
 
