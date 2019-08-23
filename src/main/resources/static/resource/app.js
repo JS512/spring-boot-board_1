@@ -139,7 +139,7 @@ function ArticleDetail__drawReply(data){
 	$(".replyList").prepend(html);
 }
 
-function ArticleDetail__getAllReplies(){
+function ArticleDetail__getAllReplies(){	
 	var id = $("#articleId").val();
 	var boardId = $("#boardId").val();
 	$.post("/article/getOneArticleAllReplies",
@@ -425,9 +425,8 @@ function MemberChangeLoginPw__checkForm(form){
 	form.submit();
 }
 
-$(function(){
-	
-	if($(".replyList") != null){
+$(function(){	
+	if($(".replyList").length){
 		ArticleDetail__getAllReplies();
 	}
 })

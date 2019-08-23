@@ -165,7 +165,7 @@ public class MemberController {
 	
 	@RequestMapping("/doChangeLoginPw")
 	public String doChangeLoginPw(Model model, @RequestParam Map<String, Object> param, HttpSession session) {
-		Log.info(param.get("origin_loginPw"));
+		
 		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));		
 		Map<String, Object> rs = memberService.changeLoginPw(param);		
 		model.addAttribute("msg", rs.get("msg"));		
