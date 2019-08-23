@@ -1,5 +1,6 @@
 package com.example.demo.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -34,4 +35,8 @@ public interface MemberDao {
 	public Member getOneMemberByIdPw(Map<String, Object> param);
 
 	public void changeLoginPw(Map<String, Object> param);
+
+	public String getMemberRole(int loginedMemberId);
+
+	public List<Member> getAllMembers(int loginedMemberId);
 }

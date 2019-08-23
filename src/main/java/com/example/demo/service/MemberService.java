@@ -26,4 +26,10 @@ public interface MemberService {
 
 	public Map<String, Object> changeLoginPw(Map<String, Object> param);
 
+	public String getMemberRole(int loginedMemberId);
+
+	public Map<String, Object> deleteMember(Map<String, Object> param);
+
+	public Map<String, Object> getAllMembers(Map<String, Object> param);
+
 }

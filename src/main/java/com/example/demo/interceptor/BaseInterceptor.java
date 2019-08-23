@@ -23,22 +23,30 @@ public class BaseInterceptor implements HandlerInterceptor{
 		if(session.getAttribute("loginedMemberId") != null) {
 			int loginedMemberId = (int)session.getAttribute("loginedMemberId");
 			Member member = memberService.getOneMemberById(loginedMemberId);
+			
 			if(member != null) {
+				String role = memberService.getMemberRole(loginedMemberId);
+				if(role == null) {
+					role = "";
+				}
 				request.setAttribute("loginedMemberId", loginedMemberId);
 				request.setAttribute("isLogined", true);
 				request.setAttribute("loginedMemberLoginId", member.getLoginId());
 				request.setAttribute("loginedMember", member);
+				request.setAttribute("role", role);
 			}else {
 				request.setAttribute("loginedMemberId", 0);
 				request.setAttribute("isLogined", false);
 				request.setAttribute("loginedMemberLoginId", "");
 				request.setAttribute("loginedMember", null);
+				request.setAttribute("role", "");
 			}
 		}else {
 			request.setAttribute("loginedMemberId", 0);
 			request.setAttribute("isLogined", false);
 			request.setAttribute("loginedMemberLoginId", "");
 			request.setAttribute("loginedMember", null);
+			request.setAttribute("role", "");
 		}
 		return HandlerInterceptor.super.preHandle(request, response, handler);
 	}

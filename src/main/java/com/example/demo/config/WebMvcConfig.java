@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.example.demo.interceptor.AdminInterceptor;
 import com.example.demo.interceptor.BaseInterceptor;
 import com.example.demo.interceptor.NeedLoginInterceptor;
 import com.example.demo.interceptor.NeedLogoutInterceptor;
@@ -23,10 +24,16 @@ public class WebMvcConfig implements WebMvcConfigurer{
 	@Autowired
 	@Qualifier("needLogoutInterceptor")
 	private NeedLogoutInterceptor needLogoutInterceptor;
+	
+	@Autowired
+	@Qualifier("adminInterceptor")
+	private AdminInterceptor adminInterceptor;
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {		
 		registry.addInterceptor(baseInterceptor).addPathPatterns("/**");
+		
+		registry.addInterceptor(adminInterceptor).addPathPatterns("/admin/**");
 		
 		registry.addInterceptor(needLoginInterceptor).addPathPatterns("/**").excludePathPatterns("/resource/**", "/")
 		.excludePathPatterns("/article/list", "/article/detail", "/article/showImg", "/article/downloadImg", "/article/getOneArticleAllReplies")

@@ -76,6 +76,16 @@
 		WHERE id = #{loginedMemberId} AND loginPw = #{origin_loginPw}
 	</update>
 	
+	<select id="getMemberRole" parameterType="Integer" resultType="string">
+		SELECT attrValue FROM memberAttr
+		WHERE memberId = #{loginedMemberId} AND attrName= 'ROLE'
+	</select>
+	
+	<select id="getAllMembers" resultMap="member">
+		SELECT * FROM `member`
+		WHERE id != #{loginedMemberId}
+	</select>
+	
 	<resultMap id="member" type="com.example.demo.dto.Member">
 		<id property="id" column="id"/>
 		<id property="regDate" column="regDate"/>

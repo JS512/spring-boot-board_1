@@ -9,6 +9,7 @@
 		</c:if>
 	</c:forEach>
 </c:url>
+<c:set value="${role == 'admin'}" var="isAdmin"/>
 
 <!DOCTYPE html>
 <html>
@@ -20,15 +21,22 @@
 		<title>${title}</title>
 	</head>
 	<body>
+		<c:if test="${isLogined }">
+			<p>현재 ${loginedMemberLoginId }님이 로그인중...</p>
+		</c:if>
 		<a href="/article/list?boardId=1">자유게시판</a>
 		<a href="/article/list?boardId=2">공지사항</a>
 		
 		<c:if test="${isLogined }">
-			<input type="hidden" id="memberId" value="${loginedMemberId }">	
+			<input type="hidden" id="memberId" value="${loginedMemberId }">
+			<input type="hidden" id="memberRole" value="${isAdmin}">	
 			<a href="/member/logout">로그아웃</a>
 			<a href="/member/myPage">마이페이지</a>
 		</c:if>
 		<c:if test="${!isLogined}">
 			<a href="/member/login">로그인</a>
 			<a href="/member/join">회원가입</a>
+		</c:if>
+		<c:if test="${isAdmin }">
+			<a href="/admin/adminPage">회원관리 페이지</a>
 		</c:if>

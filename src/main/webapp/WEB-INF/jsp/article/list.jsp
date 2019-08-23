@@ -4,7 +4,17 @@
 <%@ include file="../part/head.jspf" %>
 <h1>${title}</h1>
 
-<a href="/article/addArticle?boardId=${param.boardId }">글쓰기</a>
+<c:if test="${isLogined }">
+	<c:choose>
+		<c:when test="${param.boardId == 2 && isAdmin}">
+			<a href="/article/addArticle?boardId=${param.boardId }">글쓰기</a>
+		</c:when>
+		<c:when test="${param.boardId == 1}">
+			<a href="/admin/addArticle?boardId=${param.boardId }">글쓰기</a>
+		</c:when>
+	</c:choose>
+</c:if>
+
 <form action="/article/list" method="get">
 	<input type="hidden" name="boardId" value="${param.boardId }">	
 	<select name="searchType">

@@ -133,7 +133,7 @@ function ArticleDetail__drawReply(data){
 			</tr>											
 		</table>
 		<pre class="replyBody">${data.body}</pre>`;
-		if($("#memberId") && $("#memberId").val() == data.memberId){
+		if( ($("#memberId").length && $("#memberId").val() == data.memberId) || $("#memberRole").val() == "true"){
 			html += `<button type="button" onclick="ArticleDetail__deleteReply(this);">삭제</button>
 			<button type="button" onclick="ArticleDetail__showReplyModifyForm(this);">수정</button>`
 		}
@@ -220,6 +220,7 @@ function ArticleDetail__modifyReply(form){
 				replyContainer.find(".replyRegDate").html(data.reply.regDate);
 				replyContainer.find(".replyBody").html(data.reply.body);
 				replyContainer.show();
+				ArticleDetail__hideReplyModifyForm();
 			}
 		},
 		"json"
@@ -244,7 +245,7 @@ function ArticleDetail__showReplyModifyForm(btn){
 	
 }
 
-function ArticleDetail__hideReplyModifyForm(btn){
+function ArticleDetail__hideReplyModifyForm(){
 	
 	$("#replyModifyForm").find("iput[name='id']").val("");
 	$("#replyModifyForm").find("textarea[name='body']").val("");

@@ -6,7 +6,7 @@
 
 <a href="/article/list${url }&cPage=${param.cPage}">목록으로</a>
 
-<c:if test="${isLogined && loginedMemberId == article.memberId }">
+<c:if test="${ (isLogined && loginedMemberId == article.memberId) || isAdmin }">
 	<a href="javascript:ArticleDetail__deleteArticleCheck(${article.id }, ${param.boardId })">삭제하기</a>
 	<a href="javascript:ArticleDetail__modifyArticleCheck(${article.id }, ${param.boardId })">수정하기</a>
 </c:if>
@@ -59,7 +59,7 @@
 		<input type="hidden" name="articleId" value="${article.id }">
 		<input type="hidden" name="boardId" value="${article.boardId }">
 		수정내용 : <textarea name="body"></textarea>
-		<button>수정</button><button type="button" onclick="ArticleDetail__hideReplyModifyForm(this);">취소</button>
+		<button>수정</button><button type="button" onclick="ArticleDetail__hideReplyModifyForm();">취소</button>
 		
 	</form>
 </c:if>

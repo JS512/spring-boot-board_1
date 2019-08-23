@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.dao.ArticleDao;
 import com.example.demo.dao.ArticleFileDao;
+import com.example.demo.dao.MemberDao;
 import com.example.demo.dto.Article;
 import com.example.demo.dto.ArticleFile;
 
@@ -24,6 +25,8 @@ public class ArticleFileServiceImpl implements ArticleFileService{
 	private ArticleFileDao articleFileDao;
 	@Autowired
 	private ArticleDao articleDao;
+	@Autowired
+	private MemberDao memberDao;
 	@Value("${custom.uploadDir}")
 	private String uploadDir;
 	
@@ -53,7 +56,8 @@ public class ArticleFileServiceImpl implements ArticleFileService{
 		String msg = "";
 		String resultCode = "";
 		try {
-			if(!checkArticleAuthentication(param)) {
+			String role = memberDao.getMemberRole((int)param.get("loginedMemberId"));
+			if(!checkArticleAuthentication(param) && !role.equals("admin")) {
 				msg = "권한이 없습니다.";
 				resultCode = "F-1";
 			}else {

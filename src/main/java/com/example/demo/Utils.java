@@ -2,6 +2,7 @@ package com.example.demo;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.util.Map;
 import java.util.Random;
 
 public class Utils {
@@ -50,4 +51,31 @@ public class Utils {
 		
 		return sha1;
 	}
+	
+	public static boolean needParamCheck(Map<String, Object> param, String...checkParams) {
+		for(int i=0 ;i<checkParams.length ;i++) {
+			if(!param.containsKey(checkParams[i])) {
+				return false;
+			}else {
+				if(param.get(checkParams[i]) == null) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
+	
+	public static boolean isNumeric(Map<String, Object> param, String...str) {
+
+		for(int i=0 ;i<str.length ;i++) {
+			String s = (String)param.get(str[i]);
+	        if ( s == null || s.length() == 0 || !s.chars().allMatch(Character::isDigit)) {	        	
+	            return false;
+	        }
+		}
+
+        return true;
+
+    }
 }

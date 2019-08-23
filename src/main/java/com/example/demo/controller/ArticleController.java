@@ -26,14 +26,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.Utils;
 import com.example.demo.dto.Article;
 import com.example.demo.dto.ArticleFile;
 import com.example.demo.service.ArticleFileService;
 import com.example.demo.service.ArticleReplyService;
 import com.example.demo.service.ArticleService;
+import com.example.demo.service.MemberService;
 
 import groovy.util.logging.Slf4j;
-import jline.internal.Log;
 
 @Slf4j
 @Controller
@@ -45,6 +46,8 @@ public class ArticleController {
 	private ArticleFileService articleFileService;
 	@Autowired
 	private ArticleReplyService articleReplyService;
+	@Autowired
+	private MemberService memberService;
 	@Value("${custom.uploadDir}")
 	private String uploadDir;
 	
@@ -53,6 +56,15 @@ public class ArticleController {
 		if(param.get("cPage") == null || param.get("cPage").equals("")) {
 			param.put("cPage", 1);
 		}
+		
+		if(!Utils.needParamCheck(param, new String[] {"boardId"}) || !Utils.isNumeric(param, new String[] {"boardId"})) {
+			model.addAttribute("historyBack", true);
+			return "common/redirect";
+		}else if(Integer.parseInt((String)param.get("boardId")) > 1){
+			model.addAttribute("historyBack", true);
+			return "common/redirect";
+		}
+		
 		Map<String, Object> rs = articleService.getArticleList(param);
 		
 		model.addAttribute("list", rs.get("list"));
@@ -63,6 +75,10 @@ public class ArticleController {
 	
 	@RequestMapping("/detail")
 	public String detail(Model model,@RequestParam Map<String, Object> param) {
+		if(!Utils.needParamCheck(param, new String[] {"boardId", "id"}) || !Utils.isNumeric(param, new String[] {"boardId", "id"})) {
+			model.addAttribute("historyBack", true);
+			return "common/redirect";
+		}
 		Article article = articleService.getOneArticleById(param);
 		List<ArticleFile> files = articleFileService.getArticleFiles(param);
 		
@@ -118,7 +134,10 @@ public class ArticleController {
 	
 	@RequestMapping("/deleteOneArticle")
 	public String deleteOneArticle(Model model, @RequestParam Map<String, Object> param, HttpSession session) {
-		
+		if(!Utils.needParamCheck(param, new String[] {"boardId", "id"}) || !Utils.isNumeric(param, new String[] {"boardId", "id"})) {
+			model.addAttribute("historyBack", true);
+			return "common/redirect";
+		}
 		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));
 		Map<String, Object> rs = articleFileService.deleteOneArticleAllFiles(param);
 		String resultCode = (String) rs.get("resultCode");
@@ -148,8 +167,13 @@ public class ArticleController {
 	
 	@RequestMapping("/modifyArticle")
 	public String modifyArticle(Model model, @RequestParam Map<String, Object> param, HttpSession session) {
+		if(!Utils.needParamCheck(param, new String[] {"boardId", "id"}) || !Utils.isNumeric(param, new String[] {"boardId", "id"})) {
+			model.addAttribute("historyBack", true);
+			return "common/redirect";
+		}
 		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));
-		if(!articleService.checkArticleAuthentication(param)) {
+		String role = memberService.getMemberRole((int)session.getAttribute("loginedMemberId"));
+		if(!articleService.checkArticleAuthentication(param) && !role.equals("admin")) {
 			model.addAttribute("msg","권한이 없습니다.");
 			model.addAttribute("historyBack", true);
 			return "common/redirect";			
@@ -174,6 +198,10 @@ public class ArticleController {
 								@RequestParam(value="type", required=false) List<String> types,
 								@RequestParam(value="type2", required=false) List<String> types2)
 	{
+		if(!Utils.needParamCheck(param, new String[] {"boardId", "id"}) || !Utils.isNumeric(param, new String[] {"boardId", "id"})) {
+			model.addAttribute("historyBack", true);
+			return "common/redirect";
+		}
 		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));
 		Map<String, Object> rs = null;
 		String resultCode = null;			

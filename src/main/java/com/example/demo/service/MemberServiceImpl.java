@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.mail.MessagingException;
@@ -225,5 +226,51 @@ public class MemberServiceImpl implements MemberService{
 		}
 		
 		return Maps.of("msg", msg, "resultCode", resultCode);
+	}
+	
+	public String getMemberRole(int loginedMemberId) {
+		return memberDao.getMemberRole(loginedMemberId);
+	}
+	
+	public Map<String, Object> deleteMember(Map<String, Object> param){
+		String msg = "";
+		String resultCode = "";
+		try {
+			String role = memberDao.getMemberRole((int)param.get("loginedMemberId"));
+			if(!role.equals("admin")) {
+				msg = "권한이 없습니다.";
+				resultCode = "F-1";
+			}else {
+				memberDao.deleteOneMember(Integer.parseInt((String)param.get("targetMemberId")));
+				msg = "성공적으로 삭제했습니다.";
+				resultCode = "S-1";
+			}
+		} catch (Exception e) {
+			msg = "멤버 삭제 중 오류";
+			resultCode = "F-1";
+			e.printStackTrace();
+		}
+		return Maps.of("msg", msg, "resultCode", resultCode);
+	}
+
+	public Map<String, Object> getAllMembers(Map<String, Object> param){
+		String msg = "";
+		String resultCode = "";
+		List<Member> members = null;
+		try {
+			String role = memberDao.getMemberRole((int)param.get("loginedMemberId"));
+			if(!role.equals("admin")) {
+				msg = "권한이 없습니다.";
+				resultCode = "F-1";
+			}else {
+				members = memberDao.getAllMembers((int)param.get("loginedMemberId"));			
+				resultCode = "S-1";
+			}
+		} catch (Exception e) {
+			msg = "멤버 로드 중 오류";
+			resultCode = "F-1";
+			e.printStackTrace();
+		}
+		return Maps.of("msg", msg, "resultCode", resultCode, "members", members);
 	}
 }

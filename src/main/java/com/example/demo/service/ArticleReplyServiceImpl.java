@@ -9,10 +9,9 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.dao.ArticleDao;
 import com.example.demo.dao.ArticleReplyDao;
+import com.example.demo.dao.MemberDao;
 import com.example.demo.dto.Article;
 import com.example.demo.dto.ArticleReply;
-
-import jline.internal.Log;
 
 @Service
 public class ArticleReplyServiceImpl implements ArticleReplyService{
@@ -20,6 +19,8 @@ public class ArticleReplyServiceImpl implements ArticleReplyService{
 	private ArticleReplyDao articleReplyDao;
 	@Autowired
 	private ArticleDao articleDao;
+	@Autowired
+	private MemberDao memberDao;
 	
 	public Map<String, Object> addReply(Map<String, Object> param){
 		String msg = "";
@@ -78,7 +79,8 @@ public class ArticleReplyServiceImpl implements ArticleReplyService{
 				msg = "존재하지 않는 댓글입니다.";
 				resultCode = "F-1";
 			}else {
-				if(reply.getMemberId() != (int)param.get("loginedMemberId")) {
+				String role = memberDao.getMemberRole((int)param.get("loginedMemberId"));
+				if((reply.getMemberId() != (int)param.get("loginedMemberId")) && !role.equals("admin")) {
 					msg = "권한이 없습니다.";
 					resultCode = "F-1";
 				}else {
@@ -102,11 +104,12 @@ public class ArticleReplyServiceImpl implements ArticleReplyService{
 		ArticleReply reply = null;
 		try {
 			reply = articleReplyDao.getOneArticleOneReplyByIdArticleIdBoardId(param);
+			String role = memberDao.getMemberRole((int)param.get("loginedMemberId"));
 			if(reply == null) {
 				msg = "존재하지 않는 댓글입니다.";
 				resultCode = "F-1";
 			}else {
-				if(reply.getMemberId() != (int)param.get("loginedMemberId")) {
+				if((reply.getMemberId() != (int)param.get("loginedMemberId")) && !role.equals("admin")) {
 					msg = "권한이 없습니다.";
 					resultCode = "F-1";
 				}else {

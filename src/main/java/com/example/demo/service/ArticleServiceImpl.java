@@ -10,17 +10,19 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.Utils;
 import com.example.demo.dao.ArticleDao;
+import com.example.demo.dao.MemberDao;
 import com.example.demo.dto.Article;
 import com.example.demo.dto.Like;
 
 import groovy.util.logging.Slf4j;
-import jline.internal.Log;
 
 @Service
 @Slf4j
 public class ArticleServiceImpl implements ArticleService{
 	@Autowired
 	private ArticleDao articleDao;
+	@Autowired
+	private MemberDao memberDao;
 	
 	public Map<String, Object> getArticleList(Map<String, Object> param){	
 		Map<String, Object> page = calcData(param);
@@ -52,7 +54,8 @@ public class ArticleServiceImpl implements ArticleService{
 		String msg = "";
 		String resultCode = "";
 		try {
-			if(!checkArticleAuthentication(param)) {
+			String role = memberDao.getMemberRole((int)param.get("loginedMemberId"));
+			if(!checkArticleAuthentication(param) && !role.equals("admin")) {
 				msg = "권한이 없습니다.";
 				resultCode = "F-1";
 			}else {
@@ -73,7 +76,8 @@ public class ArticleServiceImpl implements ArticleService{
 		String msg = "";
 		String resultCode = "";
 		try {
-			if(!checkArticleAuthentication(param)) {
+			String role = memberDao.getMemberRole((int)param.get("loginedMemberId"));
+			if(!checkArticleAuthentication(param) && !role.equals("admin")) {
 				msg = "권한이 없습니다.";
 				resultCode = "F-1";
 			}else {
