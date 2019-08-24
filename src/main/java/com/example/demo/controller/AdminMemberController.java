@@ -15,18 +15,15 @@ import com.example.demo.service.MemberService;
 
 @Controller
 @RequestMapping("/admin")
-public class AdminController {
+public class AdminMemberController {
 	@Autowired
 	private MemberService memberService;
 	
-	@RequestMapping("/addArticle")
-	public String addArticle() {
-		return "forward:/article/addArticle";
-	}
 	
-	@RequestMapping("/adminPage")
+	
+	@RequestMapping("/adminMemberPage")
 	public String adminPage() {
-		return "admin/adminPage";
+		return "admin/adminMemberPage";
 	}
 	
 	@RequestMapping("/deleteMember")

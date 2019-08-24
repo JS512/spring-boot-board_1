@@ -87,19 +87,18 @@ public class ArticleController {
 	}
 	
 	@RequestMapping("/addArticle")
-	public String addArticle() {
-		
+	public String addArticle() {		
 		return "article/add";
 	}
 	
 	@RequestMapping("/doAddArticle")
-	public String doAddArticle(Model model, HttpSession session,
+	public String doAddArticle(Model model, HttpServletRequest request,
 							@RequestParam Map<String, Object> param,
 							@RequestParam(value="addFiles") List<MultipartFile> files,
 							@RequestParam(value="type", required=false) List<String> types,
 							@RequestParam(value="type2", required=false) List<String> types2)
-	{
-		
+	{		
+		HttpSession session = request.getSession();
 		String resultCode = "";
 		String redirectUrl = "";
 		Map<String, Object> rs = null;		
@@ -107,7 +106,7 @@ public class ArticleController {
 		rs = articleService.addOneArticle(param);	
 		resultCode = (String) rs.get("resultCode");
 		model.addAttribute("msg", rs.get("msg"));
-		Log.info(rs.get("msg"));
+		
 		if(!resultCode.startsWith("S-")) {			
 			model.addAttribute("historyBack", true);
 			return "common/redirect";

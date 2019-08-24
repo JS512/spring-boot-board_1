@@ -20,6 +20,10 @@ a{
 	text-decoration:none;
 	color:inherit;
 }
+a:hover, .clickable:hover{
+	text-decoration:underline;
+	cursor:pointer;
+}
 
 table{
 	width:80%;

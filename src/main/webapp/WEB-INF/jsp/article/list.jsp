@@ -8,7 +8,7 @@
 	<c:choose>
 		<c:when test="${param.boardId == 2}">
 			<c:if test="${isAdmin }">
-				<a href="/article/addArticle?boardId=${param.boardId }">글쓰기</a>
+				<a href="/admin/addArticle?boardId=${param.boardId }">글쓰기</a>
 			</c:if>
 			<h2>공지사항</h2>
 		</c:when>
@@ -49,7 +49,7 @@
   		<td>${article.id }</td>
   		<td>${article.regDate }</td>
   		<td class="text-overflow-ellipsis"><a href="/article/detail${url }&id=${article.id}&cPage=${param.cPage}">${article.title }</a></td>
-  		<td class="clickable-contextMenu" data-id="${article.memberId }" data-to="${article.extra.writer }">${article.extra.writer }</td>
+  		<td class="clickable-contextMenu clickable" data-id="${article.memberId }" data-to="${article.extra.writer }">${article.extra.writer }</td>
   	</tr>
   </c:forEach>
 </table>

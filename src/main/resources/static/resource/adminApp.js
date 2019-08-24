@@ -40,7 +40,7 @@ function adminPage__drawMembers(data){
 		html += `<tr>
 	  		<td>${member.id }</td>
 	  		<td>${member.regDate }</td>
-	  		<td>${member.loginId}</td>
+	  		<td class="clickable-contextMenu clickable" data-id="${member.id }" data-to="${member.loginId}">${member.loginId}</td>
 	  		<td>${member.name}</td>
 	  		<td>${member.email}</td>
 	  		<td>${auth}</td>

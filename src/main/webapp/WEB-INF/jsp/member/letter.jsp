@@ -16,7 +16,7 @@
   	<tr>
   		<td>${letter.id }</td>
   		<td>${letter.regDate }</td>  		
-  		<td class="clickable-contextMenu" data-id="${letter.fromMemberId }" data-to="${letter.extra.writer }">${letter.extra.writer }</td>
+  		<td class="clickable-contextMenu clickable" data-id="${letter.fromMemberId }" data-to="${letter.extra.writer }">${letter.extra.writer }</td>
   		<td class="text-overflow-ellipsis clickable-letterContent">${letter.body }</td>
   		<td><button onclick="Letter__deleteLetter(this);" data-id="${letter.id }">삭제</button></td>
   			

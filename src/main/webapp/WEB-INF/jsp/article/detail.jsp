@@ -32,7 +32,7 @@
 	</tr>
 	<tr>
 		<th>작성자</th>
-		<td class="clickable-contextMenu" data-id="${article.memberId }" data-to="${article.extra.writer }">${article.extra.writer }</td>
+		<td class="clickable-contextMenu clickable" data-id="${article.memberId }" data-to="${article.extra.writer }">${article.extra.writer }</td>
 	</tr>
 	<tr>
 		<th>내용</th>

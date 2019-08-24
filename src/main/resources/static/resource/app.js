@@ -1,3 +1,4 @@
+
 function encodeSHA1(input){	
    var hash = CryptoJS.SHA1(input.value.trim());
    var result = CryptoJS.enc.Hex.stringify(hash);
@@ -42,6 +43,9 @@ function ArticleAdd__checkForm(form){
 		}
 	});		
 	
+	if(form.boardId == 2){
+		$(form).attr("action","/admin/doAddArticle");
+	}	
 	
 	form.submit();
 }
@@ -132,7 +136,7 @@ function ArticleDetail__drawReply(data){
 				<th>날짜</th> <td class="replyRegDate"> ${data.regDate}</td>
 			</tr>
 			<tr>
-				<th>작성자</th> <td  class="clickable-contextMenu" data-id="${data.memberId }" data-to="${data.extra.writer }"> ${data.extra.writer}</td>
+				<th>작성자</th> <td  class="clickable-contextMenu clickable" data-id="${data.memberId }" data-to="${data.extra.writer }"> ${data.extra.writer}</td>
 			</tr>											
 		</table>
 		<pre class="replyBody">${data.body}</pre>`;
