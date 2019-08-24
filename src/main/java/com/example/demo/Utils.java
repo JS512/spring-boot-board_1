@@ -2,6 +2,7 @@ package com.example.demo;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -78,4 +79,38 @@ public class Utils {
         return true;
 
     }
+	
+	public static Map<String, Object> calcData(Map<String, Object> param, int total) {
+		Map<String, Object> rs = new HashMap<>();
+
+		int totalCount = total;
+		int perPageNum = 10;
+		int pageBlock = 5;
+		int cPage = Utils.getAsInt(param.get("cPage"));
+		int startPage;
+		int endPage;
+		int limitPage;
+		boolean next;
+		boolean prev;
+
+		endPage = (int) Math.ceil(cPage / (double) pageBlock) * pageBlock;
+		startPage = endPage - pageBlock + 1;
+		limitPage = (int) Math.ceil(totalCount / (double) perPageNum);
+		if (endPage > limitPage) {
+			endPage = limitPage;
+		}
+		
+		prev = startPage == 1 ? false : true;
+		next = endPage == limitPage ? false : true;
+
+		rs.put("startPage", startPage);
+		rs.put("endPage", endPage);
+		rs.put("prev", prev);
+		rs.put("next", next);
+
+		param.put("startNum", (cPage - 1) * perPageNum);
+		param.put("perPageNum", perPageNum);
+
+		return rs;
+	}
 }

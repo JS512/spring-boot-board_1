@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -12,9 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.demo.dto.Letter;
 import com.example.demo.service.MemberService;
-
-import jline.internal.Log;
 
 @Controller
 @RequestMapping("/member")
@@ -179,5 +180,72 @@ public class MemberController {
 		}
 		
 		return "common/redirect";
+	}
+	
+	@RequestMapping("/getMemberProfile")
+	@ResponseBody
+	public Map<String, Object> getMemberProfile(@RequestParam Map<String, Object> param) {		
+		Map<String, Object> rs = memberService.getMemberProfile(param);		
+		
+		boolean success = false;
+		String resultCode = (String) rs.get("resultCode");		
+		
+		if(resultCode.startsWith("S-")) {
+			success = true;
+		}
+		
+		return Maps.of("msg", rs.get("msg"), "member", rs.get("member"), "success", success);
+	}
+	
+	@RequestMapping("/sendLetter")
+	@ResponseBody
+	public Map<String, Object> sendLetter(@RequestParam Map<String, Object> param, HttpSession session) {
+		Map<String, Object> rs = new HashMap<>();
+		boolean success = false;
+		if(Integer.parseInt((String)param.get("toId")) == (int)session.getAttribute("loginedMemberId")) {
+			rs.put("msg", "자신에게는 쪽지를 보낼 수 없습니다.");			
+		}else {
+			param.put("loginedMemberId",(int)session.getAttribute("loginedMemberId"));
+			rs = memberService.sendLetter(param);
+			
+			String resultCode = (String) rs.get("resultCode");		
+			
+			if(resultCode.startsWith("S-")) {
+				success = true;
+			}
+		}
+		
+		return Maps.of("msg", rs.get("msg"), "success", success);
+	}
+	
+	@RequestMapping("/letterList")
+	public String letterList(Model model, @RequestParam Map<String, Object> param, HttpSession session) {
+		param.put("loginedMemberId", (int)session.getAttribute("loginedMemberId"));
+		if(param.get("cPage") == null || param.get("cPage").equals("")) {
+			param.put("cPage", 1);
+		}
+		
+		Map<String, Object> rs = new HashMap<>();
+		rs = memberService.getAllLetters(param);
+		model.addAttribute("letters", rs.get("letters"));
+		model.addAttribute("page", rs.get("page"));
+		
+		return "member/letter";
+	}
+	
+	@RequestMapping("/deleteLetter")
+	@ResponseBody
+	public Map<String, Object> deleteLetter(@RequestParam Map<String, Object> param, HttpSession session) {
+		param.put("loginedMemberId", (int)session.getAttribute("loginedMemberId"));
+		Map<String, Object> rs = memberService.deleteLetter(param);
+		
+		boolean success = false;
+		String resultCode = (String) rs.get("resultCode");		
+		
+		if(resultCode.startsWith("S-")) {
+			success = true;
+		}
+		
+		return Maps.of("msg", rs.get("msg"), "success", success);
 	}
 }

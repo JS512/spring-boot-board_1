@@ -1,7 +1,9 @@
 package com.example.demo.service;
 
+import java.util.List;
 import java.util.Map;
 
+import com.example.demo.dto.Letter;
 import com.example.demo.dto.Member;
 
 public interface MemberService {
@@ -31,5 +33,13 @@ public interface MemberService {
 	public Map<String, Object> deleteMember(Map<String, Object> param);
 
 	public Map<String, Object> getAllMembers(Map<String, Object> param);
+
+	public Map<String, Object> getMemberProfile(Map<String, Object> param);
+
+	public Map<String, Object> sendLetter(Map<String, Object> param);
+
+	public Map<String, Object> getAllLetters(Map<String, Object> param);
+
+	public Map<String, Object> deleteLetter(Map<String, Object> param);
 
 }

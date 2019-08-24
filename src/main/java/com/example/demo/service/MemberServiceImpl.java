@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.Utils;
 import com.example.demo.dao.MemberDao;
+import com.example.demo.dto.Letter;
 import com.example.demo.dto.Member;
 import com.example.demo.handler.MailHandler;
 
@@ -272,5 +273,83 @@ public class MemberServiceImpl implements MemberService{
 			e.printStackTrace();
 		}
 		return Maps.of("msg", msg, "resultCode", resultCode, "members", members);
+	}
+	
+	public Map<String, Object> getMemberProfile(Map<String, Object> param){
+		String msg = "";
+		String resultCode = "";
+		Member member = null;
+		try {
+			member = memberDao.getOneMemberById(Integer.parseInt((String)param.get("id")));
+			if(member == null) {
+				msg = "존재하지 않는 사용자 입니다.";
+				resultCode = "F-1";
+			}else {							
+				resultCode = "S-1";
+			}
+		} catch (Exception e) {
+			msg = "멤버 로드 중 오류";
+			resultCode = "F-1";
+			e.printStackTrace();
+		}
+		return Maps.of("msg", msg, "resultCode", resultCode, "member", member);
+	}
+	
+	public Map<String, Object> sendLetter(Map<String, Object> param){
+		String msg = "";
+		String resultCode = "";
+		
+		try {
+			Member member = memberDao.getOneMemberById(Integer.parseInt((String)param.get("toId")));
+			if(member == null) {
+				msg = "존재하지 않는 사용자";
+				resultCode = "F-1";
+			}else {
+				memberDao.addLetter(param);
+				msg = "전송 성공";
+				resultCode = "S-1";
+			}
+		} catch (Exception e) {
+			msg = "멤버 로드 중 오류";
+			resultCode = "F-1";
+			e.printStackTrace();
+		}
+		return Maps.of("msg", msg, "resultCode", resultCode);
+	}
+	
+	public Map<String, Object> getAllLetters(Map<String, Object> param){		
+		List<Letter> letters = null;
+		Map<String, Object> page = Utils.calcData(param, memberDao.getTotalLetterCount(param));
+		try {
+			letters = memberDao.getAllLetters(param);			
+		} catch (Exception e) {			
+			e.printStackTrace();
+		}
+		return Maps.of("page", page, "letters", letters);		
+	}
+	
+	public Map<String, Object> deleteLetter(Map<String, Object> param){
+		String msg = "";
+		String resultCode = "";
+		
+		try {
+			Letter letter = memberDao.getOneLetterById(Integer.parseInt((String)param.get("id")));
+			if(letter == null) {
+				msg = "존재하지 않는 정보";
+				resultCode = "F-1";
+			}else if(letter.getToMemberId() != (int)param.get("loginedMemberId")){				
+				msg = "권한이 없는 사용자";
+				resultCode = "F-1";
+			}else {
+				memberDao.deleteOneLetterById(Integer.parseInt((String)param.get("id")));
+				msg = "삭제 완료";
+				resultCode = "S-1";
+			}
+		} catch (Exception e) {
+			msg = "삭제 중 오류";
+			resultCode = "F-1";
+			e.printStackTrace();
+		}
+		return Maps.of("msg", msg, "resultCode", resultCode);
 	}
 }

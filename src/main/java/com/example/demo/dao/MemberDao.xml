@@ -86,6 +86,49 @@
 		WHERE id != #{loginedMemberId}
 	</select>
 	
+	<insert id="addLetter" parameterType="map">
+		INSERT INTO `letter`
+		SET regDate = NOW(),
+		fromMemberId = #{loginedMemberId},
+		toMemberId = #{toId},
+		body = #{body}
+	</insert>
+	
+	<select id="getAllLetters" parameterType="map" resultMap="letter">
+		SELECT L.*, IFNULL(M.loginId ,'존재하지 않는 사용자') AS writer FROM
+		`letter` AS L
+		LEFT OUTER JOIN `member` AS M
+		ON M.id = L.fromMemberId 
+		WHERE toMemberId = #{loginedMemberId}
+		LIMIT #{startNum}, #{perPageNum}
+	</select>
+	
+	<select id="getTotalLetterCount" parameterType="map" resultType="Integer">
+		SELECT COUNT(*) FROM letter
+		WHERE toMemberId = #{loginedMemberId}
+	</select>
+	
+	<delete id="deleteOneLetterById" parameterType="Integer">
+		DELETE FROM letter
+		WHERE id = #{id}
+	</delete>
+	
+	<select id="getOneLetterById" parameterType="Integer" resultMap="letter">
+		SELECT * FROM letter
+		WHERE id = #{id}
+	</select>
+	
+	<resultMap id="letter" type="com.example.demo.dto.Letter">
+		<id property="id" column="id"/>
+		<id property="regDate" column="regDate"/>
+		<id property="fromMemberId" column="fromMemberId"/>
+		<id property="toMemberId" column="toMemberId"/>
+		<id property="body" column="body"/>
+		<association property="extra" javaType="map">
+			<id property="writer" column="writer"></id>
+		</association>		
+	</resultMap>
+	
 	<resultMap id="member" type="com.example.demo.dto.Member">
 		<id property="id" column="id"/>
 		<id property="regDate" column="regDate"/>

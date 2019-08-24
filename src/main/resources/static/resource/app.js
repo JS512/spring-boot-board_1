@@ -108,6 +108,9 @@ function ArticleDetail__checkAddReplyForm(form){
 			if(data.success){
 				form.body.value = "";
 				ArticleDetail__drawReply(data.reply);
+				if($(".replyStatus").html().length){
+					$(".replyStatus").html("");
+				}
 			}
 		},
 		"json"
@@ -129,7 +132,7 @@ function ArticleDetail__drawReply(data){
 				<th>날짜</th> <td class="replyRegDate"> ${data.regDate}</td>
 			</tr>
 			<tr>
-				<th>작성자</th> <td> ${data.extra.writer}</td>
+				<th>작성자</th> <td  class="clickable-contextMenu" data-id="${data.memberId }" data-to="${data.extra.writer }"> ${data.extra.writer}</td>
 			</tr>											
 		</table>
 		<pre class="replyBody">${data.body}</pre>`;
@@ -143,6 +146,21 @@ function ArticleDetail__drawReply(data){
 	
 	$.parseHTML(html);
 	$(".replyList").prepend(html);
+	
+	
+	$(".clickable-contextMenu").click(function(e){		
+		showContextMenu(e.pageX, e.pageY);
+		clickedMemberId = $(this).attr("data-id");		
+		clickedMemberLoginId = $(this).attr("data-to");
+	});
+	
+	$(".overlay").click(function(){
+		hideOverlay();
+	});
+	
+	$(".close").click(function(){
+		close(this);
+	});	
 	
 }
 
@@ -162,11 +180,12 @@ function ArticleDetail__getAllReplies(){
 				}
 				$(".replyList").find("table").each(function(index, item){
 					ArticleDetail__getLikes($(this), "reply");
+					
 				});
 				
 				
 			}else{
-				$(".replyList").html(data.msg);
+				$(".replyStatus").html(data.msg);
 			}
 		}
 	)
@@ -189,6 +208,9 @@ function ArticleDetail__deleteReply(btn){
 				
 				if(data.success){
 					$(btn).parent().remove();
+					if(!$(".replyList").children().length){
+						$(".replyStatus").html("댓글이 없습니다.");
+					}
 				}else{
 					$(btn).parent().show();	
 				}
@@ -502,9 +524,137 @@ function MemberChangeLoginPw__checkForm(form){
 	form.submit();
 }
 
+var clickedMemberId;
+var clickedMemberLoginId;
+function showContextMenu(x, y){	
+	if($("memberId").val() == clickedMemberId){
+		$(".contextMenu").find("a:nth-child(2)").hide();
+	}
+	$(".overlay").show();
+	$(".contextMenu").css({'top':y, 'left':x}).show();
+}
+
+function hideContextMenu(){
+	$(".contextMenu").hide();
+}
+
+function hideOverlay(){
+	$(".overlay").parent().children().hide();
+}
+
+function showProfile(){
+	$("#loading").show();
+	$.post("/member/getMemberProfile",
+		{
+			id : clickedMemberId
+		},
+		function(data){
+			if(data.success){				
+				var member = data.member;
+				var html = `이름 : ${member.name}<br>
+							이메일 : ${member.email}`;
+				$(".profile-content").html(html);
+				$(".loading").hide();
+			}else{
+				$(".profile-content").html(data.msg);
+			}
+		},
+		"json"
+	);
+	hideContextMenu();
+	$(".profile").show();
+}
+
+function showLetter(){
+	$('.overlay').show();
+	$(".contextMenu").hide();
+	$(".loading").hide();
+	$(".letter").show();
+	$(".letter").find(".to").html("<h3>To : " + clickedMemberLoginId + "</h3>");
+}
+
+function close(btn){
+	$(btn).parent().parent().hide();	
+}
+
+function checkLetterForm(form){
+	if(!checkEmpty(form.body)){
+		alert("빈칸을 채워주세요.");
+		return ;
+	}	
+	$(form).parent().children().hide();
+	$(".letter").find(".loading").show();
+	$.post("/member/sendLetter",
+		{
+			toId : clickedMemberId,
+			body : form.body.value
+		},
+		function(data){
+			alert(data.msg);
+			if(data.success){
+				form.body.value = "";				
+				close($(".letter").find(".close"));				
+			}
+			$(form).parent().children().show();
+			$(".letter").find(".loading").hide();
+		},
+		"json"
+	);
+}
+
+function Letter__deleteLetter(btn){
+	
+	if(!confirm("삭제 하시겠습니까?")){
+		return ;
+	}
+	$(btn).attr("disabled", true);
+	$.get("/member/deleteLetter",
+		{
+			id : $(btn).attr("data-id")		
+		},
+		function(data){
+			alert(data.msg);
+			if(data.success){
+				$(btn).parent().remove();
+			}else{
+				$(btn).attr("disabled", false);
+			}
+		}
+	)
+}
+
 $(function(){	
 	if($(".replyList").length){
 		ArticleDetail__getAllReplies();
 		ArticleDetail__getLikes($(".article"), "article");
 	}
+	
+	$(".close").click(function(){
+		close(this);
+		$(".overlay").hide();
+	});
+	
+	$(".clickable-contextMenu").click(function(e){		
+		
+		if($(this).attr("data-id")){
+			showContextMenu(e.pageX, e.pageY);
+			clickedMemberId = $(this).attr("data-id");		
+			clickedMemberLoginId = $(this).attr("data-to");
+		}else{
+			showContextMenu();
+		}
+	});
+	
+	$(".overlay").click(function(){
+		hideOverlay();
+		$(".letter-content").hide();
+	});	
+	
+	
+	$(".clickable-letterContent").click(function(){
+		$(".overlay").show();
+		$(".letter-content").show();
+		$(".content").html($(this).html());
+	});
+
 })

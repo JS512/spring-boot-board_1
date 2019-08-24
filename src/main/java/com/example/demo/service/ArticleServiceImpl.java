@@ -25,7 +25,7 @@ public class ArticleServiceImpl implements ArticleService{
 	private MemberDao memberDao;
 	
 	public Map<String, Object> getArticleList(Map<String, Object> param){	
-		Map<String, Object> page = calcData(param);
+		Map<String, Object> page = Utils.calcData(param, articleDao.getTotalCount(param));
 		List<Article> list = articleDao.getArticleList(param);
 		return Maps.of("list", list, "page", page);
 	}
@@ -110,6 +110,7 @@ public class ArticleServiceImpl implements ArticleService{
 	public boolean checkArticleAuthentication(Map<String, Object> param) {
 		Article article = articleDao.getOneArticleById(param);
 		int loginedMemberId = (int)param.get("loginedMemberId");
+		
 		if(article.getId() != loginedMemberId) {
 			return false;
 		}else {
@@ -117,39 +118,7 @@ public class ArticleServiceImpl implements ArticleService{
 		}
 	}
 	
-	private Map<String, Object> calcData(Map<String, Object> param) {
-		Map<String, Object> rs = new HashMap<>();
-
-		long totalCount = articleDao.getTotalCount(param);
-		int perPageNum = 10;
-		int pageBlock = 5;
-		int cPage = Utils.getAsInt(param.get("cPage"));
-		int startPage;
-		int endPage;
-		int limitPage;
-		boolean next;
-		boolean prev;
-
-		endPage = (int) Math.ceil(cPage / (double) pageBlock) * pageBlock;
-		startPage = endPage - pageBlock + 1;
-		limitPage = (int) Math.ceil(totalCount / (double) perPageNum);
-		if (endPage > limitPage) {
-			endPage = limitPage;
-		}
-		
-		prev = startPage == 1 ? false : true;
-		next = endPage == limitPage ? false : true;
-
-		rs.put("startPage", startPage);
-		rs.put("endPage", endPage);
-		rs.put("prev", prev);
-		rs.put("next", next);
-
-		param.put("startNum", (cPage - 1) * perPageNum);
-		param.put("perPageNum", perPageNum);
-
-		return rs;
-	}
+	
 	
 	public Map<String, Object> getArticleLikes(Map<String, Object> param){
 		String msg = "";

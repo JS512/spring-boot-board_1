@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.example.demo.dto.Letter;
 import com.example.demo.dto.Member;
 
 @Mapper
@@ -39,4 +40,14 @@ public interface MemberDao {
 	public String getMemberRole(int loginedMemberId);
 
 	public List<Member> getAllMembers(int loginedMemberId);
+
+	public void addLetter(Map<String, Object> param);
+
+	public List<Letter> getAllLetters(Map<String, Object> param);
+
+	public int getTotalLetterCount(Map<String, Object> param);
+
+	public void deleteOneLetterById(int id);
+
+	public Letter getOneLetterById(int id);
 }

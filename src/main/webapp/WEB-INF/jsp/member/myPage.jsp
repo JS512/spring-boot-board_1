@@ -33,5 +33,6 @@
 	</tr>
 </table>
 <a href="/member/changeLoginPw">비밀번호 변경</a>
+<a href="/member/letterList">쪽지 보기</a>
 <a href="javascript:MemberMyPage__withdrawal();">회원 탈퇴</a>
 <%@ include file="../part/foot.jspf" %>

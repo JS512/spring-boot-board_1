@@ -32,7 +32,7 @@
 	</tr>
 	<tr>
 		<th>작성자</th>
-		<td>${article.extra.writer }</td>
+		<td class="clickable-contextMenu" data-id="${article.memberId }" data-to="${article.extra.writer }">${article.extra.writer }</td>
 	</tr>
 	<tr>
 		<th>내용</th>
@@ -66,5 +66,6 @@
 
 <hr>
 <div class="replyList"></div>
+<div class="replyStatus"></div>
 
 <%@ include file="../part/foot.jspf" %>
