@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.example.demo.dto.Article;
@@ -21,5 +22,7 @@ public interface ArticleService {
 	public Map<String, Object> getArticleLikes(Map<String, Object> param);
 
 	public Map<String, Object> updateArticleLike(Map<String, Object> param);
+
+	public Map<String, Object> deleteCheckedArticle(Map<String, Object> param, List<Integer> ids);
 
 }

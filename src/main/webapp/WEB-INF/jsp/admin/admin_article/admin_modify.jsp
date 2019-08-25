@@ -6,7 +6,7 @@
 
 
 
-<form onsubmit="articleModify__checkForm(this); return false;" action="/article/doModifyArticle" method="post" enctype="multipart/form-data">
+<form onsubmit="articleModify__checkForm(this); return false;" action="/admin/doModifyArticle" method="post" enctype="multipart/form-data">
 	<input type="hidden" name="id" value="${param.id }">
 	<input type="hidden" name="boardId" value="${param.boardId }">
 	제목 : <input type="text" name="title" value="${article.title }"><br>

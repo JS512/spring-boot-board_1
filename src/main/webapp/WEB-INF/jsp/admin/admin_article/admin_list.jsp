@@ -6,7 +6,7 @@
 
 <a href="/admin/addArticle?boardId=${param.boardId }">글쓰기</a>	
 
-<form action="/article/list" method="get">
+<form action="/admin/articleList" method="get">
 	<input type="hidden" name="boardId" value="${param.boardId }">	
 	<select name="searchType">
 		<option value="title">제목</option>
@@ -23,34 +23,38 @@
 	<button>검색</button>
 </form>
 
-<table>
-  <tr>
-    <th>번호</th>
-    <th>날짜</th>
-    <th>제목</th>
-    <th>작성자</th>
-    <th>비고</th>
-  </tr>
-  <c:forEach items="${list}" var="article">
-  	<tr>
-  		<td>${article.id }</td>
-  		<td>${article.regDate }</td>
-  		<td class="text-overflow-ellipsis"><a href="/admin/articleDetail${url }&id=${article.id}&cPage=${param.cPage}">${article.title }</a></td>
-  		<td class="clickable-contextMenu clickable" data-id="${article.memberId }" data-to="${article.extra.writer }">${article.extra.writer }</td>
-  	</tr>
-  </c:forEach>
-</table>
+<form onsubmit="adminArticleList__checkForm(this);return false;" >
+	<input type="hidden" name="boardId" value="${param.boardId }">
+	<table>
+	  <tr>
+	    <th>번호</th>
+	    <th>날짜</th>
+	    <th>제목</th>
+	    <th>작성자</th>
+	    <th><button>삭제</button></th>
+	  </tr>
+	  <c:forEach items="${list}" var="article">
+	  	<tr>
+	  		<td>${article.id }</td>
+	  		<td>${article.regDate }</td>
+	  		<td class="text-overflow-ellipsis"><a href="/admin/articleDetail${url }&id=${article.id}&cPage=${param.cPage}">${article.title }</a></td>
+	  		<td class="clickable-contextMenu clickable" data-id="${article.memberId }" data-to="${article.extra.writer }">${article.extra.writer }</td>  		
+	  		<td><input type="checkbox" name="id" value="${article.id }"></td>
+	  	</tr>
+	  </c:forEach>
+	</table>
+</form>
 <ul>
 	<c:if test="${page.prev }">
-		<li><a href="/article/list${url }&cPage=${page.startPage-1}"><</a></li>
+		<li><a href="/admin/articleList${url }&cPage=${page.startPage-1}"><</a></li>
 	</c:if>
 	<c:forEach begin="${page.startPage }" end="${page.endPage }" var="idx">
 		<li>
-			<a href="/article/list${url }&cPage=${idx }"><c:out value="${idx}"/></a>
+			<a href="/admin/articleList${url }&cPage=${idx }"><c:out value="${idx}"/></a>
 		</li>
 	</c:forEach>
 	<c:if test="${page.next }">
-		<li><a href="/article/list${url }&cPage=${page.endPage+1}">></a></li>
+		<li><a href="/admin/articleList${url }&cPage=${page.endPage+1}">></a></li>
 	</c:if>
 </ul>
 <%@ include file="../admin_part/admin_foot.jspf" %>

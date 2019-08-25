@@ -6,7 +6,7 @@
 
 
 
-<form onsubmit="articleAdd__checkForm(this); return false;" action="/article/doAddArticle" method="post" enctype="multipart/form-data">
+<form onsubmit="articleAdd__checkForm(this); return false;" action="/admin/doAddArticle" method="post" enctype="multipart/form-data">
 	<input type="hidden" name="boardId" value="${param.boardId }">
 	제목 : <input type="text" name="title"><br>
 	내용 : <textarea rows="30" cols="20" name="body"></textarea><br>

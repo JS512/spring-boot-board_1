@@ -36,7 +36,7 @@ function articleAdd__checkForm(form){
 		alert("빈칸 없이 채워주세요.");
 		return false;
 	}
-	
+	$(form).find("input[type='button']").attr("disabled", true);
 	$("input[type='file']").each(function(index, item){
 		if($(item).val() == ''){
 			$(item).parent().remove();
@@ -667,5 +667,6 @@ $(function(){
 		$(".letter-content").show();
 		$(".content").html("<pre>" + $(this).html() + "</pre>");
 	});
-
+	
+	$("input").attr("maxlength", "50");	
 })

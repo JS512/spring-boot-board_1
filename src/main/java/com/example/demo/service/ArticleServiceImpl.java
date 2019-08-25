@@ -38,22 +38,10 @@ public class ArticleServiceImpl implements ArticleService{
 		String msg = "";
 		String resultCode = "";
 		try {
-//			String role = memberDao.getMemberRole((int)param.get("loginedMemberId"));
-//			if(Integer.parseInt((String)param.get("boardId")) == 2) {
-//				if(role != null && role.equals("admin")) {
-					articleDao.addOneArticle(param);
-					msg = "게시물 등록 성공";
-					resultCode = "S-1";
-//				}else {
-//					msg = "권한이 없습니다.";
-//					resultCode = "F-1";
-//				}
-				
-//			}else {
 				articleDao.addOneArticle(param);
 				msg = "게시물 등록 성공";
 				resultCode = "S-1";
-//			}
+
 		}catch(Exception e) {
 			msg = "게시물 등록 실패";
 			resultCode = "F-1";
@@ -67,15 +55,11 @@ public class ArticleServiceImpl implements ArticleService{
 		String msg = "";
 		String resultCode = "";
 		try {
-//			String role = memberDao.getMemberRole((int)param.get("loginedMemberId"));
-//			if(!checkArticleAuthentication(param) && (role == null  || !role.equals("admin"))) {
-//				msg = "권한이 없습니다.";
-//				resultCode = "F-1";
-//			}else {
-				articleDao.deleteOneArticle(param);
-				msg = "게시물 삭제 성공";
-				resultCode = "S-1";
-//			}
+		
+			articleDao.deleteOneArticle(param);
+			msg = "게시물 삭제 성공";
+			resultCode = "S-1";
+			
 		}catch(Exception e) {
 			msg = "게시물 삭제 실패";
 			resultCode = "F-1";
@@ -89,15 +73,11 @@ public class ArticleServiceImpl implements ArticleService{
 		String msg = "";
 		String resultCode = "";
 		try {
-//			String role = memberDao.getMemberRole((int)param.get("loginedMemberId"));
-//			if(!checkArticleAuthentication(param)&& ( role == null  || !role.equals("admin"))) {
-//				msg = "권한이 없습니다.";
-//				resultCode = "F-1";
-//			}else {
-				articleDao.modifyArticle(param);
-				msg = "게시물 수 정 성공";
-				resultCode = "S-1";
-//			}
+			
+			articleDao.modifyArticle(param);
+			msg = "게시물 수 정 성공";
+			resultCode = "S-1";
+		
 		}catch(Exception e) {
 			msg = "게시물 수정 실패";
 			resultCode = "F-1";
@@ -191,6 +171,30 @@ public class ArticleServiceImpl implements ArticleService{
 			resultCode = "S-1";
 		}catch(Exception e) {
 			msg = "좋아요 로드중 오류";
+			resultCode = "F-1";
+			e.printStackTrace();
+		}
+		
+		return Maps.of("msg", msg, "resultCode", resultCode);
+	}
+	
+	public Map<String, Object> deleteCheckedArticle(Map<String, Object> param, List<Integer> ids){
+		
+		String msg = "";
+		String resultCode = "";		
+		
+		try {					
+			
+			for(int i=0 ;i<ids.size() ;i++) {
+				param.put("id", ids.get(i));
+				articleDao.deleteOneArticle(param);
+			}				
+				
+			msg = "삭제 성공";					
+			resultCode = "S-1";
+			
+		}catch(Exception e) {
+			msg = "삭제중 오류";
 			resultCode = "F-1";
 			e.printStackTrace();
 		}

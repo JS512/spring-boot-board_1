@@ -34,6 +34,8 @@ import com.example.demo.service.ArticleReplyService;
 import com.example.demo.service.ArticleService;
 import com.example.demo.service.MemberService;
 
+import jline.internal.Log;
+
 @Controller
 @RequestMapping("/admin")
 public class AdminArticleController {
@@ -415,5 +417,23 @@ public class AdminArticleController {
 		}
 		
 		return Maps.of("msg", rs.get("msg"), "success", success);
+	}
+	
+	@RequestMapping("/deleteCheckedArticle")
+	@ResponseBody
+	public Map<String, Object> deleteCheckedArticle(@RequestParam Map<String, Object> param,
+													@RequestParam(value="id[]") List<Integer> ids){
+		
+		Map<String, Object> rs = articleService.deleteCheckedArticle(param, ids);		
+				
+		boolean success = false;
+		String resultCode = (String)rs.get("resultCode");		
+
+		if(resultCode.startsWith("S-")) {
+			success = true;
+		}
+		
+		return Maps.of("msg", rs.get("msg"), "success", success);
+		
 	}
 }

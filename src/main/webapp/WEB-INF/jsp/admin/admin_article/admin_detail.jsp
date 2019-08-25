@@ -4,7 +4,7 @@
 <%@ include file="../admin_part/admin_head.jspf" %>
 <h1>${title}</h1>
 
-<a href="/article/list${url }&cPage=${param.cPage}">목록으로</a>
+<a href="/admin/articleList${url }&cPage=${param.cPage}">목록으로</a>
 
 
 <a href="javascript:articleDetail__deleteArticleCheck(${article.id }, ${param.boardId })">삭제하기</a>
@@ -41,8 +41,8 @@
   
 </table>
 <c:forEach items="${files }" var="file">
-	<img src="/article/showImg?id=${file.id }"><br>
-	<a href="/article/downloadImg?id=${file.id }">${file.originFileName }</a><br>
+	<img src="/admin/showImg?id=${file.id }"><br>
+	<a href="/admin/downloadImg?id=${file.id }">${file.originFileName }</a><br>
 </c:forEach>
 
 <h3>댓글</h3>

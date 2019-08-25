@@ -23,7 +23,7 @@ public class NeedLoginInterceptor implements HandlerInterceptor{
 			response.setContentType("text/html; charset=UTF-8");
 			response.getWriter().write("<script>");
 			response.getWriter().write("alert('로그인이 필요한 서비스 입니다.');");
-			response.getWriter().write("history.back();");
+			response.getWriter().write("location.replace('/');");
 			response.getWriter().write("</script>");
 			return false;
 		}

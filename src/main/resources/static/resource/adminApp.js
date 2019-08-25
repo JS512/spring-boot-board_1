@@ -50,6 +50,40 @@ function adminPage__drawMembers(data){
 	$("table").find("tbody").append(html);
 }
 
+function adminArticleList__checkForm(form){
+	if($("form").find("input[type='checkbox']:checked").length == 0){
+		alert("한개이상 선택해 주세요.");
+		return ;
+	}
+	
+	if(!confirm("선택한 게시물들을 삭제 하시겠습니까?")){
+		return ;
+	}
+	
+	var checkedValue = [];
+	
+	$("input[type='checkbox']:checked").each(function(index, item){		
+		checkedValue.push($(item).val());		
+	});	
+	
+	$("form").find("button").attr("disabled", true);	
+	
+	$.post("/admin/deleteCheckedArticle",
+		{
+			id:checkedValue,
+			boardId : form.boardId.value
+		},
+		function(data){
+			
+			alert(data.msg);
+			if(data.success){
+				$("form").find("input[type='checkbox']:checked").parent().parent().remove();
+			}
+		},
+		"json"
+	)
+}
+
 //////////////////////////////////////////////////////////////////////
 
 
@@ -95,11 +129,7 @@ function articleAdd__checkForm(form){
 		if($(item).val() == ''){
 			$(item).parent().remove();
 		}
-	});		
-	
-	if(form.boardId == 2){
-		$(form).attr("action","/admin/doAddArticle");
-	}	
+	});
 	
 	form.submit();
 }
@@ -582,5 +612,5 @@ $(function(){
 		$(".letter-content").show();
 		$(".content").html("<pre>" + $(this).html() + "</pre>");
 	});
-
+	$("input").attr("maxlength", "50");	
 })

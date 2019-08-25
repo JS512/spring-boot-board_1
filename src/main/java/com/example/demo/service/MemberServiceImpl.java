@@ -237,15 +237,11 @@ public class MemberServiceImpl implements MemberService{
 		String msg = "";
 		String resultCode = "";
 		try {
-//			String role = memberDao.getMemberRole((int)param.get("loginedMemberId"));
-//			if(role == null || !role.equals("admin")) {
-//				msg = "권한이 없습니다.";
-//				resultCode = "F-1";
-//			}else {
-				memberDao.deleteOneMember(Integer.parseInt((String)param.get("targetMemberId")));
-				msg = "성공적으로 삭제했습니다.";
-				resultCode = "S-1";
-//			}
+
+			memberDao.deleteOneMember(Integer.parseInt((String)param.get("targetMemberId")));
+			msg = "성공적으로 삭제했습니다.";
+			resultCode = "S-1";
+			
 		} catch (Exception e) {
 			msg = "멤버 삭제 중 오류";
 			resultCode = "F-1";
@@ -259,14 +255,10 @@ public class MemberServiceImpl implements MemberService{
 		String resultCode = "";
 		List<Member> members = null;
 		try {
-//			String role = memberDao.getMemberRole((int)param.get("loginedMemberId"));
-//			if(role == null || !role.equals("admin")) {
-//				msg = "권한이 없습니다.";
-//				resultCode = "F-1";
-//			}else {
-				members = memberDao.getAllMembers((int)param.get("loginedMemberId"));			
-				resultCode = "S-1";
-//			}
+
+			members = memberDao.getAllMembers((int)param.get("loginedMemberId"));			
+			resultCode = "S-1";
+
 		} catch (Exception e) {
 			msg = "멤버 로드 중 오류";
 			resultCode = "F-1";
@@ -356,4 +348,5 @@ public class MemberServiceImpl implements MemberService{
 	public Letter getOneLetterById(Map<String, Object> param) {
 		return memberDao.getOneLetterById((int)param.get("id"));
 	}
+
 }
