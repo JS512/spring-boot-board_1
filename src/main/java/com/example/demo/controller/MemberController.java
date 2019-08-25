@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.demo.dto.Article;
 import com.example.demo.dto.Letter;
 import com.example.demo.service.MemberService;
 
@@ -236,7 +237,10 @@ public class MemberController {
 	@RequestMapping("/deleteLetter")
 	@ResponseBody
 	public Map<String, Object> deleteLetter(@RequestParam Map<String, Object> param, HttpSession session) {
-		param.put("loginedMemberId", (int)session.getAttribute("loginedMemberId"));
+		param.put("loginedMemberId", (int)session.getAttribute("loginedMemberId"));		
+		if(!checkLetterAuthentication(param)) {
+			return Maps.of("msg", param.get("msg"), "success", false);
+		}
 		Map<String, Object> rs = memberService.deleteLetter(param);
 		
 		boolean success = false;
@@ -247,5 +251,21 @@ public class MemberController {
 		}
 		
 		return Maps.of("msg", rs.get("msg"), "success", success);
+	}
+	
+	private boolean checkLetterAuthentication(Map<String, Object> param) {
+		Letter letter = memberService.getOneLetterById(param);
+		String msg = null;
+		if(letter == null) {
+			msg = "존재하지 않는 쪽지 입니다.";
+			
+		}else if(letter.getToMemberId() != (int)param.get("loginedMemberId")){
+			msg = "권한이 없습니다.";
+			
+		}else {
+			return true;
+		}
+		param.put("msg", msg);
+		return false;
 	}
 }

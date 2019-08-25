@@ -56,14 +56,14 @@ public class ArticleFileServiceImpl implements ArticleFileService{
 		String msg = "";
 		String resultCode = "";
 		try {
-			String role = memberDao.getMemberRole((int)param.get("loginedMemberId"));
-			if(!checkArticleAuthentication(param) && (role == null || !role.equals("admin"))) {
-				msg = "권한이 없습니다.";
-				resultCode = "F-1";
-			}else {
+//			String role = memberDao.getMemberRole((int)param.get("loginedMemberId"));
+//			if(!checkArticleAuthentication(param)) {
+//				msg = "권한이 없습니다.";
+//				resultCode = "F-1";
+//			}else {
 				deleteArticleFiles(articleFileDao.getArticleAllFiles(param));			
 				resultCode = "S-1";
-			}
+//			}
 		} catch (Exception e) {
 			msg = "파일 삭제 중 오류";
 			resultCode = "F-1";

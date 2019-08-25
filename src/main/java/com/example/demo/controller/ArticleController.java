@@ -29,13 +29,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.Utils;
 import com.example.demo.dto.Article;
 import com.example.demo.dto.ArticleFile;
+import com.example.demo.dto.ArticleReply;
 import com.example.demo.service.ArticleFileService;
 import com.example.demo.service.ArticleReplyService;
 import com.example.demo.service.ArticleService;
 import com.example.demo.service.MemberService;
 
 import groovy.util.logging.Slf4j;
-import jline.internal.Log;
 
 @Slf4j
 @Controller
@@ -87,7 +87,13 @@ public class ArticleController {
 	}
 	
 	@RequestMapping("/addArticle")
-	public String addArticle() {		
+	public String addArticle(@RequestParam Map<String, Object> param, Model model, HttpSession session) {
+		param.put("loginedMemberId", (int)session.getAttribute("loginedMemberId"));
+		if(!checkAcceptBoardId(param)) {
+			model.addAttribute("historyBack", true);
+			model.addAttribute("msg", param.get("msg"));
+			return "common/redirect";
+		}
 		return "article/add";
 	}
 	
@@ -97,12 +103,19 @@ public class ArticleController {
 							@RequestParam(value="addFiles") List<MultipartFile> files,
 							@RequestParam(value="type", required=false) List<String> types,
 							@RequestParam(value="type2", required=false) List<String> types2)
-	{		
+	{	
 		HttpSession session = request.getSession();
+		param.put("loginedMemberId", (int)session.getAttribute("loginedMemberId"));
+		if(!checkAcceptBoardId(param)) {
+			model.addAttribute("historyBack", true);
+			model.addAttribute("msg", param.get("msg"));
+			return "common/redirect";
+		}
+		
 		String resultCode = "";
 		String redirectUrl = "";
 		Map<String, Object> rs = null;		
-		param.put("loginedMemberId", (int)session.getAttribute("loginedMemberId"));
+		
 		rs = articleService.addOneArticle(param);	
 		resultCode = (String) rs.get("resultCode");
 		model.addAttribute("msg", rs.get("msg"));
@@ -131,12 +144,20 @@ public class ArticleController {
 	}
 	
 	@RequestMapping("/deleteOneArticle")
-	public String deleteOneArticle(Model model, @RequestParam Map<String, Object> param, HttpSession session) {
+	public String deleteOneArticle(Model model, @RequestParam Map<String, Object> param, HttpSession session) {		
 		if(!Utils.needParamCheck(param, new String[] {"boardId", "id"}) || !Utils.isNumeric(param, new String[] {"boardId", "id"})) {
 			model.addAttribute("historyBack", true);
 			return "common/redirect";
 		}
 		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));
+		
+		if(!checkAcceptBoardId(param) || !checkArticleAuthentication(param)) {
+			model.addAttribute("historyBack", true);
+			model.addAttribute("msg", param.get("msg"));
+			return "common/redirect";
+		}
+		
+		
 		Map<String, Object> rs = articleFileService.deleteOneArticleAllFiles(param);
 		String resultCode = (String) rs.get("resultCode");
 		if(!resultCode.startsWith("S-")) {
@@ -169,13 +190,14 @@ public class ArticleController {
 			model.addAttribute("historyBack", true);
 			return "common/redirect";
 		}
+		
 		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));
-		String role = memberService.getMemberRole((int)session.getAttribute("loginedMemberId"));
-		if(!articleService.checkArticleAuthentication(param) && !role.equals("admin")) {
-			model.addAttribute("msg","권한이 없습니다.");
+		if(!checkAcceptBoardId(param) || !checkArticleAuthentication(param)) {
 			model.addAttribute("historyBack", true);
-			return "common/redirect";			
+			model.addAttribute("msg", param.get("msg"));
+			return "common/redirect";
 		}
+		
 		Article article = articleService.getOneArticleById(param);
 		List<ArticleFile> files = articleFileService.getArticleFiles(param);
 		
@@ -200,7 +222,14 @@ public class ArticleController {
 			model.addAttribute("historyBack", true);
 			return "common/redirect";
 		}
+		
 		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));
+		if(!checkAcceptBoardId(param) || !checkArticleAuthentication(param)) {
+			model.addAttribute("historyBack", true);
+			model.addAttribute("msg", param.get("msg"));
+			return "common/redirect";
+		}
+		
 		Map<String, Object> rs = null;
 		String resultCode = null;			
 		
@@ -352,7 +381,12 @@ public class ArticleController {
 	@RequestMapping("/deleteOneArticleOneReply")
 	@ResponseBody
 	public Map<String, Object> deleteOneArticleOneReply(@RequestParam Map<String, Object> param, HttpSession session){
+		
 		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));
+		if(!checkAcceptBoardId(param) || !checkArticleReplyAuthentication(param)) {
+			return Maps.of("msg", param.get("msg"), "success", false);
+		}
+		
 		Map<String, Object> rs = articleReplyService.deleteOneArticleOneReplyByIdArticleId(param);
 		
 		boolean success = false;
@@ -369,6 +403,9 @@ public class ArticleController {
 	@ResponseBody
 	public Map<String, Object> modifyReply(@RequestParam Map<String, Object> param, HttpSession session){
 		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));
+		if(!checkAcceptBoardId(param) || !checkArticleReplyAuthentication(param)) {
+			return Maps.of("msg", param.get("msg"), "success", false);
+		}
 		Map<String, Object> rs = articleReplyService.modifyReplyByIdArticleIdBoardId(param);
 		
 		boolean success = false;
@@ -385,8 +422,7 @@ public class ArticleController {
 	@ResponseBody
 	public Map<String, Object> getLikes(@RequestParam Map<String, Object> param, HttpSession session){
 		
-		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));
-		
+		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));		
 		
 		Map<String, Object> rs = new HashMap<>();		
 		rs = articleService.getArticleLikes(param);
@@ -418,6 +454,57 @@ public class ArticleController {
 		}
 		
 		return Maps.of("msg", rs.get("msg"), "success", success);
+	}
+	
+	
+	private boolean checkAcceptBoardId(Map<String, Object> param) {
+		String boardId = (String) param.get("boardId");
+		String msg = null;
+		try {
+			int id = Integer.parseInt(boardId);
+			if(id == 2) {
+				msg = "권한이 없습니다.";							
+			}else {
+				return true;
+			}
+		}catch(Exception e) {
+			msg = "오류가 발생했습니다.";			
+		}
+		param.put("msg", msg);
+		return false;
+	}
+	
+	private boolean checkArticleAuthentication(Map<String, Object> param) {
+		Article article = articleService.getOneArticleById(param);		
+		String msg = null;
+		
+		if(article == null) {
+			msg = "존재하지 않는 게시물 입니다.";
+			
+		}else if(article.getMemberId() != (int)param.get("loginedMemberId") || article.getBoardId() == 2){
+			msg = "권한이 없습니다.";
+			
+		}else {
+			return true;
+		}
+		param.put("msg", msg);
+		return false;
+	}
+	
+	private boolean checkArticleReplyAuthentication(Map<String, Object> param) {
+		ArticleReply reply = articleReplyService.getOneArticleOneReplyByIdArticleIdBoardId(param);
+		String msg = null;
+		if(reply == null) {
+			msg = "존재하지 않는 댓글 입니다.";
+			
+		}else if(reply.getMemberId() != (int)param.get("loginedMemberId")){
+			msg = "권한이 없습니다.";
+			
+		}else {
+			return true;
+		}
+		param.put("msg", msg);
+		return false;
 	}
 	
 }

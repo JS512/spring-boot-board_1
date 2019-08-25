@@ -1,0 +1,41 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
+	
+		<div class="container">
+			<div class="overlay" hidden></div>
+			<div class="contextMenu" hidden>
+				<a href="javascript:showProfile();">프로필 보기</a>
+				<c:if test="${isLogined }">
+					<a href="javascript:showLetter();">쪽지 보내기</a>
+				</c:if>
+			</div>
+			
+			<div class="profile absolute-center" hidden>
+				<div class="text-align-center">
+					<h3>프로필</h3>
+					<div class="close clickable-contextMenu">	</div>
+				</div>
+				<div class="text-align-center profile-content">
+					<div class="loading"></div>
+				</div>
+			</div>
+			
+			<div class="letter absolute-center" hidden>
+				<div class="text-align-left">
+					<div class="close clickable-contextMenu">	</div>
+				</div>
+									
+				<div class="loading" hidden></div>
+				<div class="to"></div>
+				<form onsubmit="checkLetterForm(this); return false;">
+					내용<br>
+					<textarea cols="40" rows="30" name="body"></textarea><br>
+					<button>전송</button>
+				</form>				
+			</div>
+		</div>
+	
+</body>
+</html>

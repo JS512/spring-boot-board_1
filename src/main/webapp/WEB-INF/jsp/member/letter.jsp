@@ -18,7 +18,7 @@
   		<td>${letter.regDate }</td>  		
   		<td class="clickable-contextMenu clickable" data-id="${letter.fromMemberId }" data-to="${letter.extra.writer }">${letter.extra.writer }</td>
   		<td class="text-overflow-ellipsis clickable-letterContent">${letter.body }</td>
-  		<td><button onclick="Letter__deleteLetter(this);" data-id="${letter.id }">삭제</button></td>
+  		<td><button onclick="letter__deleteLetter(this);" data-id="${letter.id }">삭제</button></td>
   			
   	</tr>
   </c:forEach>

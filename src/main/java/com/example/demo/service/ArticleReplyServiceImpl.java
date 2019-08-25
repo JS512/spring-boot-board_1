@@ -104,21 +104,21 @@ public class ArticleReplyServiceImpl implements ArticleReplyService{
 		ArticleReply reply = null;
 		try {
 			reply = articleReplyDao.getOneArticleOneReplyByIdArticleIdBoardId(param);
-			String role = memberDao.getMemberRole((int)param.get("loginedMemberId"));
-			if(reply == null) {
-				msg = "존재하지 않는 댓글입니다.";
-				resultCode = "F-1";
-			}else {
-				if((reply.getMemberId() != (int)param.get("loginedMemberId")) && (role == null || !role.equals("admin"))) {
-					msg = "권한이 없습니다.";
-					resultCode = "F-1";
-				}else {
+//			String role = memberDao.getMemberRole((int)param.get("loginedMemberId"));
+//			if(reply == null) {
+//				msg = "존재하지 않는 댓글입니다.";
+//				resultCode = "F-1";
+//			}else {
+//				if((reply.getMemberId() != (int)param.get("loginedMemberId")) && (role == null || !role.equals("admin"))) {
+//					msg = "권한이 없습니다.";
+//					resultCode = "F-1";
+//				}else {
 					articleReplyDao.modifyReplyByIdArticleIdBoardId(param);
 					reply = articleReplyDao.getOneArticleOneReplyByIdArticleIdBoardId(param);
 					msg = "변경 되었습니다.";
 					resultCode = "S-1";
-				}
-			}
+//				}
+//			}
 		}catch(Exception e) {
 			msg = "댓글 변경중 오류.";
 			resultCode = "F-1";
@@ -126,5 +126,9 @@ public class ArticleReplyServiceImpl implements ArticleReplyService{
 		}
 		
 		return Maps.of("msg", msg, "resultCode", resultCode, "reply", reply);
+	}
+	
+	public ArticleReply getOneArticleOneReplyByIdArticleIdBoardId(Map<String, Object> param) {
+		return articleReplyDao.getOneArticleOneReplyByIdArticleIdBoardId(param);
 	}
 }

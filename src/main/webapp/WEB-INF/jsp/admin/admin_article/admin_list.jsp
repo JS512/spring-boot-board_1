@@ -1,15 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="title" value="리스트 페이지"/>
-<%@ include file="../part/head.jspf" %>
+<%@ include file="../admin_part/admin_head.jspf" %>
 <h1>${title}</h1>
 
-<c:if test="${isLogined }">	
-	<c:if test="${param.boardId == 1 && param.boardId != 2}">
-		<h2>자유 게시판</h2>
-		<a href="/article/addArticle?boardId=${param.boardId }">글쓰기</a>
-	</c:if>	
-</c:if>
+<a href="/admin/addArticle?boardId=${param.boardId }">글쓰기</a>	
 
 <form action="/article/list" method="get">
 	<input type="hidden" name="boardId" value="${param.boardId }">	
@@ -40,7 +35,7 @@
   	<tr>
   		<td>${article.id }</td>
   		<td>${article.regDate }</td>
-  		<td class="text-overflow-ellipsis"><a href="/article/detail${url }&id=${article.id}&cPage=${param.cPage}">${article.title }</a></td>
+  		<td class="text-overflow-ellipsis"><a href="/admin/articleDetail${url }&id=${article.id}&cPage=${param.cPage}">${article.title }</a></td>
   		<td class="clickable-contextMenu clickable" data-id="${article.memberId }" data-to="${article.extra.writer }">${article.extra.writer }</td>
   	</tr>
   </c:forEach>
@@ -58,4 +53,4 @@
 		<li><a href="/article/list${url }&cPage=${page.endPage+1}">></a></li>
 	</c:if>
 </ul>
-<%@ include file="../part/foot.jspf" %>
+<%@ include file="../admin_part/admin_foot.jspf" %>

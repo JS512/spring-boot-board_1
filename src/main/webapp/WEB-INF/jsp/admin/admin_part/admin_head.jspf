@@ -16,24 +16,19 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-		<script src="/resource/app.js"></script>
+		<script src="/resource/adminApp.js"></script>
 		<link rel="stylesheet" href="/resource/app.css">	
 		<title>${title}</title>
 	</head>
 	<body>
-		<c:if test="${isLogined }">
-			<p>현재 ${loginedMemberLoginId }님이 로그인중...</p>
-		</c:if>
-		<a href="/article/list?boardId=1">자유게시판</a>
-		<a href="/article/list?boardId=2">공지사항</a>
+		
+		<a href="/admin/articleList?boardId=1">자유게시판</a>
+		<a href="/admin/articleList?boardId=2">공지사항</a>
 		<a href="/">홈</a>
 		
-		<c:if test="${isLogined }">
-			<input type="hidden" id="memberId" value="${loginedMemberId }">			
-			<a href="/member/logout">로그아웃</a>
-			<a href="/member/myPage">마이페이지</a>
-		</c:if>
-		<c:if test="${!isLogined}">
-			<a href="/member/login">로그인</a>
-			<a href="/member/join">회원가입</a>
-		</c:if>		
+		
+		<input type="hidden" id="memberId" value="${loginedMemberId }">			
+		<a href="/member/logout">로그아웃</a>
+		<a href="/member/myPage">마이페이지</a>
+		<a href="/admin/adminMemberPage">회원관리 페이지</a>
+		

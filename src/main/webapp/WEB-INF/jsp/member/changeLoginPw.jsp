@@ -4,7 +4,7 @@
 <%@ include file="../part/head.jspf" %>
 <h1>${title}</h1>
 
-<form onsubmit="MemberChangeLoginPw__checkForm(this); return false;" action="/member/doChangeLoginPw" method="post">
+<form onsubmit="memberChangeLoginPw__checkForm(this); return false;" action="/member/doChangeLoginPw" method="post">
 	
 	<label>기존 비밀번호 : <input type="text" name="temp_origin_loginPw"></label>	
 	<input type="hidden" name="origin_loginPw">	

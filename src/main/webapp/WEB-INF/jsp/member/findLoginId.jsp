@@ -4,7 +4,7 @@
 <%@ include file="../part/head.jspf" %>
 <h1>${title}</h1>
 
-<form onsubmit="MemberFindLoginId__checkForm(this); return false;" action="/member/doFindLoginId" method="post">
+<form onsubmit="memberFindLoginId__checkForm(this); return false;" action="/member/doFindLoginId" method="post">
 
 	<label>이름 : <input type="text" name="name"></label>	
 	

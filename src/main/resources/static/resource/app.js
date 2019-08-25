@@ -30,7 +30,7 @@ function checkEmailPattern(input){
 }
 
 
-function ArticleAdd__checkForm(form){	
+function articleAdd__checkForm(form){	
 	
 	if(!checkEmpty(form.body) || !checkEmpty(form.title)){
 		alert("빈칸 없이 채워주세요.");
@@ -50,7 +50,7 @@ function ArticleAdd__checkForm(form){
 	form.submit();
 }
 
-function ArticleAdd__addFile(locationType){
+function articleAdd__addFile(locationType){
 	var container = document.createElement("div");
 	var file = document.createElement("input");
 	
@@ -82,21 +82,21 @@ function ArticleAdd__addFile(locationType){
 	$(".fileList").append(container);
 }
 
-function ArticleDetail__deleteArticleCheck(id, boardId){
+function articleDetail__deleteArticleCheck(id, boardId){
 	if(!confirm("현재 게시물을 삭제하시겠습니까?")){
 		return ;
 	}
 	location.href="/article/deleteOneArticle?id="+id+"&boardId="+boardId;
 }
 
-function ArticleDetail__modifyArticleCheck(id, boardId){
+function articleDetail__modifyArticleCheck(id, boardId){
 	if(!confirm("현재 게시물을 수정하시겠습니까?")){
 		return ;
 	}
 	location.href="/article/modifyArticle?id="+id+"&boardId="+boardId;
 }
 
-function ArticleDetail__checkAddReplyForm(form){
+function articleDetail__checkAddReplyForm(form){
 	if(!checkEmpty(form.body)){
 		alert("빈칸없이 채워주세요");
 		return ;
@@ -111,7 +111,7 @@ function ArticleDetail__checkAddReplyForm(form){
 			alert(data.msg);
 			if(data.success){
 				form.body.value = "";
-				ArticleDetail__drawReply(data.reply);
+				articleDetail__drawReply(data.reply);
 				if($(".replyStatus").html().length){
 					$(".replyStatus").html("");
 				}
@@ -121,13 +121,13 @@ function ArticleDetail__checkAddReplyForm(form){
 	)
 }
 
-function ArticleDetail__drawReply(data){
+function articleDetail__drawReply(data){
 	var html = `
 	<div>	
 		<table>
 			<tr>
-				<td><button data-type="reply" class="like" type="button" onclick="ArticleDetail__updateLike(this, true);">좋아요</button> <span>0</span></td>
-				<td><button data-type="reply" class="like" type="button" onclick="ArticleDetail__updateLike(this, false);">싫어요</button> <span>0</span></td>
+				<td><button data-type="reply" class="like" type="button" onclick="articleDetail__updateLike(this, true);">좋아요</button> <span>0</span></td>
+				<td><button data-type="reply" class="like" type="button" onclick="articleDetail__updateLike(this, false);">싫어요</button> <span>0</span></td>
 			</tr>
 			<tr>
 				<th>번호</th> <td class="replyId id" data-id="${data.id}"> ${data.id}</td>
@@ -140,9 +140,9 @@ function ArticleDetail__drawReply(data){
 			</tr>											
 		</table>
 		<pre class="replyBody">${data.body}</pre>`;
-		if( ($("#memberId").length && $("#memberId").val() == data.memberId) || $("#memberRole").val() == "true"){
-			html += `<button type="button" onclick="ArticleDetail__deleteReply(this);">삭제</button>
-			<button type="button" onclick="ArticleDetail__showReplyModifyForm(this);">수정</button>`
+		if( $("#memberId").length && $("#memberId").val() == data.memberId){
+			html += `<button type="button" onclick="articleDetail__deleteReply(this);">삭제</button>
+			<button type="button" onclick="articleDetail__showReplyModifyForm(this);">수정</button>`
 		}
 		html += `	
 		<hr>
@@ -152,10 +152,10 @@ function ArticleDetail__drawReply(data){
 	$(".replyList").prepend(html);
 	
 	
-	$(".clickable-contextMenu").click(function(e){		
-		showContextMenu(e.pageX, e.pageY);
+	$(".clickable-contextMenu").click(function(e){
 		clickedMemberId = $(this).attr("data-id");		
 		clickedMemberLoginId = $(this).attr("data-to");
+		showContextMenu(e.pageX, e.pageY);		
 	});
 	
 	$(".overlay").click(function(){
@@ -168,7 +168,7 @@ function ArticleDetail__drawReply(data){
 	
 }
 
-function ArticleDetail__getAllReplies(){	
+function articleDetail__getAllReplies(){	
 	var id = $(".articleId").attr("data-id");
 	var boardId = $("#boardId").val();
 	$.post("/article/getOneArticleAllReplies",
@@ -179,11 +179,11 @@ function ArticleDetail__getAllReplies(){
 		function(data){			
 			if(data.success){
 				for(var i=0; i<data.replies.length ;i++){
-					ArticleDetail__drawReply(data.replies[i]);
+					articleDetail__drawReply(data.replies[i]);
 					
 				}
 				$(".replyList").find("table").each(function(index, item){
-					ArticleDetail__getLikes($(this), "reply");
+					articleDetail__getLikes($(this), "reply");
 					
 				});
 				
@@ -195,7 +195,7 @@ function ArticleDetail__getAllReplies(){
 	)
 }
 
-function ArticleDetail__deleteReply(btn){
+function articleDetail__deleteReply(btn){
 	var articleId = $(".articleId").attr("data-id");
 	var boardId = $("#boardId").val();
 	var id = $(btn).parent().find(".replyId").attr("data-id");		
@@ -224,7 +224,7 @@ function ArticleDetail__deleteReply(btn){
 	}
 }
 
-function ArticleDetail__modifyReply(form){
+function articleDetail__modifyReply(form){
 	if(!checkEmpty(form.body)){
 		alert("빈칸없이 채워주세요.");
 		return ;
@@ -246,7 +246,7 @@ function ArticleDetail__modifyReply(form){
 				replyContainer.find(".replyRegDate").html(data.reply.regDate);
 				replyContainer.find(".replyBody").html(data.reply.body);
 				replyContainer.show();
-				ArticleDetail__hideReplyModifyForm();
+				articleDetail__hideReplyModifyForm();
 			}
 		},
 		"json"
@@ -254,7 +254,7 @@ function ArticleDetail__modifyReply(form){
 }
 
 var hide;
-function ArticleDetail__showReplyModifyForm(btn){
+function articleDetail__showReplyModifyForm(btn){
 	
 	if(hide != null)
 		hide.show();
@@ -271,7 +271,7 @@ function ArticleDetail__showReplyModifyForm(btn){
 	
 }
 
-function ArticleDetail__hideReplyModifyForm(){
+function articleDetail__hideReplyModifyForm(){
 	
 	$("#replyModifyForm").find("iput[name='id']").val("");
 	$("#replyModifyForm").find("textarea[name='body']").val("");
@@ -282,7 +282,7 @@ function ArticleDetail__hideReplyModifyForm(){
 	hide.show();
 }
 
-function ArticleDetail__getLikes(table, type){
+function articleDetail__getLikes(table, type){
 	var articleId = table.find(".id").attr("data-id");
 	var boardId = $("#boardId").val();
 	
@@ -297,13 +297,13 @@ function ArticleDetail__getLikes(table, type){
 			if(!data.success){
 				alert(data.msg);
 			}						
-			ArticleDetail__drawArticleLike(table, data);
+			articleDetail__drawArticleLike(table, data);
 		},
 		"json"
 	);
 }
 
-function ArticleDetail__updateLike(btn, val){
+function articleDetail__updateLike(btn, val){
 	var articleId = $(btn).parent().parent().parent().find(".id").attr("data-id");
 	var boardId = $("#boardId").val();
 	var type = $(btn).attr("data-type");
@@ -318,14 +318,14 @@ function ArticleDetail__updateLike(btn, val){
 		function(data){
 			alert(data.msg);
 			if(data.success){
-				ArticleDetail__getLikes($(btn).parent().parent().parent(), type);
+				articleDetail__getLikes($(btn).parent().parent().parent(), type);
 			}
 		},
 		"json"
 	);
 }
 
-function ArticleDetail__drawArticleLike(table, data){
+function articleDetail__drawArticleLike(table, data){
 	table.find(".like").css("background-color","");
 	
 	table.find(".like").each(function(index, item){	
@@ -345,15 +345,15 @@ function ArticleDetail__drawArticleLike(table, data){
 	
 }
 
-function ArticleModify__checkForm(form){
-	ArticleAdd__checkForm(form);
+function articleModify__checkForm(form){
+	articleAdd__checkForm(form);
 }
 
-function ArticleModify__addFile(locationType){
-	ArticleAdd__addFile(locationType);
+function articleModify__addFile(locationType){
+	articleAdd__addFile(locationType);
 }
 
-function ArticleModify__check(btn){
+function articleModify__check(btn){
 	$(btn).attr("disabled", false);
 	if(btn.checked){
 		if($(btn).attr("name") == "modify"){
@@ -372,7 +372,7 @@ function ArticleModify__check(btn){
 
 var idCheck = false;
 var emailCheck = false;
-function MemberJoin__checkForm(form){	
+function memberJoin__checkForm(form){	
 	
 	if(!checkEmpty(form.loginId) || !checkEmpty(form.temp_loginPw)
 			|| !checkEmpty(form.name) || !checkEmpty(form.email))
@@ -399,7 +399,7 @@ function MemberJoin__checkForm(form){
 	form.submit();
 }
 
-function MemberJoin__loginIdDoubleCheck(btn){
+function memberJoin__loginIdDoubleCheck(btn){
 	$(btn).prev().find("input").val($(btn).prev().find("input").val().trim());
 	var loginId = $(btn).prev().find("input").val();
 	if(loginId.length == 0){
@@ -421,7 +421,7 @@ function MemberJoin__loginIdDoubleCheck(btn){
 	);
 }
 
-function MemberJoin__emailDoubleCheck(btn){
+function memberJoin__emailDoubleCheck(btn){
 	$(btn).prev().find("input").val($(btn).prev().find("input").val().trim());
 	var email = $(btn).prev().find("input").val();
 	var pattern = /\w+@\w+\.\w+\.?\w*/;
@@ -445,15 +445,15 @@ function MemberJoin__emailDoubleCheck(btn){
 	);
 }
 
-function MemberJoin__resetEmail(){	
+function memberJoin__resetEmail(){	
 	emailCheck = false;
 }
 
-function MemberJoin__resetLoginId(){	
+function memberJoin__resetLoginId(){	
 	idCheck = false;
 }
 
-function MemberLogin__checkForm(form){
+function memberLogin__checkForm(form){
 	if(!checkEmpty(form.loginId) || !checkEmpty(form.temp_loginPw))
 	{
 		alert("빈칸없이 채워주세요");
@@ -465,13 +465,13 @@ function MemberLogin__checkForm(form){
 	form.submit();
 }
 
-function MemberMyPage__withdrawal(){
+function memberMyPage__withdrawal(){
 	if(confirm("정말 탈퇴 하시겠습니까?")){
 		location.href = "/member/withdrawal";
 	}
 }
 
-function MemberFindLoginId__checkForm(form){
+function memberFindLoginId__checkForm(form){
 	if(!checkEmpty(form.name) || !checkEmpty(form.email)){
 		alert("빈칸을 채워주세요");
 		return ;
@@ -496,7 +496,7 @@ function MemberFindLoginId__checkForm(form){
 	)
 }
 
-function MemberFindLoginPw__checkForm(form){
+function memberFindLoginPw__checkForm(form){
 	if(!checkEmpty(form.loginId) || !checkEmpty(form.email)){
 		alert("빈칸을 채워주세요");
 		return ;
@@ -516,7 +516,7 @@ function MemberFindLoginPw__checkForm(form){
 	);
 }
 
-function MemberChangeLoginPw__checkForm(form){
+function memberChangeLoginPw__checkForm(form){
 	if(!checkEmpty(form.temp_origin_loginPw) || !checkEmpty(form.temp_loginPw)){
 		alert("빈칸을 채워주세요");
 		return ;
@@ -530,9 +530,12 @@ function MemberChangeLoginPw__checkForm(form){
 
 var clickedMemberId;
 var clickedMemberLoginId;
-function showContextMenu(x, y){	
-	if($("memberId").val() == clickedMemberId){
+function showContextMenu(x, y){
+	
+	if($("#memberId").val() == clickedMemberId){
 		$(".contextMenu").find("a:nth-child(2)").hide();
+	}else{
+		$(".contextMenu").find("a:nth-child(2)").show();
 	}
 	$(".overlay").show();
 	$(".contextMenu").css({'top':y, 'left':x}).show();
@@ -597,16 +600,19 @@ function checkLetterForm(form){
 			alert(data.msg);
 			if(data.success){
 				form.body.value = "";				
-				close($(".letter").find(".close"));				
+				close($(".letter").find(".close"));
+				showContextMenu();
+			}else{				
+				$(form).parent().children().show();
 			}
-			$(form).parent().children().show();
+			
 			$(".letter").find(".loading").hide();
 		},
 		"json"
 	);
 }
 
-function Letter__deleteLetter(btn){
+function letter__deleteLetter(btn){
 	
 	if(!confirm("삭제 하시겠습니까?")){
 		return ;
@@ -629,8 +635,8 @@ function Letter__deleteLetter(btn){
 
 $(function(){	
 	if($(".replyList").length){
-		ArticleDetail__getAllReplies();
-		ArticleDetail__getLikes($(".article"), "article");
+		articleDetail__getAllReplies();
+		articleDetail__getLikes($(".article"), "article");
 	}
 	
 	$(".close").click(function(){
@@ -640,11 +646,12 @@ $(function(){
 	
 	$(".clickable-contextMenu").click(function(e){		
 		
-		if($(this).attr("data-id")){
-			showContextMenu(e.pageX, e.pageY);
+		if($(this).attr("data-id")){		
 			clickedMemberId = $(this).attr("data-id");		
 			clickedMemberLoginId = $(this).attr("data-to");
-		}else{
+			showContextMenu(e.pageX, e.pageY);			
+		}
+		else{			
 			showContextMenu();
 		}
 	});
@@ -658,7 +665,7 @@ $(function(){
 	$(".clickable-letterContent").click(function(){
 		$(".overlay").show();
 		$(".letter-content").show();
-		$(".content").html($(this).html());
+		$(".content").html("<pre>" + $(this).html() + "</pre>");
 	});
 
 })

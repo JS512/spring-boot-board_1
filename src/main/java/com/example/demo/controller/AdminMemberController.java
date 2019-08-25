@@ -17,13 +17,12 @@ import com.example.demo.service.MemberService;
 @RequestMapping("/admin")
 public class AdminMemberController {
 	@Autowired
-	private MemberService memberService;
-	
+	private MemberService memberService;	
 	
 	
 	@RequestMapping("/adminMemberPage")
 	public String adminPage() {
-		return "admin/adminMemberPage";
+		return "admin/admin_member/adminMemberPage";
 	}
 	
 	@RequestMapping("/deleteMember")

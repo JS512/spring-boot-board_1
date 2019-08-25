@@ -63,6 +63,13 @@ table, th, td{
 	background-color:white;
 	z-index:100;
 }
+.contextMenu{
+	min-width:120px;
+}
+.contextMenu a{	
+	display:block;
+	padding:10px;
+}
 
 .profile, .letter{	
 	padding:5px;
@@ -71,11 +78,6 @@ table, th, td{
 
 .letter textarea{
 	border:1px solid black;
-}
-
-.contextMenu a{
-	display:block;
-	padding:10px;
 }
 
 .text-align-left{
@@ -101,6 +103,11 @@ table, th, td{
 	font-weight:bold;
 }
 
-.clickable-letterContent{
-	
+.letter-content{
+	padding:10px;
+}
+
+.letter-content pre{
+	border:1px solid black;
+	padding:5px;
 }

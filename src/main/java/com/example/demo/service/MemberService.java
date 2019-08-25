@@ -42,4 +42,6 @@ public interface MemberService {
 
 	public Map<String, Object> deleteLetter(Map<String, Object> param);
 
+	public Letter getOneLetterById(Map<String, Object> param);
+
 }
