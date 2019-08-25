@@ -140,14 +140,14 @@ function articleDetail__deleteArticleCheck(id, boardId){
 	if(!confirm("현재 게시물을 삭제하시겠습니까?")){
 		return ;
 	}
-	location.href="/article/deleteOneArticle?id="+id+"&boardId="+boardId;
+	location.href="/admin/deleteOneArticle?id="+id+"&boardId="+boardId;
 }
 
 function articleDetail__modifyArticleCheck(id, boardId){
 	if(!confirm("현재 게시물을 수정하시겠습니까?")){
 		return ;
 	}
-	location.href="/article/modifyArticle?id="+id+"&boardId="+boardId;
+	location.href="/admin/modifyArticle?id="+id+"&boardId="+boardId;
 }
 
 function articleDetail__checkAddReplyForm(form){
@@ -225,7 +225,7 @@ function articleDetail__drawReply(data){
 function articleDetail__getAllReplies(){	
 	var id = $(".articleId").attr("data-id");
 	var boardId = $("#boardId").val();
-	$.post("/article/getOneArticleAllReplies",
+	$.post("/admin/getOneArticleAllReplies",
 		{
 			articleId : id,
 			boardId : boardId
@@ -256,7 +256,7 @@ function articleDetail__deleteReply(btn){
 	
 	if(confirm("선택하신 댓글을 삭제하시겠습니까?")){
 		$(btn).parent().hide();
-		$.get("/article/deleteOneArticleOneReply",
+		$.get("/admin/deleteOneArticleOneReply",
 			{
 				articleId : articleId,
 				boardId : boardId,
@@ -284,7 +284,7 @@ function articleDetail__modifyReply(form){
 		return ;
 	}
 	var replyContainer = hide;
-	$.post("/article/modifyReply",
+	$.post("/admin/modifyReply",
 		{
 			id : form.id.value,
 			articleId : form.articleId.value,
@@ -340,7 +340,7 @@ function articleDetail__getLikes(table, type){
 	var articleId = table.find(".id").attr("data-id");
 	var boardId = $("#boardId").val();
 	
-	$.get("/article/getLikes",
+	$.get("/admin/getLikes",
 		{
 			relId : articleId,
 			boardId : boardId,
@@ -362,7 +362,7 @@ function articleDetail__updateLike(btn, val){
 	var boardId = $("#boardId").val();
 	var type = $(btn).attr("data-type");
 	
-	$.get("/article/updateLike",
+	$.get("/admin/updateLike",
 		{
 			relId : articleId,
 			boardId : boardId,
@@ -424,150 +424,11 @@ function articleModify__check(btn){
 	}	
 }
 
-var idCheck = false;
-var emailCheck = false;
-function memberJoin__checkForm(form){	
-	
-	if(!checkEmpty(form.loginId) || !checkEmpty(form.temp_loginPw)
-			|| !checkEmpty(form.name) || !checkEmpty(form.email))
-	{
-		alert("빈칸없이 채워주세요");
-		return ;
-	}	
-	
-	if(!checkEmailPattern(form.email)){
-		alert("이메일 형식에 맞지 않습니다.");
-		return ;
-	}
-	
-	if(!idCheck || !emailCheck){
-		alert("중복체크를 모두 완료해주세요");
-		return ;
-	}
-	
-	form.loginPw.value = encodeSHA1(form.temp_loginPw);
-	$(form).find("button").attr("disabled", true);
-	$(form).hide();
-	$(".statusMsg").html("회원가입  진행중......");
-	
-	form.submit();
-}
-
-function memberJoin__loginIdDoubleCheck(btn){
-	$(btn).prev().find("input").val($(btn).prev().find("input").val().trim());
-	var loginId = $(btn).prev().find("input").val();
-	if(loginId.length == 0){
-		alert("빈칸없이 채워주세요");
-		return ;
-	}
-	
-	$.get("/member/loginIdDoubleCheck",
-		{
-			loginId : loginId
-		},
-		function(data){
-			$(btn).next().html(data.msg);
-			if(data.success){
-				idCheck = true;
-			}
-		},
-		"json"
-	);
-}
-
-function memberJoin__emailDoubleCheck(btn){
-	$(btn).prev().find("input").val($(btn).prev().find("input").val().trim());
-	var email = $(btn).prev().find("input").val();
-	var pattern = /\w+@\w+\.\w+\.?\w*/;
-	
-	if(!pattern.test(email)){
-		alert("이메일 형식에 맞지 않습니다.");
-		return ;
-	}
-	
-	$.get("/member/emailDoubleCheck",
-		{
-			email : email
-		},
-		function(data){
-			$(btn).next().html(data.msg);
-			if(data.success){
-				emailCheck = true;
-			}
-		},
-		"json"
-	);
-}
-
-function memberJoin__resetEmail(){	
-	emailCheck = false;
-}
-
-function memberJoin__resetLoginId(){	
-	idCheck = false;
-}
-
-function memberLogin__checkForm(form){
-	if(!checkEmpty(form.loginId) || !checkEmpty(form.temp_loginPw))
-	{
-		alert("빈칸없이 채워주세요");
-		return ;
-	}
-	
-	form.loginPw.value = encodeSHA1(form.temp_loginPw);	
-	
-	form.submit();
-}
 
 function memberMyPage__withdrawal(){
 	if(confirm("정말 탈퇴 하시겠습니까?")){
 		location.href = "/member/withdrawal";
 	}
-}
-
-function memberFindLoginId__checkForm(form){
-	if(!checkEmpty(form.name) || !checkEmpty(form.email)){
-		alert("빈칸을 채워주세요");
-		return ;
-	}
-	$(form).find("button").attr("disabled", true);
-	$("div").html("<h1>찾는중..</h1>");
-	$.get("/member/doFindLoginId",
-		{
-			name : form.name.value.trim(),
-			email : form.email.value.trim()
-		},
-		function(data){
-			if(data.success){
-				$("div").html("<h2>아이디</h2>" + data.msg);
-			}else{
-				$("div").html("");
-				alert(data.msg);
-			}
-			
-			$(form).find("button").attr("disabled", false);
-		}
-	)
-}
-
-function memberFindLoginPw__checkForm(form){
-	if(!checkEmpty(form.loginId) || !checkEmpty(form.email)){
-		alert("빈칸을 채워주세요");
-		return ;
-	}
-	$(form).find("button").attr("disabled", true);
-	$("div").html("<h1>찾는중..</h1>");
-	$.get("/member/doFindLoginPw",
-		{
-			loginId : form.loginId.value.trim(),
-			email : form.email.value.trim()
-		},
-		function(data){							
-			alert(data.msg);			
-			$("div").html("");
-			$(form).find("button").attr("disabled", false);
-		}
-	);
 }
 
 function memberChangeLoginPw__checkForm(form){
