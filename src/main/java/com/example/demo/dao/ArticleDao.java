@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.example.demo.dto.Article;
+import com.example.demo.dto.ArticleReply;
 import com.example.demo.dto.Like;
 
 @Mapper
@@ -33,4 +34,8 @@ public interface ArticleDao {
 	public void updateArticleLike(Map<String, Object> param);
 
 	public void updateArticleView(Map<String, Object> param);
+
+	public List<Article> getMemberArticlesByMemberId(Map<String, Object> param);
+
+	public int getArticleTotalCountByMemberId(Map<String, Object> param);	
 }

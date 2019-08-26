@@ -114,6 +114,49 @@
 		WHERE id = #{id} AND boardId = #{boardId}
 	</update>
 	
+	<select id="getMemberArticlesByMemberId" parameterType="map" resultMap="article">
+		SELECT A.*, IFNULL(M.loginId, '존재하지 않는 사용자') AS writer, IFNULL(SUM(L.val),0) AS likeCnt
+		FROM article AS A
+		LEFT OUTER JOIN `member` AS M
+		ON M.id = A.memberId
+		LEFT OUTER JOIN `like` AS L
+		ON L.relType = 'article' AND L.relId = A.id
+		WHERE A.memberId = #{memberId}
+		<if test="searchType != null and searchType != '' and searchKeyword != null and searchKeyword != ''">
+			<if test="searchType == 'title'"> AND A.title LIKE CONCAT('%', #{searchKeyword}, '%')</if>
+			<if test="searchType == 'body'"> AND A.body LIKE CONCAT('%', #{searchKeyword}, '%')</if>			
+		</if>	
+		GROUP BY A.id
+		ORDER BY
+		<choose>
+			<when test="sortType != null and sortType != ''">
+				<if test="sortType == 'latest'"> A.id DESC </if>
+				<if test="sortType == 'oldest'"> A.id </if>
+				<if test="sortType == 'highLike'"> likeCnt DESC </if>
+				<if test="sortType == 'lowLike'"> likeCnt </if>
+				<if test="sortType == 'highView'"> A.view DESC</if>
+				<if test="sortType == 'lowView'"> A.view </if>
+			</when>
+			<otherwise>
+				A.id DESC
+			</otherwise>
+		</choose>
+		, A.id DESC				
+		LIMIT #{startNum}, #{perPageNum}
+	</select>	
+	
+	<select id="getArticleTotalCountByMemberId" parameterType="map" resultType="Integer">
+		SELECT COUNT(A.id)
+		FROM article AS A
+		LEFT OUTER JOIN `member` AS M
+		ON M.id = A.memberId
+		WHERE A.memberId= #{memberId}		
+		<if test="searchType != null and searchType != '' and searchKeyword != null and searchKeyword != ''">
+			<if test="searchType == 'title'"> AND A.title LIKE CONCAT('%', #{searchKeyword}, '%')</if>
+			<if test="searchType == 'body'"> AND A.body LIKE CONCAT('%', #{searchKeyword}, '%')</if>			
+		</if>
+	</select>
+	
 	<resultMap type="com.example.demo.dto.Article" id="article">
 		<id property="id" column="id"/>
 		<id property="regDate" column="regDate"/>

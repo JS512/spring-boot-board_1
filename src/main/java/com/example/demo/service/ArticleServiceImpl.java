@@ -165,13 +165,13 @@ public class ArticleServiceImpl implements ArticleService{
 		return Maps.of("msg", msg, "resultCode", resultCode);
 	}
 	
-	public Map<String, Object> deleteCheckedArticle(Map<String, Object> param, List<Integer> ids){
+	public Map<String, Object> deleteCheckedArticle(Map<String, Object> param){
 		
 		String msg = "";
 		String resultCode = "";		
-		
+		Map<String, Object> p = new HashMap<>();
 		try {					
-			
+			List<Integer> ids = (List<Integer>) param.get("ids");
 			for(int i=0 ;i<ids.size() ;i++) {
 				param.put("id", ids.get(i));
 				articleDao.deleteOneArticle(param);
@@ -192,4 +192,38 @@ public class ArticleServiceImpl implements ArticleService{
 	public void updateArticleView(Map<String, Object> param) {
 		articleDao.updateArticleView(param);
 	}
+	
+	public Map<String, Object> getMemberArticlesByMemberId(Map<String, Object> param) {
+		Map<String, Object> page = Utils.calcData(param, articleDao.getArticleTotalCountByMemberId(param));
+		List<Article> list = articleDao.getMemberArticlesByMemberId(param);		
+		return Maps.of("list", list, "page", page);
+	}
+	
+	public Map<String, Object> deleteCheckedMemberArticle(Map<String, Object> param){
+		String msg = "";
+		String resultCode = "";		
+		Map<String, Object> p = new HashMap<>();
+		try {				
+			
+			List<Integer> boardIds = (List<Integer>) param.get("boardIds");
+			List<Integer> ids = (List<Integer>) param.get("ids");
+			
+			for(int i=0 ;i<ids.size() ;i++) {
+				p.put("id", ids.get(i));				
+				p.put("boardId", boardIds.get(i));
+				articleDao.deleteOneArticle(p);
+			}				
+				
+			msg = "삭제 성공";					
+			resultCode = "S-1";
+			
+		}catch(Exception e) {
+			msg = "삭제중 오류";
+			resultCode = "F-1";
+			e.printStackTrace();
+		}
+		
+		return Maps.of("msg", msg, "resultCode", resultCode);
+	}
+	
 }

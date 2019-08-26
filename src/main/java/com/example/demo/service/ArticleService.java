@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.demo.dto.Article;
+import com.example.demo.dto.ArticleReply;
 
 public interface ArticleService {
 
@@ -21,8 +22,12 @@ public interface ArticleService {
 
 	public Map<String, Object> updateArticleLike(Map<String, Object> param);
 
-	public Map<String, Object> deleteCheckedArticle(Map<String, Object> param, List<Integer> ids);
+	public Map<String, Object> deleteCheckedArticle(Map<String, Object> param);
 
 	public void updateArticleView(Map<String, Object> param);
+
+	public Map<String, Object> getMemberArticlesByMemberId(Map<String, Object> param);
+
+	public Map<String, Object> deleteCheckedMemberArticle(Map<String, Object> param);
 
 }

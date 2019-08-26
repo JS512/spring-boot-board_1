@@ -6,10 +6,10 @@
 		<div class="container">
 			<div class="overlay" hidden></div>
 			<div class="contextMenu" hidden>
-				<a href="javascript:showProfile();">프로필 보기</a>
-				<c:if test="${isLogined }">
-					<a href="javascript:showLetter();">쪽지 보내기</a>
-				</c:if>
+				<a href="javascript:showProfile();">프로필 보기</a>				
+				<a href="javascript:showLetter();">쪽지 보내기</a>
+				<a href="javascript:showMemberArticles();">작성 게시물 보기</a>
+				<a href="javascript:showMemberReplies();">작성 댓글 보기</a>
 			</div>
 			
 			<div class="profile absolute-center" hidden>

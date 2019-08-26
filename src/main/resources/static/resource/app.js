@@ -123,7 +123,7 @@ function articleDetail__checkAddReplyForm(form){
 
 function articleDetail__drawReply(data){
 	var html = `
-	<div>	
+	<div class="reply">	
 		<table>
 			<tr>
 				<td><button data-type="reply" class="like" type="button" onclick="articleDetail__updateLike(this, true);">좋아요</button> <span>0</span></td>
@@ -137,9 +137,12 @@ function articleDetail__drawReply(data){
 			</tr>
 			<tr>
 				<th>작성자</th> <td  class="clickable-contextMenu clickable" data-id="${data.memberId }" data-to="${data.extra.writer }"> ${data.extra.writer}</td>
-			</tr>											
+			</tr>								
+			<tr>
+				<td colspan='2'><pre class="replyBody">${data.body}</pre></td>				
+			</tr>			
 		</table>
-		<pre class="replyBody">${data.body}</pre>`;
+		`;
 		if( $("#memberId").length && $("#memberId").val() == data.memberId){
 			html += `<button type="button" onclick="articleDetail__deleteReply(this);">삭제</button>
 			<button type="button" onclick="articleDetail__showReplyModifyForm(this);">수정</button>`

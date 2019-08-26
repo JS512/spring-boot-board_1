@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.example.demo.dto.ArticleReply;
 import com.example.demo.dto.Letter;
 import com.example.demo.dto.Member;
 
@@ -50,4 +51,6 @@ public interface MemberDao {
 	public void deleteOneLetterById(int id);
 
 	public Letter getOneLetterById(int id);
+
+	public List<ArticleReply> getMemberRepliesByMemberId(Map<String, Object> param);
 }

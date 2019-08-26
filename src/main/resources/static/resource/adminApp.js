@@ -88,6 +88,89 @@ function adminArticleList__checkForm(form){
 	)
 }
 
+function adminMemberReply__checkForm(){
+	if($("form").find("input[type='checkbox']:checked").length == 0){
+		alert("한개이상 선택해 주세요.");
+		return ;
+	}
+	
+	if(!confirm("선택한 댓글들을 삭제 하시겠습니까?")){
+		return ;
+	}
+	
+	var checkedValue = [];
+	var checkedArticleValue = [];
+	var checkedBoardValue = [];
+	
+	$("input[type='checkbox']:checked").each(function(index, item){		
+		checkedValue.push($(item).val());
+		checkedArticleValue.push($(item).attr("data-articleId"));
+		checkedBoardValue.push($(item).attr("data-boardId"));
+	});	
+	
+	$("form").find("button").attr("disabled", true);	
+	
+	$.post("/admin/deleteCheckedMemberReply",
+		{
+			id:checkedValue,
+			boardId : checkedBoardValue,
+			articleId : checkedArticleValue
+		},
+		function(data){
+			
+			alert(data.msg);
+			if(data.success){
+				$("form").find("input[type='checkbox']:checked").parent().parent().remove();
+			}
+		},
+		"json"
+	)
+}
+
+function adminMemberArticle__checkForm(){
+	if($("form").find("input[type='checkbox']:checked").length == 0){
+		alert("한개이상 선택해 주세요.");
+		return ;
+	}
+	
+	if(!confirm("선택한 게시물들을 삭제 하시겠습니까?")){
+		return ;
+	}
+	
+	var checkedValue = [];	
+	var checkedBoardValue = [];
+	
+	$("input[type='checkbox']:checked").each(function(index, item){		
+		checkedValue.push($(item).val());
+		checkedBoardValue.push($(item).attr("data-boardId"));
+	});	
+	
+	$("form").find("button").attr("disabled", true);	
+	
+	$.post("/admin/deleteCheckedMemberArticle",
+		{
+			id:checkedValue,
+			boardId : checkedBoardValue			
+		},
+		function(data){
+			
+			alert(data.msg);
+			if(data.success){
+				$("form").find("input[type='checkbox']:checked").parent().parent().remove();
+			}
+		},
+		"json"
+	)
+}
+
+function showMemberArticles(){
+	location.href="/admin/getMemberArticles?memberId="+clickedMemberId;
+}
+
+function showMemberReplies(){
+	location.href="/admin/getMemberReplies?memberId=" + clickedMemberId;
+}
+
 //////////////////////////////////////////////////////////////////////
 
 
@@ -211,7 +294,7 @@ function articleDetail__checkAddReplyForm(form){
 
 function articleDetail__drawReply(data){
 	var html = `
-	<div>	
+	<div class="reply">	
 		<table>
 			<tr>
 				<td><button data-type="reply" class="like" type="button" onclick="articleDetail__updateLike(this, true);">좋아요</button> <span>0</span></td>
@@ -225,9 +308,11 @@ function articleDetail__drawReply(data){
 			</tr>
 			<tr>
 				<th>작성자</th> <td  class="clickable-contextMenu clickable" data-id="${data.memberId }" data-to="${data.extra.writer }"> ${data.extra.writer}</td>
+			</tr>
+			<tr>
+				<td colspan='2'><pre class="replyBody">${data.body}</pre></td>				
 			</tr>											
-		</table>
-		<pre class="replyBody">${data.body}</pre>
+		</table>		
 		
 		<button type="button" onclick="articleDetail__deleteReply(this);">삭제</button>
 		<button type="button" onclick="articleDetail__showReplyModifyForm(this);">수정</button>
@@ -467,9 +552,9 @@ var clickedMemberLoginId;
 function showContextMenu(x, y){
 	
 	if($("#memberId").val() == clickedMemberId){
-		$(".contextMenu").find("a:nth-child(2)").hide();
+		$(".contextMenu").find("a").not("a:nth-child(1)").hide();		
 	}else{
-		$(".contextMenu").find("a:nth-child(2)").show();
+		$(".contextMenu").find("a").not("a:nth-child(1)").show();
 	}
 	$(".overlay").show();
 	$(".contextMenu").css({'top':y, 'left':x}).show();

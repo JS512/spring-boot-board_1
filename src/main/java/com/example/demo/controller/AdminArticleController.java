@@ -426,7 +426,8 @@ public class AdminArticleController {
 	public Map<String, Object> deleteCheckedArticle(@RequestParam Map<String, Object> param,
 													@RequestParam(value="id[]") List<Integer> ids){
 		
-		Map<String, Object> rs = articleService.deleteCheckedArticle(param, ids);		
+		param.put("ids", ids);
+		Map<String, Object> rs = articleService.deleteCheckedArticle(param);		
 				
 		boolean success = false;
 		String resultCode = (String)rs.get("resultCode");		
@@ -435,7 +436,80 @@ public class AdminArticleController {
 			success = true;
 		}
 		
-		return Maps.of("msg", rs.get("msg"), "success", success);
+		return Maps.of("msg", rs.get("msg"), "success", success);		
+	}
+	
+	@RequestMapping("/getMemberArticles")
+	public String getmemberArticles(Model model, @RequestParam Map<String, Object> param) {
+		if(param.get("cPage") == null || param.get("cPage").equals("")) {
+			param.put("cPage", 1);
+		}
+		Map<String, Object> rs = articleService.getMemberArticlesByMemberId(param);
+		model.addAttribute("list", rs.get("list"));
+		model.addAttribute("page", rs.get("page"));
 		
+		return "admin/admin_member/admin_member_article";
+	}
+	
+	@RequestMapping("/getMemberReplies")
+	public String getMemberReplies(Model model, @RequestParam Map<String, Object> param) {
+		if(param.get("cPage") == null || param.get("cPage").equals("")) {
+			param.put("cPage", 1);
+		}
+		Map<String , Object> rs = articleReplyService.getMemberRepliesByMemberId(param);
+		model.addAttribute("list", rs.get("list"));
+		model.addAttribute("page", rs.get("page"));
+		
+		return "admin/admin_member/admin_member_reply";
+	}
+	
+	@RequestMapping("/deleteCheckedMemberReply")
+	@ResponseBody
+	public Map<String, Object> deleteCheckedMemberReply(@RequestParam Map<String, Object> param,
+													@RequestParam(value="id[]") List<Integer> ids,
+													@RequestParam(value="articleId[]") List<Integer> articleIds,
+													@RequestParam(value="boardId[]") List<Integer> boardIds){
+		
+		if(param.get("cPage") == null || param.get("cPage").equals("")) {
+			param.put("cPage", 1);
+		}
+		
+		param.put("articleIds", articleIds);
+		param.put("boardIds", boardIds);
+		param.put("ids", ids);
+		Map<String, Object> rs = articleReplyService.deleteCheckedMemberReply(param);		
+				
+		boolean success = false;
+		String resultCode = (String)rs.get("resultCode");		
+
+		if(resultCode.startsWith("S-")) {
+			success = true;
+		}
+		
+		return Maps.of("msg", rs.get("msg"), "success", success);		
+	}
+	
+	@RequestMapping("/deleteCheckedMemberArticle")
+	@ResponseBody
+	public Map<String, Object> deleteCheckedMemberArticle(@RequestParam Map<String, Object> param,
+													@RequestParam(value="id[]") List<Integer> ids,													
+													@RequestParam(value="boardId[]") List<Integer> boardIds){
+		
+		if(param.get("cPage") == null || param.get("cPage").equals("")) {
+			param.put("cPage", 1);
+		}	
+		
+		param.put("boardIds", boardIds);
+		param.put("ids", ids);
+		Map<String, Object> rs = articleService.deleteCheckedMemberArticle(param);		
+				
+		boolean success = false;
+		String resultCode = (String)rs.get("resultCode");		
+
+		if(resultCode.startsWith("S-")) {
+			success = true;
+		}
+		
+		return Maps.of("msg", rs.get("msg"), "success", success);		
 	}
 }

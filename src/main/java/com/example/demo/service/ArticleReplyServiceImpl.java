@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import org.apache.groovy.util.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.Utils;
 import com.example.demo.dao.ArticleDao;
 import com.example.demo.dao.ArticleReplyDao;
 import com.example.demo.dao.MemberDao;
@@ -121,5 +123,40 @@ public class ArticleReplyServiceImpl implements ArticleReplyService{
 	
 	public ArticleReply getOneArticleOneReplyByIdArticleIdBoardId(Map<String, Object> param) {
 		return articleReplyDao.getOneArticleOneReplyByIdArticleIdBoardId(param);
+	}
+	
+	@Override
+	public Map<String, Object> getMemberRepliesByMemberId(Map<String, Object> param) {
+		Map<String, Object> page = Utils.calcData(param, articleReplyDao.getReplyTotalCountByMemberId(param));
+		List<ArticleReply> list = articleReplyDao.getMemberRepliesByMemberId(param);	
+		return Maps.of("list", list, "page", page);
+	}
+	
+	public Map<String, Object> deleteCheckedMemberReply(Map<String, Object> param){
+		String msg = "";
+		String resultCode = "";		
+		Map<String, Object> p = new HashMap<>();
+		try {					
+			List<Integer> articleIds = (List<Integer>) param.get("articleIds");
+			List<Integer> boardIds = (List<Integer>) param.get("boardIds");
+			List<Integer> ids = (List<Integer>) param.get("ids");
+			
+			for(int i=0 ;i<ids.size() ;i++) {
+				p.put("id", ids.get(i));
+				p.put("articleId", articleIds.get(i));
+				p.put("boardId", boardIds.get(i));
+				articleReplyDao.deleteOneArticleOneReplyByIdArticleIdBoardId(p);
+			}				
+				
+			msg = "삭제 성공";					
+			resultCode = "S-1";
+			
+		}catch(Exception e) {
+			msg = "삭제중 오류";
+			resultCode = "F-1";
+			e.printStackTrace();
+		}
+		
+		return Maps.of("msg", msg, "resultCode", resultCode);
 	}
 }

@@ -40,6 +40,26 @@
 		WHERE id = #{id} AND articleId = #{articleId} AND boardId = #{boardId}
 	</update>
 	
+	<select id="getMemberRepliesByMemberId" parameterType="map" resultMap="articleReply">		
+		SELECT AR.*, IFNULL(M.loginId, '존재하지 않는 사용자') AS writer
+		FROM articleReply AS AR
+		LEFT OUTER JOIN `member` AS M
+		ON M.id = AR.memberId
+		WHERE AR.memberId = #{memberId}
+		LIMIT #{startNum}, #{perPageNum}
+	</select>
+	
+	<select id="getReplyTotalCountByMemberId" parameterType="map" resultType="Integer">
+		SELECT COUNT(AR.id)
+		FROM articleReply AS AR
+		LEFT OUTER JOIN `member` AS M
+		ON M.id = AR.memberId
+		WHERE AR.memberId= #{memberId}		
+		<if test="searchType != null and searchType != '' and searchKeyword != null and searchKeyword != ''">			
+			<if test="searchType == 'body'"> AND A.body LIKE CONCAT('%', #{searchKeyword}, '%')</if>			
+		</if>
+	</select>
+	
 	<resultMap id="articleReply" type="com.example.demo.dto.ArticleReply">
 		<id property="id" column="id"/>
 		<id property="regDate" column="regDate"/>

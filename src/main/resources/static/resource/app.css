@@ -20,7 +20,8 @@ pre{
 }
 a{
 	text-decoration:none;
-	color:inherit;
+	color:inherit;	
+	padding:0 5px;
 }
 a:hover, .clickable:hover{
 	text-decoration:underline;
@@ -33,16 +34,19 @@ table{
 }
 th, td{	
 	max-width:200px;
+	max-height:10px;
 }
 table, th, td{
 	border:1px solid black;
 	border-collapse:collapse;
 	padding:5px;
-	word-break:break-all;
+	word-break:break-all;	
 }
 .text-overflow-ellipsis{
 	text-overflow:ellipsis;
-	word-break:break-all;	
+	word-break:break-all;
+	white-space: nowrap;
+	overflow:hidden;	
 }
 .absolute-center{
 	position:absolute;
@@ -115,4 +119,7 @@ table, th, td{
 	min-height:300px;
 	max-width:500px;
 	max-height:500px;
+}
+.reply{
+	max-width:300px;
 }
