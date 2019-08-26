@@ -36,6 +36,7 @@ import com.example.demo.service.ArticleService;
 import com.example.demo.service.MemberService;
 
 import groovy.util.logging.Slf4j;
+import jline.internal.Log;
 
 @Slf4j
 @Controller
@@ -259,7 +260,7 @@ public class ArticleController {
 			}
 		}
 		
-		if(fileIds != null && fileIds.size() > 0) {
+		if(fileIds != null && fileIds.size() > 0) {			
 			rs = articleFileService.modifyArticleFiles(param, modifyFiles, fileIds, modifyTypes2);			
 			resultCode = (String) rs.get("resultCode");
 			

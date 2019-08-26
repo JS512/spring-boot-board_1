@@ -5,6 +5,14 @@
 <h1>${title}</h1>
 
 <a href="/admin/addArticle?boardId=${param.boardId }">글쓰기</a>	
+<c:choose>
+	<c:when test="${param.boardId == 1 }">
+		<h3>자유게시판</h3>
+	</c:when>
+	<c:when test="${param.boardId == 2 }">
+		<h3>공지사항</h3>
+	</c:when>
+</c:choose>
 
 <form action="/admin/articleList" method="get">
 	<input type="hidden" name="boardId" value="${param.boardId }">	

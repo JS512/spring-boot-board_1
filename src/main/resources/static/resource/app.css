@@ -15,7 +15,9 @@
 @-webkit-keyframes spin {
   to { -webkit-transform: rotate(360deg); }
 }
-
+pre{
+	white-space: pre-wrap;       /* Since CSS 2.1 */    
+}
 a{
 	text-decoration:none;
 	color:inherit;
@@ -26,11 +28,10 @@ a:hover, .clickable:hover{
 }
 
 table{
-	width:80%;
+	width:100%;
 	min-width:500px;
 }
-th, td{
-	min-width:200px;
+th, td{	
 	max-width:200px;
 }
 table, th, td{
@@ -41,7 +42,7 @@ table, th, td{
 }
 .text-overflow-ellipsis{
 	text-overflow:ellipsis;
-	overflow: hidden;
+	word-break:break-all;	
 }
 .absolute-center{
 	position:absolute;
@@ -104,10 +105,14 @@ table, th, td{
 }
 
 .letter-content{
-	padding:10px;
+	padding:10px;	
 }
 
 .letter-content pre{
 	border:1px solid black;
 	padding:5px;
+	min-width:300px;
+	min-height:300px;
+	max-width:500px;
+	max-height:500px;
 }

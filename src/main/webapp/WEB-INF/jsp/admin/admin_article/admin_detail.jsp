@@ -36,7 +36,7 @@
 	</tr>
 	<tr>
 		<th>내용</th>
-		<td><pre>${article.body }</pre></td>
+		<td class="text-overflow-ellipsis"><pre>${article.body }</pre></td>
 	</tr>  
   
 </table>

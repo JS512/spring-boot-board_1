@@ -170,7 +170,7 @@ public class AdminArticleController {
 		}
 		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));
 		String role = memberService.getMemberRole((int)session.getAttribute("loginedMemberId"));
-		if(!articleService.checkArticleAuthentication(param) && !role.equals("admin")) {
+		if(!role.equals("admin")) {
 			model.addAttribute("msg","권한이 없습니다.");
 			model.addAttribute("historyBack", true);
 			return "common/redirect";			
@@ -181,7 +181,7 @@ public class AdminArticleController {
 		model.addAttribute("article", article);
 		model.addAttribute("files", files);
 		
-		return "article/modify";
+		return "admin/admin_article/admin_modify";
 	}
 	
 	@RequestMapping("/doModifyArticle")
@@ -199,7 +199,9 @@ public class AdminArticleController {
 			model.addAttribute("historyBack", true);
 			return "common/redirect";
 		}
-		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));
+		
+		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));		
+		
 		Map<String, Object> rs = null;
 		String resultCode = null;			
 		
@@ -229,7 +231,7 @@ public class AdminArticleController {
 			}
 		}
 		
-		if(fileIds != null && fileIds.size() > 0) {
+		if(fileIds != null && fileIds.size() > 0) {			
 			rs = articleFileService.modifyArticleFiles(param, modifyFiles, fileIds, modifyTypes2);			
 			resultCode = (String) rs.get("resultCode");
 			

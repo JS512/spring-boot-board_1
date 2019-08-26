@@ -4,12 +4,18 @@
 <%@ include file="../part/head.jspf" %>
 <h1>${title}</h1>
 
-<c:if test="${isLogined }">	
-	<c:if test="${param.boardId == 1 && param.boardId != 2}">
-		<h2>자유 게시판</h2>
-		<a href="/article/addArticle?boardId=${param.boardId }">글쓰기</a>
-	</c:if>	
+<c:if test="${isLogined && param.boardId == 1 && param.boardId != 2}">			
+	<a href="/article/addArticle?boardId=${param.boardId }">글쓰기</a>	
 </c:if>
+
+<c:choose>
+	<c:when test="${param.boardId == 1 }">
+		<h3>자유게시판</h3>
+	</c:when>
+	<c:when test="${param.boardId == 2 }">
+		<h3>공지사항</h3>
+	</c:when>
+</c:choose>
 
 <form action="/article/list" method="get">
 	<input type="hidden" name="boardId" value="${param.boardId }">	

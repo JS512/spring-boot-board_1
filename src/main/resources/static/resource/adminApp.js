@@ -223,12 +223,11 @@ function articleDetail__drawReply(data){
 				<th>작성자</th> <td  class="clickable-contextMenu clickable" data-id="${data.memberId }" data-to="${data.extra.writer }"> ${data.extra.writer}</td>
 			</tr>											
 		</table>
-		<pre class="replyBody">${data.body}</pre>`;
-		if( $("#memberId").length && $("#memberId").val() == data.memberId){
-			html += `<button type="button" onclick="articleDetail__deleteReply(this);">삭제</button>
-			<button type="button" onclick="articleDetail__showReplyModifyForm(this);">수정</button>`
-		}
-		html += `	
+		<pre class="replyBody">${data.body}</pre>
+		
+		<button type="button" onclick="articleDetail__deleteReply(this);">삭제</button>
+		<button type="button" onclick="articleDetail__showReplyModifyForm(this);">수정</button>
+			
 		<hr>
 	</div>`;
 	
