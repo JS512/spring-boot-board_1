@@ -19,6 +19,10 @@
 		<td><button data-type="article" class="like" type="button" onclick="articleDetail__updateLike(this, false);">싫어요</button> <span>0</span></td>
 	</tr>
 	<tr>
+		<th>조회수</th>
+		<td>${article.view }</td>
+	</tr>
+	<tr>
     	<th>번호</th>
 		<td class="articleId id" data-id="${article.id }">${article.id }</td>
 	</tr>

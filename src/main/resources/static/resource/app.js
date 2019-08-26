@@ -152,19 +152,7 @@ function articleDetail__drawReply(data){
 	$(".replyList").prepend(html);
 	
 	
-	$(".clickable-contextMenu").click(function(e){
-		clickedMemberId = $(this).attr("data-id");		
-		clickedMemberLoginId = $(this).attr("data-to");
-		showContextMenu(e.pageX, e.pageY);		
-	});
-	
-	$(".overlay").click(function(){
-		hideOverlay();
-	});
-	
-	$(".close").click(function(){
-		close(this);
-	});	
+	initContextMenu();
 	
 }
 
@@ -632,13 +620,15 @@ function letter__deleteLetter(btn){
 		}
 	)
 }
-
-$(function(){	
+function initGetReply(){
 	if($(".replyList").length){
 		articleDetail__getAllReplies();
 		articleDetail__getLikes($(".article"), "article");
-	}
-	
+	}	
+		
+}
+
+function initContextMenu(){
 	$(".close").click(function(){
 		close(this);
 		$(".overlay").hide();
@@ -667,6 +657,10 @@ $(function(){
 		$(".letter-content").show();
 		$(".content").html("<pre>" + $(this).html() + "</pre>");
 	});
+}
+$(function(){	
+	initGetReply();
+	initContextMenu();	
 	
 	$("input").attr("maxlength", "50");	
 })

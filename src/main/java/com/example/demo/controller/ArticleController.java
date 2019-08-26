@@ -78,6 +78,7 @@ public class ArticleController {
 			model.addAttribute("historyBack", true);
 			return "common/redirect";
 		}
+		articleService.updateArticleView(param);
 		Article article = articleService.getOneArticleById(param);
 		List<ArticleFile> files = articleFileService.getArticleFiles(param);
 		

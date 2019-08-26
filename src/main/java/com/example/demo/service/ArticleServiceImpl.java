@@ -85,20 +85,7 @@ public class ArticleServiceImpl implements ArticleService{
 		}
 		
 		return Maps.of("msg", msg, "resultCode", resultCode);
-	}
-	
-	public boolean checkArticleAuthentication(Map<String, Object> param) {
-		Article article = articleDao.getOneArticleById(param);
-		int loginedMemberId = (int)param.get("loginedMemberId");
-		
-		if(article.getId() != loginedMemberId) {
-			return false;
-		}else {
-			return true;
-		}
-	}
-	
-	
+	}	
 	
 	public Map<String, Object> getArticleLikes(Map<String, Object> param){
 		String msg = "";
@@ -200,5 +187,9 @@ public class ArticleServiceImpl implements ArticleService{
 		}
 		
 		return Maps.of("msg", msg, "resultCode", resultCode);
+	}
+	
+	public void updateArticleView(Map<String, Object> param) {
+		articleDao.updateArticleView(param);
 	}
 }

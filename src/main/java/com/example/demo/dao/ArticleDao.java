@@ -31,4 +31,6 @@ public interface ArticleDao {
 	public void deleteArticleLike(Map<String, Object> param);
 
 	public void updateArticleLike(Map<String, Object> param);
+
+	public void updateArticleView(Map<String, Object> param);
 }

@@ -15,14 +15,14 @@ public interface ArticleService {
 
 	public Map<String, Object> deleteOneArticle(Map<String, Object> param);
 
-	public Map<String, Object> modifyArticle(Map<String, Object> param);
-
-	public boolean checkArticleAuthentication(Map<String, Object> param);
+	public Map<String, Object> modifyArticle(Map<String, Object> param);	
 
 	public Map<String, Object> getArticleLikes(Map<String, Object> param);
 
 	public Map<String, Object> updateArticleLike(Map<String, Object> param);
 
 	public Map<String, Object> deleteCheckedArticle(Map<String, Object> param, List<Integer> ids);
+
+	public void updateArticleView(Map<String, Object> param);
 
 }

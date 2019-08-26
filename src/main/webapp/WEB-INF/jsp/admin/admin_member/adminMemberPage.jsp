@@ -2,14 +2,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="title" value="회원관리 페이지"/>
 <%@ include file="../admin_part/admin_head.jspf" %>
-<script>
-	$(function(){
-		adminPage__getAllMembers();
-	})
-</script>
+
 <h1>${title}</h1>
 
-<table>
+<table class="memberTable">
 	<thead>
 	  <tr>
 	    <th>번호</th>

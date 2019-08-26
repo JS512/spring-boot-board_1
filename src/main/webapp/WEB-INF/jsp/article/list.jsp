@@ -23,15 +23,31 @@
 		<option value="title">제목</option>
 		<option value="body">내용</option>
 		<option value="writer">작성자</option>
-	</select>
+	</select>	
+	
+	<input type="text" name="searchKeyword" value="${param.searchKeyword }">
+	<button>검색</button><br>
+	<label>
+		정렬 기준 :
+		<select name="sortType">
+			<option value="latest">최신순</option>
+			<option value="oldest">오래된순</option>
+			<option value="highLike">좋아요 많은순</option>
+			<option value="lowLike">좋아요 적은순</option>
+			<option value="highView">조회수 많은순</option>
+			<option value="lowView">조회수 적은순</option>
+		</select>
+	</label>
 	<c:if test="${param.searchType != null && param.searchType != '' }">
 		<script>
 			$("select[name='searchType']").val("${param.searchType}");
 		</script>
-	</c:if>	
-	
-	<input type="text" name="searchKeyword" value="${param.searchKeyword }">
-	<button>검색</button>
+	</c:if>
+	<c:if test="${param.sortType != null && param.sortType != ''}">
+		<script>
+			$("select[name='sortType']").val("${param.sortType}");
+		</script>
+	</c:if>
 </form>
 
 <table>
@@ -40,7 +56,8 @@
     <th>날짜</th>
     <th>제목</th>
     <th>작성자</th>
-    <th>비고</th>
+    <th>조회수</th>
+    <th>좋아요</th>
   </tr>
   <c:forEach items="${list}" var="article">
   	<tr>
@@ -48,6 +65,8 @@
   		<td>${article.regDate }</td>
   		<td class="text-overflow-ellipsis"><a href="/article/detail${url }&id=${article.id}&cPage=${param.cPage}">${article.title }</a></td>
   		<td class="clickable-contextMenu clickable" data-id="${article.memberId }" data-to="${article.extra.writer }">${article.extra.writer }</td>
+  		<td>${article.view }</td>
+  		<td>${article.extra.likeCnt }</td>
   	</tr>
   </c:forEach>
 </table>

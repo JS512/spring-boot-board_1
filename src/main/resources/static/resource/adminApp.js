@@ -1,15 +1,18 @@
 function adminPage__getAllMembers(){
-	$.post("/admin/getAllMembers",
-			{},
-			function(data){
-				if(data.success){
-					adminPage__drawMembers(data.members);
-				}else{
-					alert(data.msg);
-				}
-			},
-			"json"
-		);
+	if($(".memberTable").length){
+		$.post("/admin/getAllMembers",
+				{},
+				function(data){
+					if(data.success){
+						adminPage__drawMembers(data.members);
+					}else{
+						alert(data.msg);
+					}
+				},
+				"json"
+			);
+	}
+	
 }
 
 function adminPage__deleteMember(btn){
@@ -29,7 +32,7 @@ function adminPage__deleteMember(btn){
 }
 
 function adminPage__drawMembers(data){
-	$("table").find("tbody").html("");
+	$(".memberTable").find("tbody").html("");
 	var html;
 	for(var i=0; i<data.length ;i++){
 		var member = data[i];
@@ -47,7 +50,8 @@ function adminPage__drawMembers(data){
 	  		<td><button data-id="${member.id}" onclick="adminPage__deleteMember(this);">회원 삭제</button></td>
   		</tr>`;
 	}
-	$("table").find("tbody").append(html);
+	$(".memberTable").find("tbody").append(html);	
+	initContextMenu();
 }
 
 function adminArticleList__checkForm(form){
@@ -234,21 +238,7 @@ function articleDetail__drawReply(data){
 	$.parseHTML(html);
 	$(".replyList").prepend(html);
 	
-	
-	$(".clickable-contextMenu").click(function(e){
-		clickedMemberId = $(this).attr("data-id");		
-		clickedMemberLoginId = $(this).attr("data-to");
-		showContextMenu(e.pageX, e.pageY);		
-	});
-	
-	$(".overlay").click(function(){
-		hideOverlay();
-	});
-	
-	$(".close").click(function(){
-		close(this);
-	});	
-	
+	initContextMenu();	
 }
 
 function articleDetail__getAllReplies(){	
@@ -576,13 +566,17 @@ function letter__deleteLetter(btn){
 		}
 	)
 }
-
-$(function(){	
+function initGetReply(){
 	if($(".replyList").length){
 		articleDetail__getAllReplies();
 		articleDetail__getLikes($(".article"), "article");
-	}
-	
+	}	
+		
+}
+function initGetMembers(){
+	adminPage__getAllMembers();
+}
+function initContextMenu(){
 	$(".close").click(function(){
 		close(this);
 		$(".overlay").hide();
@@ -611,5 +605,10 @@ $(function(){
 		$(".letter-content").show();
 		$(".content").html("<pre>" + $(this).html() + "</pre>");
 	});
-	$("input").attr("maxlength", "50");	
+}
+$(function(){	
+	initGetReply();
+	initContextMenu();
+	initGetMembers();
+	$("input").attr("maxlength", "50");
 })
