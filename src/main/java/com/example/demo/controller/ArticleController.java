@@ -458,6 +458,32 @@ public class ArticleController {
 		return Maps.of("msg", rs.get("msg"), "success", success);
 	}
 	
+	@RequestMapping("/getMemberArticles")
+	public String getmemberArticles(Model model, @RequestParam Map<String, Object> param, HttpSession session) {
+		if(param.get("cPage") == null || param.get("cPage").equals("")) {
+			param.put("cPage", 1);
+		}
+		param.put("memberId", session.getAttribute("loginedMemberId"));
+		Map<String, Object> rs = articleService.getMemberArticlesByMemberId(param);
+		model.addAttribute("list", rs.get("list"));
+		model.addAttribute("page", rs.get("page"));
+		
+		return "member/memberArticle";
+	}
+	
+	@RequestMapping("/getMemberReplies")
+	public String getMemberReplies(Model model, @RequestParam Map<String, Object> param, HttpSession session) {
+		if(param.get("cPage") == null || param.get("cPage").equals("")) {
+			param.put("cPage", 1);
+		}
+		param.put("memberId", session.getAttribute("loginedMemberId"));
+		Map<String , Object> rs = articleReplyService.getMemberRepliesByMemberId(param);
+		model.addAttribute("list", rs.get("list"));
+		model.addAttribute("page", rs.get("page"));
+		
+		return "member/memberReply";
+	}
+	
 	
 	private boolean checkAcceptBoardId(Map<String, Object> param) {
 		String boardId = (String) param.get("boardId");

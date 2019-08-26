@@ -623,6 +623,9 @@ function letter__deleteLetter(btn){
 		}
 	)
 }
+
+
+
 function initGetReply(){
 	if($(".replyList").length){
 		articleDetail__getAllReplies();

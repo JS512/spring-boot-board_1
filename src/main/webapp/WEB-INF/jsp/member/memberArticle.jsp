@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<c:set var="title" value="멤버 게시물 리스트 페이지"/>
-<%@ include file="../admin_part/admin_head.jspf" %>
+<c:set var="title" value="내 게시물  페이지"/>
+<%@ include file="../part/head.jspf" %>
 <h1>${title}</h1>
 
 <form action="/admin/getMemberArticles" method="get">
@@ -36,42 +36,40 @@
 	</c:if>
 </form>
 
-<form onsubmit="adminMemberArticle__checkForm(this);return false;" >
-	<input type="hidden" name="boardId" value="${param.boardId }">
-	<table>
-	  <tr>
-	    <th>번호</th>
-	    <th>날짜</th>
-	    <th>제목</th>
-	    <th>작성자</th>
-	    <th>조회수</th>
-	    <th>좋아요</th>
-	    <th><button>삭제</button></th>
-	  </tr>
-	  <c:forEach items="${list}" var="article">
-	  	<tr>
-	  		<td>${article.id }</td>
-	  		<td>${article.regDate }</td>
-	  		<td class="text-overflow-ellipsis"><a href="/admin/articleDetail?id=${article.id}&cPage=${param.cPage}&boardId=${article.boardId}">${article.title }</a></td>
-	  		<td class="clickable-contextMenu clickable" data-id="${article.memberId }" data-to="${article.extra.writer }">${article.extra.writer }</td>
-	  		<td>${article.view }</td>
-	  		<td>${article.extra.likeCnt }</td>  		
-	  		<td><input type="checkbox" name="id" value="${article.id }" data-boardId="${article.boardId }"></td>
-	  	</tr>
-	  </c:forEach>
-	</table>
-</form>
+
+	
+<table>
+  <tr>
+    <th>번호</th>
+    <th>날짜</th>
+    <th>제목</th>
+    <th>작성자</th>
+    <th>조회수</th>
+    <th>좋아요</th>    
+  </tr>
+  <c:forEach items="${list}" var="article">
+  	<tr>
+  		<td>${article.id }</td>
+  		<td>${article.regDate }</td>
+  		<td class="text-overflow-ellipsis"><a href="/article/detail?id=${article.id}&cPage=${param.cPage}&boardId=${article.boardId}">${article.title }</a></td>
+  		<td class="clickable-contextMenu clickable" data-id="${article.memberId }" data-to="${article.extra.writer }">${article.extra.writer }</td>
+  		<td>${article.view }</td>
+  		<td>${article.extra.likeCnt }</td>  		
+  	</tr>
+  </c:forEach>
+</table>
+
 <ul>
 	<c:if test="${page.prev }">
-		<li><a href="/admin/getMemberArticles${url }&cPage=${page.startPage-1}"><</a></li>
+		<li><a href="/article/getMemberArticles?cPage=${page.startPage-1}"><</a></li>
 	</c:if>
 	<c:forEach begin="${page.startPage }" end="${page.endPage }" var="idx">
 		<li>
-			<a href="/admin/getMemberArticles${url }&cPage=${idx }"><c:out value="${idx}"/></a>
+			<a href="/article/getMemberArticles?cPage=${idx }"><c:out value="${idx}"/></a>
 		</li>
 	</c:forEach>
 	<c:if test="${page.next }">
-		<li><a href="/admin/getMemberArticles${url }&cPage=${page.endPage+1}">></a></li>
+		<li><a href="/article/getMemberArticles?cPage=${page.endPage+1}">></a></li>
 	</c:if>
 </ul>
-<%@ include file="../admin_part/admin_foot.jspf" %>
+<%@ include file="../part/foot.jspf" %>

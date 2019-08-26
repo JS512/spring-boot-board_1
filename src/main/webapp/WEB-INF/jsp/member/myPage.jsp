@@ -35,4 +35,6 @@
 <a href="/member/changeLoginPw">비밀번호 변경</a>
 <a href="/member/letterList">쪽지 보기</a>
 <a href="javascript:memberMyPage__withdrawal();">회원 탈퇴</a>
+<a href="/article/getMemberArticles">내 게시물</a>
+<a href="/article/getMemberReplies">내 댓글</a>
 <%@ include file="../part/foot.jspf" %>
