@@ -8,7 +8,9 @@
   animation: spin 1s ease-in-out infinite;
   -webkit-animation: spin 1s ease-in-out infinite;
 }
-
+*{
+	box-sizing:border-box;
+}
 @keyframes spin {
   to { -webkit-transform: rotate(360deg); }
 }
@@ -16,12 +18,29 @@
   to { -webkit-transform: rotate(360deg); }
 }
 pre{
-	white-space: pre-wrap;       /* Since CSS 2.1 */    
+	white-space: pre-wrap;       /* Since CSS 2.1 */
+	word-break:break-all;    
 }
 a{
 	text-decoration:none;
 	color:inherit;	
 	padding:0 5px;
+}
+
+.border-normal{
+	border:1px solid black;
+}
+.margin-vertical-normal{
+	margin:10px 0px;
+}
+.margin-horizontal-normal{
+	margin:0px 10px;
+}
+.margin-normal{
+	margin:10px;
+}
+.max-width{
+	width:100%;
 }
 a:hover, .clickable:hover{
 	text-decoration:underline;
@@ -119,6 +138,7 @@ table, th, td{
 	min-height:300px;
 	max-width:500px;
 	max-height:500px;
+	overflow-y:scroll;
 }
 .reply{
 	max-width:300px;

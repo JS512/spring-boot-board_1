@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="title" value="쪽지 리스트 페이지"/>
-<%@ include file="../part/head.jspf" %>
+<%@ include file="../admin_part/admin_head.jspf" %>
 <h1>${title}</h1>
 
 <table>
@@ -26,15 +26,15 @@
 <c:out value="${url }"/>
 <ul>
 	<c:if test="${page.prev }">
-		<li><a href="/member/letterList?cPage=${page.startPage-1}"><</a></li>
+		<li><a href="/admin/letterList?cPage=${page.startPage-1}"><</a></li>
 	</c:if>
 	<c:forEach begin="${page.startPage }" end="${page.endPage }" var="idx">
 		<li>
-			<a href="/member/letterList?cPage=${idx }"><c:out value="${idx}"/></a>
+			<a href="/admin/letterList?cPage=${idx }"><c:out value="${idx}"/></a>
 		</li>
 	</c:forEach>
 	<c:if test="${page.next }">
-		<li><a href="/member/letterList?cPage=${page.endPage+1}">></a></li>
+		<li><a href="/admin/letterList?cPage=${page.endPage+1}">></a></li>
 	</c:if>
 </ul>
 <div class="letter-content absolute-center" hidden>
@@ -43,4 +43,4 @@
 	</div>
 	<div class="content"></div>
 </div>
-<%@ include file="../part/foot.jspf" %>
+<%@ include file="../admin_part/admin_foot.jspf" %>

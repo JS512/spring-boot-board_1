@@ -272,7 +272,7 @@ function articleDetail__checkAddReplyForm(form){
 		alert("빈칸없이 채워주세요");
 		return ;
 	}
-	$.post("/article/addReply",
+	$.post("/admin/addReply",
 		{
 			articleId : form.articleId.value,
 			boardId : form.boardId.value,
@@ -529,13 +529,13 @@ function articleModify__check(btn){
 }
 
 
-function memberMyPage__withdrawal(){
+function adminMemberMyPage__withdrawal(){
 	if(confirm("정말 탈퇴 하시겠습니까?")){
-		location.href = "/member/withdrawal";
+		location.href = "/admin/withdrawal";
 	}
 }
 
-function memberChangeLoginPw__checkForm(form){
+function adminMemberChangeLoginPw__checkForm(form){
 	if(!checkEmpty(form.temp_origin_loginPw) || !checkEmpty(form.temp_loginPw)){
 		alert("빈칸을 채워주세요");
 		return ;
@@ -570,7 +570,7 @@ function hideOverlay(){
 
 function showProfile(){
 	$("#loading").show();
-	$.post("/member/getMemberProfile",
+	$.post("/admin/getMemberProfile",
 		{
 			id : clickedMemberId
 		},
@@ -610,7 +610,7 @@ function checkLetterForm(form){
 	}	
 	$(form).parent().children().hide();
 	$(".letter").find(".loading").show();
-	$.post("/member/sendLetter",
+	$.post("/admin/sendLetter",
 		{
 			toId : clickedMemberId,
 			body : form.body.value
@@ -637,7 +637,7 @@ function letter__deleteLetter(btn){
 		return ;
 	}
 	$(btn).attr("disabled", true);
-	$.get("/member/deleteLetter",
+	$.get("/admin/deleteLetter",
 		{
 			id : $(btn).attr("data-id")		
 		},
