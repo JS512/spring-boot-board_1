@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<c:set var="title" value="멤버 게시물 리스트 페이지"/>
+<c:set var="title" value="${boardName } 리스트"/>
 <%@ include file="../admin_part/admin_head.jspf" %>
 <h1>${title}</h1>
 

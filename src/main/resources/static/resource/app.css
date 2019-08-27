@@ -21,12 +21,14 @@ pre{
 	white-space: pre-wrap;       /* Since CSS 2.1 */
 	word-break:break-all;    
 }
-a{
+a{	
 	text-decoration:none;
 	color:inherit;	
 	padding:0 5px;
 }
-
+.nav_page li{
+	display:inline-block;
+}
 .border-normal{
 	border:1px solid black;
 }

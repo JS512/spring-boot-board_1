@@ -1,21 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<c:set var="title" value="리스트 페이지"/>
+<c:set var="title" value="${boardName } 리스트"/>
 <%@ include file="../part/head.jspf" %>
+
 <h1>${title}</h1>
 
-<c:if test="${isLogined && param.boardId == 1 && param.boardId != 2}">			
+<c:if test="${isLogined && param.boardId == 2 && param.boardId != 1}">			
 	<a href="/article/addArticle?boardId=${param.boardId }">글쓰기</a>	
 </c:if>
 
-<c:choose>
-	<c:when test="${param.boardId == 1 }">
-		<h3>자유게시판</h3>
-	</c:when>
-	<c:when test="${param.boardId == 2 }">
-		<h3>공지사항</h3>
-	</c:when>
-</c:choose>
 
 <form action="/article/list" method="get">
 	<input type="hidden" name="boardId" value="${param.boardId }">	
@@ -63,14 +56,14 @@
   	<tr>
   		<td>${article.id }</td>
   		<td>${article.regDate }</td>
-  		<td class="text-overflow-ellipsis"><a href="/article/detail${url }&id=${article.id}&cPage=${param.cPage}">${article.title }</a></td>
+  		<td class="text-overflow-ellipsis"><a onclick="articleList__checkView(${article.id}, ${param.boardId });" href="/article/detail${url }&id=${article.id}&cPage=${param.cPage}">${article.title }</a></td>
   		<td class="clickable-contextMenu clickable" data-id="${article.memberId }" data-to="${article.extra.writer }">${article.extra.writer }</td>
   		<td>${article.view }</td>
   		<td>${article.extra.likeCnt }</td>
   	</tr>
   </c:forEach>
 </table>
-<ul>
+<ul class="nav_page">
 	<c:if test="${page.prev }">
 		<li><a href="/article/list${url }&cPage=${page.startPage-1}"><</a></li>
 	</c:if>

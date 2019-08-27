@@ -157,6 +157,11 @@
 		</if>
 	</select>
 	
+	<select id="getBoardName" parameterType="map" resultType="string">
+		SELECT name FROM `board`
+		WHERE id = #{boardId}
+	</select>
+	
 	<resultMap type="com.example.demo.dto.Article" id="article">
 		<id property="id" column="id"/>
 		<id property="regDate" column="regDate"/>

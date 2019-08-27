@@ -51,7 +51,8 @@ public class AdminArticleController {
 	private String uploadDir;
 	
 	@RequestMapping("/addArticle")
-	public String addArticle() {
+	public String addArticle(Model model, @RequestParam Map<String, Object> param) {
+		model.addAttribute("boardName", articleService.getBoardName(param));
 		return "admin/admin_article/admin_add";
 	}
 	
@@ -108,6 +109,8 @@ public class AdminArticleController {
 		
 		Map<String, Object> rs = articleService.getArticleList(param);
 		
+		
+		model.addAttribute("boardName", rs.get("boardName"));
 		model.addAttribute("list", rs.get("list"));
 		model.addAttribute("page", rs.get("page"));
 		
@@ -123,6 +126,7 @@ public class AdminArticleController {
 		Article article = articleService.getOneArticleById(param);
 		List<ArticleFile> files = articleFileService.getArticleFiles(param);
 		
+		model.addAttribute("boardName", articleService.getBoardName(param));
 		model.addAttribute("article", article);
 		model.addAttribute("files", files);
 		
@@ -178,6 +182,7 @@ public class AdminArticleController {
 		Article article = articleService.getOneArticleById(param);
 		List<ArticleFile> files = articleFileService.getArticleFiles(param);
 		
+		model.addAttribute("boardName", articleService.getBoardName(param));
 		model.addAttribute("article", article);
 		model.addAttribute("files", files);
 		

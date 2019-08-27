@@ -66,6 +66,7 @@ public class ArticleController {
 		
 		Map<String, Object> rs = articleService.getArticleList(param);
 		
+		model.addAttribute("boardName", rs.get("boardName"));
 		model.addAttribute("list", rs.get("list"));
 		model.addAttribute("page", rs.get("page"));
 		
@@ -78,10 +79,12 @@ public class ArticleController {
 			model.addAttribute("historyBack", true);
 			return "common/redirect";
 		}
-		articleService.updateArticleView(param);
+		
 		Article article = articleService.getOneArticleById(param);
 		List<ArticleFile> files = articleFileService.getArticleFiles(param);
 		
+		
+		model.addAttribute("boardName", articleService.getBoardName(param));
 		model.addAttribute("article", article);
 		model.addAttribute("files", files);
 		
@@ -96,6 +99,7 @@ public class ArticleController {
 			model.addAttribute("msg", param.get("msg"));
 			return "common/redirect";
 		}
+		model.addAttribute("boardName", articleService.getBoardName(param));
 		return "article/add";
 	}
 	
@@ -203,6 +207,7 @@ public class ArticleController {
 		Article article = articleService.getOneArticleById(param);
 		List<ArticleFile> files = articleFileService.getArticleFiles(param);
 		
+		model.addAttribute("boardName", articleService.getBoardName(param));
 		model.addAttribute("article", article);
 		model.addAttribute("files", files);
 		
@@ -484,13 +489,30 @@ public class ArticleController {
 		return "member/memberReply";
 	}
 	
+	@RequestMapping("/addViewCnt")
+	@ResponseBody
+	public Map<String, Object> addViewCnt(@RequestParam Map<String, Object> param) {
+		boolean success = false;
+		try {
+			Article article = articleService.getOneArticleById(param);
+			if(article != null) {
+				articleService.updateArticleView(param);
+				success = true;
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return Maps.of("success", success);
+	}
 	
 	private boolean checkAcceptBoardId(Map<String, Object> param) {
 		String boardId = (String) param.get("boardId");
 		String msg = null;
 		try {
 			int id = Integer.parseInt(boardId);
-			if(id == 2) {
+			if(id == 1) {
 				msg = "권한이 없습니다.";							
 			}else {
 				return true;

@@ -624,7 +624,33 @@ function letter__deleteLetter(btn){
 	)
 }
 
+function articleList__checkView(id, boardId){
 
+	var read;
+	var key;
+	if($("#memberId").length){
+		key = $("#memberId").val()+"-"+id+"-"+boardId;		
+	}else{
+		key = ip() + "-"+ id+"-"+boardId;		
+	}
+	
+	read = localStorage.getItem(key);
+	
+	if(read == null){
+		$.get("/article/addViewCnt",
+				{
+					boardId: boardId,
+					id: id
+				},
+				function(data){
+					if(data.success){
+						localStorage.setItem(key, "1");
+					}
+				},
+				"json"
+		);
+	}
+}
 
 function initGetReply(){
 	if($(".replyList").length){

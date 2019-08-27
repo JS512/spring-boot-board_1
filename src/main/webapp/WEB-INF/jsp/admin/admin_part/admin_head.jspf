@@ -22,8 +22,8 @@
 	</head>
 	<body>
 		
-		<a href="/admin/articleList?boardId=1">자유게시판</a>
-		<a href="/admin/articleList?boardId=2">공지사항</a>
+		<a href="/admin/articleList?boardId=1">공지사항</a>
+		<a href="/admin/articleList?boardId=2">자유게시판</a>
 		<a href="/">홈</a>
 		
 		

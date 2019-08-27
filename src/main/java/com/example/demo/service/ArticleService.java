@@ -30,4 +30,6 @@ public interface ArticleService {
 
 	public Map<String, Object> deleteCheckedMemberArticle(Map<String, Object> param);
 
+	public String getBoardName(Map<String, Object> param);
+
 }

@@ -27,7 +27,8 @@ public class ArticleServiceImpl implements ArticleService{
 	public Map<String, Object> getArticleList(Map<String, Object> param){	
 		Map<String, Object> page = Utils.calcData(param, articleDao.getTotalCount(param));
 		List<Article> list = articleDao.getArticleList(param);
-		return Maps.of("list", list, "page", page);
+		String boardName = articleDao.getBoardName(param);
+		return Maps.of("list", list, "page", page, "boardName", boardName);
 	}
 	
 	public Article getOneArticleById(Map<String, Object> param) {
@@ -225,5 +226,7 @@ public class ArticleServiceImpl implements ArticleService{
 		
 		return Maps.of("msg", msg, "resultCode", resultCode);
 	}
-	
+	public String getBoardName(Map<String, Object> param) {
+		return articleDao.getBoardName(param);
+	}
 }
