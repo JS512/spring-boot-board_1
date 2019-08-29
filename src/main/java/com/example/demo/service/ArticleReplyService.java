@@ -21,4 +21,6 @@ public interface ArticleReplyService {
 
 	public Map<String, Object> deleteCheckedMemberReply(Map<String, Object> param);
 
+	public Map<String, Object> cancelDeleteOneArticleOneReplyByIdArticleId(Map<String, Object> param);
+
 }

@@ -32,4 +32,6 @@ public interface ArticleService {
 
 	public String getBoardName(Map<String, Object> param);
 
+	public Map<String, Object> cancelDeleteOneArticle(Map<String, Object> param);
+
 }

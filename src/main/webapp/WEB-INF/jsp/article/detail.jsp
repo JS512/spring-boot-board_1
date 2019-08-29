@@ -6,18 +6,23 @@
 
 <a href="/article/list${url }&cPage=${param.cPage}">목록으로</a>
 
-<c:if test="${ isLogined && loginedMemberId == article.memberId}">
-	<a href="javascript:articleDetail__deleteArticleCheck(${article.id }, ${param.boardId })">삭제하기</a>
-	<a href="javascript:articleDetail__modifyArticleCheck(${article.id }, ${param.boardId })">수정하기</a>
+<c:if test="${ isLogined}">
+	<c:if test="${loginedMemberId == article.memberId }">
+		<a href="javascript:articleDetail__deleteArticleCheck(${article.id }, ${param.boardId })">삭제하기</a>
+		<a href="javascript:articleDetail__modifyArticleCheck(${article.id }, ${param.boardId })">수정하기</a>
+	</c:if>	
+	<a data-type="article" data-id="${article.id }" href="javascript:void(0);" onclick="showReportForm(this);">신고하기</a>
 </c:if>
 
-<input type="hidden" id="boardId" value="${article.boardId}">
 
-<table class="article">
+<input type="hidden" id="boardId" value="${article.boardId}">
+<input type="hidden" id="articleId" value="${article.id }">
+
+<table class="article" id="article${article.id}">
 	<tr>
 		<td><button data-type="article" class="like" type="button" onclick="articleDetail__updateLike(this, true);">좋아요</button> <span>0</span></td>
 		<td><button data-type="article" class="like" type="button" onclick="articleDetail__updateLike(this, false);">싫어요</button> <span>0</span></td>
-	</tr>
+	</tr>	
 	<tr>
 		<th>조회수</th>
 		<td>${article.view }</td>

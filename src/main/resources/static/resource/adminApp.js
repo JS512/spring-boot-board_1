@@ -260,6 +260,13 @@ function articleDetail__deleteArticleCheck(id, boardId){
 	location.href="/admin/deleteOneArticle?id="+id+"&boardId="+boardId;
 }
 
+function articleDetail__cancelDeleteArticleCheck(id, boardId){
+	if(!confirm("현재 게시물 블라인드를 취소 하시겠습니까?")){
+		return ;
+	}
+	location.href="/admin/cancelDeleteOneArticle?id="+id+"&boardId="+boardId;
+}
+
 function articleDetail__modifyArticleCheck(id, boardId){
 	if(!confirm("현재 게시물을 수정하시겠습니까?")){
 		return ;
@@ -293,10 +300,17 @@ function articleDetail__checkAddReplyForm(form){
 }
 
 function articleDetail__drawReply(data){
-	var html = `
+	var html;	
+	
+	html = `
 	<div class="reply">	
-		<table>
-			<tr>
+		<table id="reply${data.id}">`;
+	if(data.blindStatus){
+		html += `<tr><th>상태</th><td>관리자에 의해 블라인드</td></tr>`;		
+	}else if(data.delStatus){
+		html += `<tr><th>상태</th><td>작성자에 의해 삭제</td></tr>`;
+	}
+	html += `<tr>
 				<td><button data-type="reply" class="like" type="button" onclick="articleDetail__updateLike(this, true);">좋아요</button> <span>0</span></td>
 				<td><button data-type="reply" class="like" type="button" onclick="articleDetail__updateLike(this, false);">싫어요</button> <span>0</span></td>
 			</tr>
@@ -311,19 +325,21 @@ function articleDetail__drawReply(data){
 			</tr>
 			<tr>
 				<td colspan='2'><pre class="replyBody">${data.body}</pre></td>				
-			</tr>											
-		</table>		
-		
-		<button type="button" onclick="articleDetail__deleteReply(this);">삭제</button>
-		<button type="button" onclick="articleDetail__showReplyModifyForm(this);">수정</button>
+			</tr>
+			
+		</table>`;	
+		if(data.blindStatus){
+			html += `<button type="button" onclick="articleDetail__cancelDeleteReply(this);">블라인드 취소</button>`;
+		}else{
+			html += `<button type="button" onclick="articleDetail__deleteReply(this);">블라인드</button>`;
+		}
+	html += `<button type="button" onclick="articleDetail__showReplyModifyForm(this);">수정</button>
 			
 		<hr>
-	</div>`;
+	</div>`;	
 	
-	$.parseHTML(html);
-	$(".replyList").prepend(html);
-	
-	initContextMenu();	
+	$(".replyList").prepend(html);	
+		
 }
 
 function articleDetail__getAllReplies(){	
@@ -341,11 +357,10 @@ function articleDetail__getAllReplies(){
 					
 				}
 				$(".replyList").find("table").each(function(index, item){
-					articleDetail__getLikes($(this), "reply");
-					
+					articleDetail__getLikes($(this), "reply");					
 				});
-				
-				
+				initContextMenu();
+				moveToId();
 			}else{
 				$(".replyStatus").html(data.msg);
 			}
@@ -368,14 +383,45 @@ function articleDetail__deleteReply(btn){
 			},
 			function(data){
 				
-				if(data.success){
-					$(btn).parent().remove();
-					if(!$(".replyList").children().length){
-						$(".replyStatus").html("댓글이 없습니다.");
-					}
+				if(data.success){					
+					$(btn).parent().find("table").prepend('<tr><th>상태</th><td>관리자에 의해 블라인드</td></tr>');
+					$('<button type="button" onclick="articleDetail__deleteReply(this);">블라인드</button>').insertBefore($(btn).next());
+					$(btn).parent().show();
+					$(btn).remove();
 				}else{
-					$(btn).parent().show();	
+					$(btn).parent().show();
 				}
+				
+			},
+			"json"
+		);
+	}
+}
+
+function articleDetail__cancelDeleteReply(btn){
+	var articleId = $(".articleId").attr("data-id");
+	var boardId = $("#boardId").val();
+	var id = $(btn).parent().find(".replyId").attr("data-id");		
+	
+	if(confirm("선택하신 댓글의 블라인드를 취소하시겠습니까?")){
+		$(btn).parent().hide();
+		$.get("/admin/cancelDeleteOneArticleOneReply",
+			{
+				articleId : articleId,
+				boardId : boardId,
+				id : id
+			},
+			function(data){				
+				alert(data.msg);
+				if(data.success){
+					$(btn).parent().find("table").find("tr").first().remove();
+					$("<button type='button' onclick='articleDetail__deleteReply(this);'>블라인드</button>").insertBefore($(btn).next());
+					$(btn).parent().show();
+					$(btn).remove();
+				}else{
+					$(btn).parent().show();
+				}
+				
 			},
 			"json"
 		);
@@ -651,6 +697,19 @@ function letter__deleteLetter(btn){
 		}
 	)
 }
+
+function moveToId(){	
+	var id = location.hash;	
+	if(id.length){
+		var offset = $(id).offset();
+		$('html').animate({scrollTop : offset.top}, 400,function(){
+			for(var i=0 ;i<2 ;i++){
+				$(id).animate({	opacity: "0.20"	}, 500).animate({opacity:"1.0"}, 500);
+			}
+		});
+		
+	}
+}
 function initGetReply(){
 	if($(".replyList").length){
 		articleDetail__getAllReplies();
@@ -688,6 +747,12 @@ function initContextMenu(){
 	$(".clickable-letterContent").click(function(){
 		$(".overlay").show();
 		$(".letter-content").show();
+		$(".content").html("<pre>" + $(this).html() + "</pre>");
+	});
+	
+	$(".clickable-reportContent").click(function(){
+		$(".overlay").show();
+		$(".report-content").show();
 		$(".content").html("<pre>" + $(this).html() + "</pre>");
 	});
 }

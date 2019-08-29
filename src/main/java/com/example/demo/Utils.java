@@ -70,14 +70,34 @@ public class Utils {
 	public static boolean isNumeric(Map<String, Object> param, String...str) {
 
 		for(int i=0 ;i<str.length ;i++) {
-			String s = (String)param.get(str[i]);
-	        if ( s == null || s.length() == 0 || !s.chars().allMatch(Character::isDigit)) {	        	
-	            return false;
-	        }
+			String s = String.valueOf(param.get(str[i]));
+			if(s != null) {
+				if ( s.length() == 0 || !s.chars().allMatch(Character::isDigit)) {	        	
+		            return false;
+		        }	        
+			}
 		}
 
         return true;
 
+    }
+	
+	public static boolean isBoolean(Map<String, Object> param, String...str) {
+
+		try {
+			for(int i=0 ;i<str.length ;i++) {
+				String s = String.valueOf(param.get(str[i]));
+				if(s != null) {
+					if ( s.length() == 0 || Boolean.parseBoolean(s)) {	        	
+			            return false;
+					}
+				}
+			}
+		}catch(Exception e) {
+//			e.printStackTrace();
+			return false;
+		}
+        return true;
     }
 	
 	public static Map<String, Object> calcData(Map<String, Object> param, int total) {

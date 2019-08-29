@@ -14,6 +14,7 @@ import com.example.demo.Utils;
 import com.example.demo.dao.MemberDao;
 import com.example.demo.dto.Letter;
 import com.example.demo.dto.Member;
+import com.example.demo.dto.Report;
 import com.example.demo.handler.MailHandler;
 
 @Service
@@ -347,6 +348,35 @@ public class MemberServiceImpl implements MemberService{
 	
 	public Letter getOneLetterById(Map<String, Object> param) {
 		return memberDao.getOneLetterById((int)param.get("id"));
+	}
+	
+	public Map<String, Object> sendReport(Map<String, Object> param){
+		String msg = "";
+		String resultCode = "";
+		
+		try {			
+			
+			memberDao.addReport(param);
+			msg = "신고가 접수 되었습니다.";
+			resultCode = "S-1";
+			
+		} catch (Exception e) {
+			msg = "전송 중 오류";
+			resultCode = "F-1";
+			e.printStackTrace();
+		}
+		return Maps.of("msg", msg, "resultCode", resultCode);
+	}
+	
+	public Map<String, Object> getAllReports(Map<String, Object> param){
+		List<Report> reports = null;
+		Map<String, Object> page = Utils.calcData(param, memberDao.getTotalReportCount(param));
+		try {
+			reports = memberDao.getAllReports(param);			
+		} catch (Exception e) {			
+			e.printStackTrace();
+		}
+		return Maps.of("page", page, "reports", reports);
 	}
 
 }

@@ -43,23 +43,26 @@
 	</c:if>
 </form>
 
-<table>
-  <tr>
+<table id="article${article.id }">
+  <tr>  	
     <th>번호</th>
     <th>날짜</th>
     <th>제목</th>
     <th>작성자</th>
     <th>조회수</th>
     <th>좋아요</th>
+    
   </tr>
   <c:forEach items="${list}" var="article">
   	<tr>
+  		
   		<td>${article.id }</td>
   		<td>${article.regDate }</td>
   		<td class="text-overflow-ellipsis"><a onclick="articleList__checkView(${article.id}, ${param.boardId });" href="/article/detail${url }&id=${article.id}&cPage=${param.cPage}">${article.title }</a></td>
   		<td class="clickable-contextMenu clickable" data-id="${article.memberId }" data-to="${article.extra.writer }">${article.extra.writer }</td>
   		<td>${article.view }</td>
   		<td>${article.extra.likeCnt }</td>
+  		
   	</tr>
   </c:forEach>
 </table>

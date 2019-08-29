@@ -43,7 +43,7 @@ function articleAdd__checkForm(form){
 		}
 	});		
 	
-	if(form.boardId == 2){
+	if(form.boardId == 1){
 		$(form).attr("action","/admin/doAddArticle");
 	}	
 	
@@ -122,40 +122,50 @@ function articleDetail__checkAddReplyForm(form){
 }
 
 function articleDetail__drawReply(data){
-	var html = `
-	<div class="reply">	
-		<table>
-			<tr>
-				<td><button data-type="reply" class="like" type="button" onclick="articleDetail__updateLike(this, true);">좋아요</button> <span>0</span></td>
-				<td><button data-type="reply" class="like" type="button" onclick="articleDetail__updateLike(this, false);">싫어요</button> <span>0</span></td>
-			</tr>
-			<tr>
-				<th>번호</th> <td class="replyId id" data-id="${data.id}"> ${data.id}</td>
-			</tr>
-			<tr>
-				<th>날짜</th> <td class="replyRegDate"> ${data.regDate}</td>
-			</tr>
-			<tr>
-				<th>작성자</th> <td  class="clickable-contextMenu clickable" data-id="${data.memberId }" data-to="${data.extra.writer }"> ${data.extra.writer}</td>
-			</tr>								
-			<tr>
-				<td colspan='2'><pre class="replyBody">${data.body}</pre></td>				
-			</tr>			
-		</table>
-		`;
-		if( $("#memberId").length && $("#memberId").val() == data.memberId){
-			html += `<button type="button" onclick="articleDetail__deleteReply(this);">삭제</button>
-			<button type="button" onclick="articleDetail__showReplyModifyForm(this);">수정</button>`
-		}
-		html += `	
-		<hr>
-	</div>`;
+	var html;
+	
+	if(data.blindStatus){
+		html = `<div id="reply${data.id}">관리자에 의해 블라인드 처리된 댓글 입니다.<hr></div>`;		
+	}else if(data.delStatus){
+		html = `<div id="reply${data.id}">작성자에 의해 삭제된 댓글입니다.<hr></div>`;
+	}else{
+		html = `
+			<div class="reply">	
+			<table id="reply${data.id}">
+				<tr>
+					<td><button data-type="reply" class="like" type="button" onclick="articleDetail__updateLike(this, true);">좋아요</button> <span>0</span></td>
+					<td><button data-type="reply" class="like" type="button" onclick="articleDetail__updateLike(this, false);">싫어요</button> <span>0</span></td>
+				</tr>
+				<tr>
+					<th>번호</th> <td class="replyId id" data-id="${data.id}"> ${data.id}</td>
+				</tr>
+				<tr>
+					<th>날짜</th> <td class="replyRegDate"> ${data.regDate}</td>
+				</tr>
+				<tr>
+					<th>작성자</th> <td  class="clickable-contextMenu clickable" data-id="${data.memberId }" data-to="${data.extra.writer }"> ${data.extra.writer}</td>
+				</tr>								
+				<tr>
+					<td colspan='2'><pre class="replyBody">${data.body}</pre></td>				
+				</tr>			
+			</table>
+			`;
+			if( $("#memberId").length){
+				if( $("#memberId").val() == data.memberId){
+					html += `<button type="button" onclick="articleDetail__deleteReply(this);">삭제</button>
+					<button type="button" onclick="articleDetail__showReplyModifyForm(this);">수정</button>`;
+				}
+				
+				html += `<a data-type="reply" data-id="${data.id }" href="javascript:void(0);" onclick="showReportForm(this);">신고하기</a>`;
+			}
+			html += `	
+			<hr>
+		</div>`;
+	}
+	
 	
 	$.parseHTML(html);
-	$(".replyList").prepend(html);
-	
-	
-	initContextMenu();
+	$(".replyList").prepend(html);	
 	
 }
 
@@ -174,11 +184,10 @@ function articleDetail__getAllReplies(){
 					
 				}
 				$(".replyList").find("table").each(function(index, item){
-					articleDetail__getLikes($(this), "reply");
-					
+					articleDetail__getLikes($(this), "reply");					
 				});
-				
-				
+				initContextMenu();				
+				moveToId();
 			}else{
 				$(".replyStatus").html(data.msg);
 			}
@@ -202,7 +211,7 @@ function articleDetail__deleteReply(btn){
 			function(data){
 				
 				if(data.success){
-					$(btn).parent().remove();
+					$(btn).parent().html("<div>작성자에 의해 삭제되었습니다.<hr></div>");
 					if(!$(".replyList").children().length){
 						$(".replyStatus").html("댓글이 없습니다.");
 					}
@@ -564,12 +573,25 @@ function showProfile(){
 }
 
 function showLetter(){
+	$(".letter").children().show();
 	$('.overlay').show();
 	$(".contextMenu").hide();
 	$(".loading").hide();
 	$(".letter").show();
 	$(".letter").find(".to").html("<h3>To : " + clickedMemberLoginId + "</h3>");
 }
+
+var clickedId;
+var clickedType;
+function showReportForm(obj){
+	$(".report").children().show();
+	$('.overlay').show();	
+	$(".loading").hide();	
+	$(".report").show();	
+	clickedId = $(obj).attr("data-id");
+	clickedType = $(obj).attr("data-type");
+}
+
 
 function close(btn){
 	$(btn).parent().parent().hide();	
@@ -603,6 +625,39 @@ function checkLetterForm(form){
 	);
 }
 
+function checkReportForm(form){
+	if(!checkEmpty(form.body)){
+		alert("빈칸을 채워주세요.");
+		return ;
+	}
+	if(!confirm("해당 내용으로 신고를 하시겠습니까?")){
+		return ;
+	}
+	$(form).parent().children().hide();
+	$(".report").find(".loading").show();
+	$.post("/member/sendReport",
+		{
+			relId : clickedId,
+			relType: clickedType,
+			body : form.body.value
+		},
+		function(data){
+			alert(data.msg);
+			if(data.success){
+				form.body.value = "";				
+				close($(".report").find(".close"));
+				hideOverlay();
+			}else{				
+				$(form).parent().children().show();
+			}
+			
+			$(".report").find(".loading").hide();
+		},
+		"json"
+	);
+}
+
+
 function letter__deleteLetter(btn){
 	
 	if(!confirm("삭제 하시겠습니까?")){
@@ -624,15 +679,11 @@ function letter__deleteLetter(btn){
 	)
 }
 
-function articleList__checkView(id, boardId){
-
+function articleList__checkView(id, boardId){	
 	var read;
 	var key;
-	if($("#memberId").length){
-		key = $("#memberId").val()+"-"+id+"-"+boardId;		
-	}else{
-		key = ip() + "-"+ id+"-"+boardId;		
-	}
+	
+	key = "read-" + ip() + "-"+ id+"-"+boardId;	
 	
 	read = localStorage.getItem(key);
 	
@@ -689,6 +740,19 @@ function initContextMenu(){
 		$(".letter-content").show();
 		$(".content").html("<pre>" + $(this).html() + "</pre>");
 	});
+}
+
+function moveToId(){	
+	var id = location.hash;	
+	if(id.length){
+		var offset = $(id).offset();
+		$('html').animate({scrollTop : offset.top}, 400,function(){
+			for(var i=0 ;i<2 ;i++){
+				$(id).animate({	opacity: "0.20"	}, 500).animate({opacity:"1.0"}, 500);
+			}
+		});
+		
+	}
 }
 $(function(){	
 	initGetReply();

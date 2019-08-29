@@ -47,23 +47,22 @@ public class ArticleController {
 	@Autowired
 	private ArticleFileService articleFileService;
 	@Autowired
-	private ArticleReplyService articleReplyService;
-	@Autowired
-	private MemberService memberService;
+	private ArticleReplyService articleReplyService;	
 	@Value("${custom.uploadDir}")
 	private String uploadDir;
 	
 	@RequestMapping("/list")
-	public String list(Model model,@RequestParam Map<String, Object> param) {
+	public String list(Model model,@RequestParam Map<String, Object> param, HttpServletRequest request) {
 		if(param.get("cPage") == null || param.get("cPage").equals("")) {
 			param.put("cPage", 1);
 		}
 		
-		if(!Utils.needParamCheck(param, new String[] {"boardId"}) || !Utils.isNumeric(param, new String[] {"boardId"})) {
+		if(!Utils.needParamCheck(param, new String[] {"boardId", "cPage"}) || !Utils.isNumeric(param, new String[] {"boardId", "cPage"})) {
 			model.addAttribute("historyBack", true);
 			return "common/redirect";
-		}
+		}	
 		
+		param.put("role", (String)request.getAttribute("role"));
 		Map<String, Object> rs = articleService.getArticleList(param);
 		
 		model.addAttribute("boardName", rs.get("boardName"));
@@ -75,7 +74,17 @@ public class ArticleController {
 	
 	@RequestMapping("/detail")
 	public String detail(Model model,@RequestParam Map<String, Object> param) {
-		if(!Utils.needParamCheck(param, new String[] {"boardId", "id"}) || !Utils.isNumeric(param, new String[] {"boardId", "id"})) {
+		
+		if(param.get("cPage") == null || param.get("cPage").equals("")) {
+			param.put("cPage", 1);
+		}
+		
+		if(!Utils.needParamCheck(param, new String[] {"boardId", "cPage"}) || !Utils.isNumeric(param, new String[] {"boardId", "cPage"})) {
+			model.addAttribute("historyBack", true);
+			return "common/redirect";
+		}
+		if(checkArticleIsBlind(param)) {
+			model.addAttribute("msg", param.get("msg"));
 			model.addAttribute("historyBack", true);
 			return "common/redirect";
 		}
@@ -94,6 +103,12 @@ public class ArticleController {
 	@RequestMapping("/addArticle")
 	public String addArticle(@RequestParam Map<String, Object> param, Model model, HttpSession session) {
 		param.put("loginedMemberId", (int)session.getAttribute("loginedMemberId"));
+		
+		if(!Utils.needParamCheck(param, new String[] {"boardId"}) || !Utils.isNumeric(param, new String[] {"boardId"})) {
+			model.addAttribute("historyBack", true);
+			return "common/redirect";
+		}
+		
 		if(!checkAcceptBoardId(param)) {
 			model.addAttribute("historyBack", true);
 			model.addAttribute("msg", param.get("msg"));
@@ -112,6 +127,10 @@ public class ArticleController {
 	{	
 		HttpSession session = request.getSession();
 		param.put("loginedMemberId", (int)session.getAttribute("loginedMemberId"));
+		if(!Utils.needParamCheck(param, new String[] {"boardId"}) || !Utils.isNumeric(param, new String[] {"boardId"})) {
+			model.addAttribute("historyBack", true);
+			return "common/redirect";
+		}
 		if(!checkAcceptBoardId(param)) {
 			model.addAttribute("historyBack", true);
 			model.addAttribute("msg", param.get("msg"));
@@ -150,7 +169,7 @@ public class ArticleController {
 	}
 	
 	@RequestMapping("/deleteOneArticle")
-	public String deleteOneArticle(Model model, @RequestParam Map<String, Object> param, HttpSession session) {		
+	public String deleteOneArticle(Model model, @RequestParam Map<String, Object> param, HttpSession session, HttpServletRequest request) {		
 		if(!Utils.needParamCheck(param, new String[] {"boardId", "id"}) || !Utils.isNumeric(param, new String[] {"boardId", "id"})) {
 			model.addAttribute("historyBack", true);
 			return "common/redirect";
@@ -161,20 +180,12 @@ public class ArticleController {
 			model.addAttribute("historyBack", true);
 			model.addAttribute("msg", param.get("msg"));
 			return "common/redirect";
-		}
+		}		
 		
-		
-		Map<String, Object> rs = articleFileService.deleteOneArticleAllFiles(param);
-		String resultCode = (String) rs.get("resultCode");
-		if(!resultCode.startsWith("S-")) {
-			model.addAttribute("msg", rs.get("msg"));
-			model.addAttribute("historyBack", true);
-			return "common/redirect";
-		}
-		
-		rs = articleService.deleteOneArticle(param);
+		param.put("role", (String)request.getAttribute("role"));
+		Map<String, Object >rs = articleService.deleteOneArticle(param);
 		model.addAttribute("msg", rs.get("msg"));
-		resultCode = (String) rs.get("resultCode");
+		String resultCode = (String) rs.get("resultCode");
 		
 		if(resultCode.startsWith("S-")) {
 			StringBuffer redirectUrl = new StringBuffer();
@@ -294,6 +305,7 @@ public class ArticleController {
 	@RequestMapping("/downloadImg")
 	@ResponseBody
 	public ResponseEntity<Resource> downloadImg(@RequestParam Map<String, Object> param){
+
 		ArticleFile file = articleFileService.getArticleOneFile(param);
 		
 		File target = new File(uploadDir, file.getPrefix() + file.getOriginFileName());		
@@ -356,6 +368,10 @@ public class ArticleController {
 	@ResponseBody
 	public Map<String, Object> addReply(HttpSession session, @RequestParam Map<String, Object> param){
 		
+		if(!Utils.needParamCheck(param, new String[] {"boardId", "articleId", "body"}) || !Utils.isNumeric(param, new String[] {"boardId", "articleId"})) {			
+			return Maps.of("msg", "잘못된 접근", "success", false);
+		}
+		
 		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));	
 		
 		Map<String, Object> rs = articleReplyService.addReply(param);		
@@ -372,7 +388,12 @@ public class ArticleController {
 	
 	@RequestMapping("/getOneArticleAllReplies")
 	@ResponseBody
-	public Map<String, Object> getOneArticleAllReplies(@RequestParam Map<String, Object> param){
+	public Map<String, Object> getOneArticleAllReplies(@RequestParam Map<String, Object> param, HttpServletRequest request){
+		
+		if(!Utils.needParamCheck(param, new String[] {"boardId", "articleId"}) || !Utils.isNumeric(param, new String[] {"boardId", "articleId"})) {			
+			return Maps.of("msg", "잘못된 접근", "success", false);
+		}		
+		
 		Map<String, Object> rs = articleReplyService.getOneArticleAllReplies(param);
 		
 		boolean success = false;
@@ -387,13 +408,17 @@ public class ArticleController {
 	
 	@RequestMapping("/deleteOneArticleOneReply")
 	@ResponseBody
-	public Map<String, Object> deleteOneArticleOneReply(@RequestParam Map<String, Object> param, HttpSession session){
+	public Map<String, Object> deleteOneArticleOneReply(@RequestParam Map<String, Object> param, HttpSession session, HttpServletRequest request){
 		
+		if(!Utils.needParamCheck(param, new String[] {"boardId", "articleId", "id"}) || !Utils.isNumeric(param, new String[] {"boardId", "articleId", "id"})) {			
+			return Maps.of("msg", "잘못된 접근", "success", false);
+		}
 		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));
 		if(!checkAcceptBoardId(param) || !checkArticleReplyAuthentication(param)) {
 			return Maps.of("msg", param.get("msg"), "success", false);
 		}
 		
+		param.put("role", (String)request.getAttribute("role"));
 		Map<String, Object> rs = articleReplyService.deleteOneArticleOneReplyByIdArticleId(param);
 		
 		boolean success = false;
@@ -410,6 +435,9 @@ public class ArticleController {
 	@ResponseBody
 	public Map<String, Object> modifyReply(@RequestParam Map<String, Object> param, HttpSession session){
 		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));
+		if(!Utils.needParamCheck(param, new String[] {"boardId", "articleId", "id", "body"}) || !Utils.isNumeric(param, new String[] {"boardId", "articleId", "id"})) {			
+			return Maps.of("msg", "잘못된 접근", "success", false);
+		}
 		if(!checkAcceptBoardId(param) || !checkArticleReplyAuthentication(param)) {
 			return Maps.of("msg", param.get("msg"), "success", false);
 		}
@@ -428,7 +456,9 @@ public class ArticleController {
 	@RequestMapping("/getLikes")
 	@ResponseBody
 	public Map<String, Object> getLikes(@RequestParam Map<String, Object> param, HttpSession session){
-		
+		if(!Utils.needParamCheck(param, new String[] {"boardId", "relId", "type"}) || !Utils.isNumeric(param, new String[] {"boardId", "relId"})) {			
+			return Maps.of("msg", "잘못된 접근", "success", false);
+		}
 		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));		
 		
 		Map<String, Object> rs = new HashMap<>();		
@@ -448,6 +478,10 @@ public class ArticleController {
 	@ResponseBody
 	public Map<String, Object> updateLike(@RequestParam Map<String, Object> param, HttpSession session){
 		
+		if(!Utils.needParamCheck(param, new String[] {"boardId", "relId", "val", "type"}) || !Utils.isNumeric(param, new String[] {"boardId", "relId"})
+				|| !Utils.isBoolean(param, new String[] {"val"})) {			
+			return Maps.of("msg", "잘못된 접근", "success", false);
+		}
 		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));		
 		
 		Map<String, Object> rs = new HashMap<>();		
@@ -464,11 +498,16 @@ public class ArticleController {
 	}
 	
 	@RequestMapping("/getMemberArticles")
-	public String getmemberArticles(Model model, @RequestParam Map<String, Object> param, HttpSession session) {
+	public String getmemberArticles(Model model, @RequestParam Map<String, Object> param, HttpSession session, HttpServletRequest request) {
 		if(param.get("cPage") == null || param.get("cPage").equals("")) {
 			param.put("cPage", 1);
 		}
+		if(!Utils.isNumeric(param, new String[] {"cPage"})) {
+			model.addAttribute("historyBack", true);
+			return "common/redirect";
+		}
 		param.put("memberId", session.getAttribute("loginedMemberId"));
+		param.put("role", (String)request.getAttribute("role"));
 		Map<String, Object> rs = articleService.getMemberArticlesByMemberId(param);
 		model.addAttribute("list", rs.get("list"));
 		model.addAttribute("page", rs.get("page"));
@@ -477,11 +516,16 @@ public class ArticleController {
 	}
 	
 	@RequestMapping("/getMemberReplies")
-	public String getMemberReplies(Model model, @RequestParam Map<String, Object> param, HttpSession session) {
+	public String getMemberReplies(Model model, @RequestParam Map<String, Object> param, HttpSession session, HttpServletRequest request) {
 		if(param.get("cPage") == null || param.get("cPage").equals("")) {
 			param.put("cPage", 1);
 		}
+		if(!Utils.isNumeric(param, new String[] {"cPage"})) {
+			model.addAttribute("historyBack", true);
+			return "common/redirect";
+		}
 		param.put("memberId", session.getAttribute("loginedMemberId"));
+		param.put("role", (String)request.getAttribute("role"));
 		Map<String , Object> rs = articleReplyService.getMemberRepliesByMemberId(param);
 		model.addAttribute("list", rs.get("list"));
 		model.addAttribute("page", rs.get("page"));
@@ -492,10 +536,13 @@ public class ArticleController {
 	@RequestMapping("/addViewCnt")
 	@ResponseBody
 	public Map<String, Object> addViewCnt(@RequestParam Map<String, Object> param) {
+		if(!Utils.needParamCheck(param, new String[] {"boardId", "id"}) || !Utils.isNumeric(param, new String[] {"boardId", "id"})) {			
+			return Maps.of("msg", "잘못된 접근", "success", false);
+		}
 		boolean success = false;
 		try {
 			Article article = articleService.getOneArticleById(param);
-			if(article != null) {
+			if(article != null && !article.isDelStatus()) {
 				articleService.updateArticleView(param);
 				success = true;
 			}
@@ -531,7 +578,12 @@ public class ArticleController {
 		if(article == null) {
 			msg = "존재하지 않는 게시물 입니다.";
 			
-		}else if(article.getMemberId() != (int)param.get("loginedMemberId") || article.getBoardId() == 2){
+		}else if(article.isBlindStatus()){
+			msg = "관리자에 의해서 블라인드 처리된 게시물 입니다.";
+		}else if(article.isDelStatus()){
+			msg = "삭제된 게시물 입니다.";
+			
+		}else if(article.getMemberId() != (int)param.get("loginedMemberId") || article.getBoardId() == 1){
 			msg = "권한이 없습니다.";
 			
 		}else {
@@ -547,6 +599,11 @@ public class ArticleController {
 		if(reply == null) {
 			msg = "존재하지 않는 댓글 입니다.";
 			
+		}else if(reply.isBlindStatus()){
+			msg = "관리자에 의해서 블라인드 처리된 게시물 입니다.";
+		}else if(reply.isDelStatus()){
+			msg = "삭제된 게시물 입니다.";
+			
 		}else if(reply.getMemberId() != (int)param.get("loginedMemberId")){
 			msg = "권한이 없습니다.";
 			
@@ -555,6 +612,22 @@ public class ArticleController {
 		}
 		param.put("msg", msg);
 		return false;
+	}
+	
+	private boolean checkArticleIsBlind(Map<String, Object> param) {
+		Article article = articleService.getOneArticleById(param);		
+		String msg = null;
+		
+		if(article == null) {
+			msg = "존재하지 않는 게시물 입니다.";
+			
+		}else if(article.isBlindStatus()){
+			msg = "관리자에 의해서 블라인드 처리된 게시물 입니다.";
+		}else {
+			return false;
+		}
+		param.put("msg", msg);
+		return true;
 	}
 	
 }

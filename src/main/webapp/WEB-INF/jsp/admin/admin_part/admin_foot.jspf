@@ -23,7 +23,7 @@
 			</div>
 			
 			<div class="letter absolute-center" hidden>
-				<div class="text-align-left">
+				<div class="text-align-right">
 					<div class="close clickable-contextMenu">	</div>
 				</div>
 									

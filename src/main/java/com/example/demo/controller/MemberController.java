@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.demo.Utils;
 import com.example.demo.dto.Article;
 import com.example.demo.dto.Letter;
 import com.example.demo.service.MemberService;
+
+import jline.internal.Log;
 
 @Controller
 @RequestMapping("/member")
@@ -185,7 +188,10 @@ public class MemberController {
 	
 	@RequestMapping("/getMemberProfile")
 	@ResponseBody
-	public Map<String, Object> getMemberProfile(@RequestParam Map<String, Object> param) {		
+	public Map<String, Object> getMemberProfile(@RequestParam Map<String, Object> param) {
+		if(!Utils.isNumeric(param, new String[] {"id"})) {
+			return Maps.of("msg", "잘못된 접근", "member", null, "success", false);
+		}
 		Map<String, Object> rs = memberService.getMemberProfile(param);		
 		
 		boolean success = false;
@@ -201,6 +207,9 @@ public class MemberController {
 	@RequestMapping("/sendLetter")
 	@ResponseBody
 	public Map<String, Object> sendLetter(@RequestParam Map<String, Object> param, HttpSession session) {
+		if(!Utils.needParamCheck(param, new String[] {"toId"}) || !Utils.isNumeric(param, new String[] {"toId"})) {
+			return Maps.of("msg", "잘못된 접근", "success", false);
+		}
 		Map<String, Object> rs = new HashMap<>();
 		boolean success = false;
 		if(Integer.parseInt((String)param.get("toId")) == (int)session.getAttribute("loginedMemberId")) {
@@ -222,6 +231,7 @@ public class MemberController {
 	@RequestMapping("/letterList")
 	public String letterList(Model model, @RequestParam Map<String, Object> param, HttpSession session) {
 		param.put("loginedMemberId", (int)session.getAttribute("loginedMemberId"));
+		
 		if(param.get("cPage") == null || param.get("cPage").equals("")) {
 			param.put("cPage", 1);
 		}
@@ -237,7 +247,10 @@ public class MemberController {
 	@RequestMapping("/deleteLetter")
 	@ResponseBody
 	public Map<String, Object> deleteLetter(@RequestParam Map<String, Object> param, HttpSession session) {
-		param.put("loginedMemberId", (int)session.getAttribute("loginedMemberId"));		
+		param.put("loginedMemberId", (int)session.getAttribute("loginedMemberId"));
+		if(!Utils.needParamCheck(param, new String[] {"id"}) || !Utils.isNumeric(param, new String[] {"id"})) {
+			return Maps.of("msg", "잘못된 접근", "success", false);
+		}
 		if(!checkLetterAuthentication(param)) {
 			return Maps.of("msg", param.get("msg"), "success", false);
 		}
@@ -252,6 +265,30 @@ public class MemberController {
 		
 		return Maps.of("msg", rs.get("msg"), "success", success);
 	}
+	
+	@RequestMapping("/sendReport")
+	@ResponseBody
+	public Map<String, Object> sendReport(@RequestParam Map<String, Object> param, HttpSession session) {
+		
+		if(!Utils.needParamCheck(param, new String[] {"relType", "relId", "body"}) || !Utils.isNumeric(param, new String[] {"relId"})) {
+			return Maps.of("msg", "잘못된 접근", "success", false);
+		}
+		Map<String, Object> rs = new HashMap<>();
+		boolean success = false;
+		
+		param.put("loginedMemberId",(int)session.getAttribute("loginedMemberId"));
+		rs = memberService.sendReport(param);
+		
+		String resultCode = (String) rs.get("resultCode");		
+		
+		if(resultCode.startsWith("S-")) {
+			success = true;
+		}	
+		
+		return Maps.of("msg", rs.get("msg"), "success", success);
+		
+	}
+	
 	
 	private boolean checkLetterAuthentication(Map<String, Object> param) {
 		Letter letter = memberService.getOneLetterById(param);

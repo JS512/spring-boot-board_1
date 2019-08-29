@@ -84,7 +84,7 @@ table, th, td{
 	background-color:rgba(0,0,0,0.5);	
 }
 
-.contextMenu, .profile, .letter, .letter-content{	
+.contextMenu, .profile, .letter, .letter-content, .report, .report-content{	
 	position:absolute;
 	background-color:white;
 	z-index:100;
@@ -97,16 +97,16 @@ table, th, td{
 	padding:10px;
 }
 
-.profile, .letter{	
+.profile, .letter, .report{	
 	padding:5px;
 	padding-bottom:10px;
 }
 
-.letter textarea{
+.letter textarea,.report textarea{
 	border:1px solid black;
 }
 
-.text-align-left{
+.text-align-right{
 	text-align:right;	
 }
 
@@ -129,11 +129,11 @@ table, th, td{
 	font-weight:bold;
 }
 
-.letter-content{
+.letter-content, .report-content{
 	padding:10px;	
 }
 
-.letter-content pre{
+.letter-content pre, .report-content pre{
 	border:1px solid black;
 	padding:5px;
 	min-width:300px;

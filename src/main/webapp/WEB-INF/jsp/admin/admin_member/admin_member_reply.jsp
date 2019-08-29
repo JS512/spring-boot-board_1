@@ -11,7 +11,8 @@
 	    <th>번호</th>
 	    <th>날짜</th>
 	    <th>내용</th>
-	    <th>작성자</th>	    
+	    <th>작성자</th>
+	    <th>상태</th>    
 	    <th><button>삭제</button></th>
 	  </tr>
 	  <c:forEach items="${list}" var="reply">
@@ -19,7 +20,15 @@
 	  		<td>${reply.id }</td>
 	  		<td>${reply.regDate }</td>
 	  		<td class="text-overflow-ellipsis"><a href="/admin/articleDetail?id=${reply.articleId}&cPage=${param.cPage}&boardId=${reply.boardId}">${reply.body }</a></td>
-	  		<td class="clickable-contextMenu clickable" data-id="${reply.memberId }" data-to="${reply.extra.writer }">${reply.extra.writer }</td>	  		  		
+	  		<td class="clickable-contextMenu clickable" data-id="${reply.memberId }" data-to="${reply.extra.writer }">${reply.extra.writer }</td>
+	  		<td>
+	  			<c:if test="${reply.blindStatus }">
+	  				관리자에 의해 블라인드 상태
+	  			</c:if>
+	  			<c:if test="${!reply.blindStatus && reply.delStatus}">
+	  				작성자에 의해 삭제
+	  			</c:if>
+	  		</td>  		  		  		
 	  		<td><input type="checkbox" value="${reply.id }" data-articleId="${reply.articleId }" data-boardId=${reply.boardId }></td>
 	  	</tr>
 	  </c:forEach>

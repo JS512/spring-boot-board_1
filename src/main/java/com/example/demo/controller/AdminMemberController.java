@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -13,8 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.demo.Utils;
 import com.example.demo.dto.Letter;
+import com.example.demo.dto.Report;
 import com.example.demo.service.MemberService;
+
+import jline.internal.Log;
 
 @Controller
 @RequestMapping("/admin")
@@ -31,9 +36,11 @@ public class AdminMemberController {
 	@RequestMapping("/deleteMember")
 	@ResponseBody
 	public Map<String, Object> deleteMember(@RequestParam Map<String, Object> param, HttpSession session){
+		if(!Utils.isNumeric(param, new String[] {"targetMemberId"}) || !Utils.isNumeric(param, new String[] {"taregetMemberId"})) {
+			return Maps.of("msg", "잘못된 접근");
+		}
 		param.put("loginedMemberId", (int)session.getAttribute("loginedMemberId"));
-		Map<String, Object> rs = memberService.deleteMember(param); 
-				
+		Map<String, Object> rs = memberService.deleteMember(param);				
 		
 		return Maps.of("msg", rs.get("msg"));
 	}
@@ -106,7 +113,10 @@ public class AdminMemberController {
 	
 	@RequestMapping("/getMemberProfile")
 	@ResponseBody
-	public Map<String, Object> getMemberProfile(@RequestParam Map<String, Object> param) {		
+	public Map<String, Object> getMemberProfile(@RequestParam Map<String, Object> param) {	
+		if(!Utils.isNumeric(param, new String[] {"id"})) {
+			return Maps.of("msg", "잘못된 접근", "member", null, "success", false);
+		}
 		Map<String, Object> rs = memberService.getMemberProfile(param);		
 		
 		boolean success = false;
@@ -122,6 +132,9 @@ public class AdminMemberController {
 	@RequestMapping("/sendLetter")
 	@ResponseBody
 	public Map<String, Object> sendLetter(@RequestParam Map<String, Object> param, HttpSession session) {
+		if(!Utils.isNumeric(param, new String[] {"toId"})) {
+			return Maps.of("msg", "잘못된 접근", "success", false);
+		}
 		Map<String, Object> rs = new HashMap<>();
 		boolean success = false;
 		if(Integer.parseInt((String)param.get("toId")) == (int)session.getAttribute("loginedMemberId")) {
@@ -141,7 +154,7 @@ public class AdminMemberController {
 	}
 	
 	@RequestMapping("/letterList")
-	public String letterList(Model model, @RequestParam Map<String, Object> param, HttpSession session) {
+	public String letterList(Model model, @RequestParam Map<String, Object> param, HttpSession session) {		
 		param.put("loginedMemberId", (int)session.getAttribute("loginedMemberId"));
 		if(param.get("cPage") == null || param.get("cPage").equals("")) {
 			param.put("cPage", 1);
@@ -159,6 +172,9 @@ public class AdminMemberController {
 	@ResponseBody
 	public Map<String, Object> deleteLetter(@RequestParam Map<String, Object> param, HttpSession session) {
 		param.put("loginedMemberId", (int)session.getAttribute("loginedMemberId"));		
+		if(!Utils.isNumeric(param, new String[] {"id"})) {
+			return Maps.of("msg", "잘못된 접근", "success", false);
+		}
 		if(!checkLetterAuthentication(param)) {
 			return Maps.of("msg", param.get("msg"), "success", false);
 		}
@@ -172,6 +188,22 @@ public class AdminMemberController {
 		}
 		
 		return Maps.of("msg", rs.get("msg"), "success", success);
+	}
+	
+	@RequestMapping("/reportList")	
+	public String reportList(Model model, @RequestParam Map<String, Object> param, HttpSession session) {	
+		
+		
+		if(param.get("cPage") == null || param.get("cPage").equals("")) {
+			param.put("cPage", 1);
+		}
+		
+		Map<String, Object> rs = new HashMap<>();
+		rs = memberService.getAllReports(param);
+		model.addAttribute("reports", rs.get("reports"));
+		model.addAttribute("page", rs.get("page"));		
+		
+		return "admin/admin_report/admin_list";		
 	}
 	
 	private boolean checkLetterAuthentication(Map<String, Object> param) {

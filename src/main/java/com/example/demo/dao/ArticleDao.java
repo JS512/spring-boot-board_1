@@ -39,5 +39,7 @@ public interface ArticleDao {
 
 	public int getArticleTotalCountByMemberId(Map<String, Object> param);
 
-	public String getBoardName(Map<String, Object> param);	
+	public String getBoardName(Map<String, Object> param);
+
+	public void cancelDeleteOneArticle(Map<String, Object> param);	
 }

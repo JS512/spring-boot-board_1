@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.example.demo.dto.ArticleReply;
 import com.example.demo.dto.Letter;
 import com.example.demo.dto.Member;
+import com.example.demo.dto.Report;
 
 @Mapper
 public interface MemberDao {
@@ -53,4 +54,10 @@ public interface MemberDao {
 	public Letter getOneLetterById(int id);
 
 	public List<ArticleReply> getMemberRepliesByMemberId(Map<String, Object> param);
+
+	public void addReport(Map<String, Object> param);
+
+	public List<Report> getAllReports(Map<String, Object> param);
+
+	public int getTotalReportCount(Map<String, Object> param);
 }

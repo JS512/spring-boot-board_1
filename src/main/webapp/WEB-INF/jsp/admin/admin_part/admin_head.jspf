@@ -31,4 +31,5 @@
 		<a href="/member/logout">로그아웃</a>
 		<a href="/admin/myPage">마이페이지</a>
 		<a href="/admin/adminMemberPage">회원관리 페이지</a>
+		<a href="/admin/reportList">신고 내역</a>
 		

@@ -46,6 +46,7 @@
 	    <th>작성자</th>
 	    <th>조회수</th>
 	    <th>좋아요</th>
+	    <th>상태</th>
 	    <th><button>삭제</button></th>
 	  </tr>
 	  <c:forEach items="${list}" var="article">
@@ -55,7 +56,15 @@
 	  		<td class="text-overflow-ellipsis"><a href="/admin/articleDetail?id=${article.id}&cPage=${param.cPage}&boardId=${article.boardId}">${article.title }</a></td>
 	  		<td class="clickable-contextMenu clickable" data-id="${article.memberId }" data-to="${article.extra.writer }">${article.extra.writer }</td>
 	  		<td>${article.view }</td>
-	  		<td>${article.extra.likeCnt }</td>  		
+	  		<td>${article.extra.likeCnt }</td>  	
+	  		<td>
+	  			<c:if test="${article.blindStatus }">
+	  				관리자에 의해 블라인드 상태
+	  			</c:if>
+	  			<c:if test="${!article.blindStatus && article.delStatus}">
+	  				작성자에 의해 삭제
+	  			</c:if>
+	  		</td>  		
 	  		<td><input type="checkbox" name="id" value="${article.id }" data-boardId="${article.boardId }"></td>
 	  	</tr>
 	  </c:forEach>

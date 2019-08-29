@@ -28,10 +28,15 @@
 		WHERE AR.articleId = #{articleId} AND AR.boardId = #{boardId} AND AR.id = #{id}		
 	</select>
 	
-	<delete id="deleteOneArticleOneReplyByIdArticleIdBoardId" parameterType="map">
-		DELETE FROM articleReply
+	<update id="deleteOneArticleOneReplyByIdArticleIdBoardId" parameterType="map">
+		UPDATE articleReply
+		SET delStatus = TRUE
+		<if test="role != null and role == 'admin'">
+			, blindStatus = TRUE
+		</if>
 		WHERE id = #{id} AND articleId = #{articleId} AND boardId = #{boardId}
-	</delete>
+		
+	</update>
 	
 	<update id="modifyReplyByIdArticleIdBoardId" parameterType="map">
 		UPDATE articleReply
@@ -46,6 +51,9 @@
 		LEFT OUTER JOIN `member` AS M
 		ON M.id = AR.memberId
 		WHERE AR.memberId = #{memberId}
+		<if test="role == null or role == ''">
+			AND AR.delStatus = 0
+		</if>
 		LIMIT #{startNum}, #{perPageNum}
 	</select>
 	
@@ -60,6 +68,21 @@
 		</if>
 	</select>
 	
+	<update id="deleteOneArticleAllReplies" parameterType="map">
+		UPDATE articleReply
+		SET delStatus = 1
+		WHERE articleId = #{id} AND boardId = #{boardId}
+	</update>
+	
+	<update id="cancelDeleteOneArticleOneReplyByIdArticleIdBoardId" parameterType="map">
+		UPDATE articleReply
+		SET delStatus = FALSE
+		<if test="role != null and role == 'admin'">
+			, blindStatus = FALSE
+		</if>
+		WHERE id = #{id} AND articleId = #{articleId} AND boardId = #{boardId}
+	</update>
+	
 	<resultMap id="articleReply" type="com.example.demo.dto.ArticleReply">
 		<id property="id" column="id"/>
 		<id property="regDate" column="regDate"/>
@@ -67,6 +90,8 @@
 		<id property="memberId" column="memberId"/>
 		<id property="body" column="body"/>
 		<id property="boardId" column="boardId"/>
+		<id property="delStatus" column="delStatus"/>
+		<id property="blindStatus" column="blindStatus"/>
 		<association property="extra" javaType="map">
 			<id property="writer" column="writer"/>
 		</association>

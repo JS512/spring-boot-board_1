@@ -23,6 +23,10 @@ public interface ArticleReplyDao {
 	public List<ArticleReply> getMemberRepliesByMemberId(Map<String, Object> param);
 
 	public int getReplyTotalCountByMemberId(Map<String, Object> param);
+
+	public void deleteOneArticleAllReplies(Map<String, Object> param);
+
+	public void cancelDeleteOneArticleOneReplyByIdArticleIdBoardId(Map<String, Object> param);
 	
 
 }

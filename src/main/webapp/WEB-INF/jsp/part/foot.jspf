@@ -23,7 +23,7 @@
 			</div>
 			
 			<div class="letter absolute-center" hidden>
-				<div class="text-align-left">
+				<div class="text-align-right">
 					<div class="close clickable-contextMenu">	</div>
 				</div>
 									
@@ -34,6 +34,18 @@
 					<textarea cols="40" rows="30" name="body"></textarea><br>
 					<button>전송</button>
 				</form>				
+			</div>
+			
+			<div class="report absolute-center" hidden>
+				<div class="text-align-right">
+					<div class="close">	</div>
+				</div>
+				<div class="loading" hidden></div>
+				<form onsubmit="checkReportForm(this); return false;">
+					신고 내용<br>
+					<textarea cols="40" rows="30" name="body"></textarea><br>
+					<button>전송</button>
+				</form>
 			</div>
 		</div>
 	

@@ -38,7 +38,7 @@
 	</c:if>
 </ul>
 <div class="letter-content absolute-center" hidden>
-	<div class="text-align-left">
+	<div class="text-align-right">
 		<div class="close">	</div>
 	</div>
 	<div class="content"></div>

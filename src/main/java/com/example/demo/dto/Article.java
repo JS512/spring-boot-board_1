@@ -17,5 +17,7 @@ public class Article {
 	private int memberId;
 	private int boardId;
 	private int view;
+	private boolean delStatus;
+	private boolean blindStatus;
 	private Map<String, Object> extra;
 }

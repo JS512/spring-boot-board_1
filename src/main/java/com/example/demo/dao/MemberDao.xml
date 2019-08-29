@@ -118,6 +118,30 @@
 		WHERE id = #{id}
 	</select>
 	
+	<insert id="addReport" parameterType="map">
+		INSERT INTO report
+		SET regDate = NOW(),
+		relId = #{relId},
+		relType = #{relType},
+		`body` = #{body},
+		memberId = #{loginedMemberId}
+	</insert>
+	
+	<select id="getAllReports" parameterType="map" resultMap="report">
+		SELECT R.*, A.id AS articleId, A.boardId, AR.articleId AS AR_articleId , AR.boardId AS AR_boardId, IFNULL(M.loginId, '존재하지 않는 사용자') AS writer
+		FROM report AS R
+		LEFT OUTER JOIN article AS A
+		ON R.relType = 'article' AND R.relId = A.id
+		LEFT OUTER JOIN articleReply AS AR
+		ON R.relType = 'reply' AND R.relId = AR.id
+		LEFT OUTER JOIN `member` AS M
+		ON M.id = R.memberId;
+	</select>
+	
+	<select id="getTotalReportCount" parameterType="map" resultType="Integer">
+		SELECT COUNT(*) FROM report		
+	</select>
+	
 	<resultMap id="letter" type="com.example.demo.dto.Letter">
 		<id property="id" column="id"/>
 		<id property="regDate" column="regDate"/>
@@ -137,5 +161,20 @@
 		<id property="email" column="email"/>
 		<id property="authKey" column="authKey"/>
 		<id property="emailAuthStatus" column="emailAuthStatus"/>
+	</resultMap>
+	
+	<resultMap id="report" type="com.example.demo.dto.Report">
+		<id property="id" column="id"/>
+		<id property="regDate" column="regDate"/>
+		<id property="relId" column="relId"/>
+		<id property="relType" column="relType"/>
+		<id property="body" column="body"/>
+		<association property="extra" javaType="map">
+			<id property="articleId" column="articleId"/>
+			<id property="boardId" column="boardId"/>
+			<id property="articleId" column="AR_articleId"/>
+			<id property="boardId" column="AR_boardId"/>
+			<id property="writer" column="writer"/>
+		</association>		
 	</resultMap>
 </mapper>

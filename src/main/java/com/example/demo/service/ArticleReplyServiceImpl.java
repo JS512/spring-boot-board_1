@@ -159,4 +159,32 @@ public class ArticleReplyServiceImpl implements ArticleReplyService{
 		
 		return Maps.of("msg", msg, "resultCode", resultCode);
 	}
+	
+	public Map<String, Object> cancelDeleteOneArticleOneReplyByIdArticleId(Map<String, Object> param){
+		String msg = "";
+		String resultCode = "";
+		try {
+			ArticleReply reply = articleReplyDao.getOneArticleOneReplyByIdArticleIdBoardId(param);
+			if(reply == null) {
+				msg = "존재하지 않는 댓글입니다.";
+				resultCode = "F-1";
+			}else {
+				String role = memberDao.getMemberRole((int)param.get("loginedMemberId"));
+				if((reply.getMemberId() != (int)param.get("loginedMemberId")) && (role == null || !role.equals("admin"))) {
+					msg = "권한이 없습니다.";
+					resultCode = "F-1";
+				}else {
+					articleReplyDao.cancelDeleteOneArticleOneReplyByIdArticleIdBoardId(param);
+					msg = "취소 되었습니다.";
+					resultCode = "S-1";
+				}
+			}
+		}catch(Exception e) {
+			msg = "댓글 삭제중 오류.";
+			resultCode = "F-1";
+			e.printStackTrace();
+		}
+		
+		return Maps.of("msg", msg, "resultCode", resultCode);
+	}
 }

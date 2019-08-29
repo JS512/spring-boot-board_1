@@ -16,7 +16,7 @@
   	<tr>
   		<td>${reply.id }</td>
   		<td>${reply.regDate }</td>
-  		<td class="text-overflow-ellipsis"><a href="/article/detail?id=${reply.articleId}&cPage=${param.cPage}&boardId=${reply.boardId}">${reply.body }</a></td>
+  		<td class="text-overflow-ellipsis"><a href="/article/detail?id=${reply.articleId}&cPage=${param.cPage}&boardId=${reply.boardId}#reply${reply.id}">${reply.body }</a></td>
   		<td class="clickable-contextMenu clickable" data-id="${reply.memberId }" data-to="${reply.extra.writer }">${reply.extra.writer }</td>  		  		
   		
   	</tr>

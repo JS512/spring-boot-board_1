@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.Utils;
 import com.example.demo.dao.ArticleDao;
+import com.example.demo.dao.ArticleReplyDao;
 import com.example.demo.dao.MemberDao;
 import com.example.demo.dto.Article;
 import com.example.demo.dto.Like;
@@ -23,6 +24,8 @@ public class ArticleServiceImpl implements ArticleService{
 	private ArticleDao articleDao;
 	@Autowired
 	private MemberDao memberDao;
+	@Autowired
+	private ArticleReplyDao articleReplyDao;
 	
 	public Map<String, Object> getArticleList(Map<String, Object> param){	
 		Map<String, Object> page = Utils.calcData(param, articleDao.getTotalCount(param));
@@ -56,8 +59,7 @@ public class ArticleServiceImpl implements ArticleService{
 		String msg = "";
 		String resultCode = "";
 		try {
-		
-			articleDao.deleteOneArticle(param);
+			articleDao.deleteOneArticle(param);			
 			msg = "게시물 삭제 성공";
 			resultCode = "S-1";
 			
@@ -138,7 +140,7 @@ public class ArticleServiceImpl implements ArticleService{
 	public Map<String, Object> updateArticleLike(Map<String, Object> param){
 		String msg = "";
 		String resultCode = "";
-		int value = ((String)param.get("val")).equals("true") ? 1 : -1;
+		int value = Boolean.parseBoolean((String)param.get("val")) ? 1 : -1;
 		
 		try {
 			param.put("val", value);
@@ -228,5 +230,24 @@ public class ArticleServiceImpl implements ArticleService{
 	}
 	public String getBoardName(Map<String, Object> param) {
 		return articleDao.getBoardName(param);
+	}
+
+	@Override
+	public Map<String, Object> cancelDeleteOneArticle(Map<String, Object> param) {
+		// TODO Auto-generated method stub		
+		String msg = "";
+		String resultCode = "";
+		try {
+			articleDao.cancelDeleteOneArticle(param);	
+			msg = "게시물 삭제 성공";
+			resultCode = "S-1";
+			
+		}catch(Exception e) {
+			msg = "게시물 삭제 실패";
+			resultCode = "F-1";
+			e.printStackTrace();
+		}
+		
+		return Maps.of("msg", msg, "resultCode", resultCode);
 	}
 }

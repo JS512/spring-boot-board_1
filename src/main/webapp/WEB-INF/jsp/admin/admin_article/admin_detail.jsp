@@ -6,17 +6,31 @@
 
 <a href="/admin/articleList${url }&cPage=${param.cPage}">목록으로</a>
 
-
-<a href="javascript:articleDetail__deleteArticleCheck(${article.id }, ${param.boardId })">삭제하기</a>
+<c:if test="${!article.blindStatus }">
+	<a href="javascript:articleDetail__deleteArticleCheck(${article.id }, ${param.boardId })">블라인드 처리 하기</a>
+</c:if>
+<c:if test="${article.blindStatus }">
+	<a href="javascript:articleDetail__cancelDeleteArticleCheck(${article.id }, ${param.boardId })">블라인드 취소 하기</a>
+</c:if>
 <a href="javascript:articleDetail__modifyArticleCheck(${article.id }, ${param.boardId })">수정하기</a>
-
 
 <input type="hidden" id="boardId" value="${article.boardId}">
 
-<table class="article">
+<table class="article" id="article${article.id}">
 	<tr>
 		<td><button data-type="article" class="like" type="button" onclick="articleDetail__updateLike(this, true);">좋아요</button> <span>0</span></td>
 		<td><button data-type="article" class="like" type="button" onclick="articleDetail__updateLike(this, false);">싫어요</button> <span>0</span></td>
+	</tr>
+	<tr>
+		<th>상태</th>
+		<td>			
+  			<c:if test="${article.blindStatus }">
+  				관리자에 의해 블라인드 상태
+  			</c:if>
+  			<c:if test="${!article.blindStatus && article.delStatus}">
+  				작성자에 의해 삭제
+  			</c:if>
+  		</td>
 	</tr>
 	<tr>
 		<th>조회수</th>
@@ -49,7 +63,6 @@
 	<a href="/admin/downloadImg?id=${file.id }">${file.originFileName }</a><br>
 </c:forEach>
 
-<h3>댓글</h3>
 <c:if test="${isLogined }">
 	<form id="replyAddForm" onsubmit="articleDetail__checkAddReplyForm(this); return false;">
 		<input type="hidden" name="articleId" value="${article.id }">
