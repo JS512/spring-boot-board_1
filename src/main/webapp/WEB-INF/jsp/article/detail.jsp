@@ -45,7 +45,7 @@
 	</tr>
 	<tr>
 		<th>내용</th>
-		<td><pre>${article.body }</pre></td>
+		<td>${article.body }</td>
 	</tr>  
   
 </table>
@@ -67,7 +67,7 @@
 		<input type="hidden" name="id">
 		<input type="hidden" name="articleId" value="${article.id }">
 		<input type="hidden" name="boardId" value="${article.boardId }">
-		수정내용 : <textarea name="body"></textarea>
+		수정내용 : <textarea name="body"></textarea>		
 		<button>수정</button><button type="button" onclick="articleDetail__hideReplyModifyForm();">취소</button>
 		
 	</form>

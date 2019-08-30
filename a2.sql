@@ -34,7 +34,7 @@ CREATE TABLE `article` (
   KEY `boardId` (`boardId`),
   KEY `article_memberId` (`memberId`),
   CONSTRAINT `article_memberId` FOREIGN KEY (`memberId`) REFERENCES `member` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=280 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=299 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Data for the table `article` */
 
@@ -45,7 +45,7 @@ insert  into `article`(`id`,`regDate`,`title`,`body`,`memberId`,`boardId`,`view`
 (239,'2019-08-26 00:33:07','두번째 입니다.','ㅋ\r\nㅋ\r\nㅋ\r\nㅋ\r\nㅋ',237,2,1,0,0),
 (240,'2019-08-26 00:34:22','엥?','엥',237,2,4,0,0),
 (241,'2019-08-26 00:34:22','엥?','엥',237,2,3,0,0),
-(242,'2019-08-26 00:37:21','아니 ㅋㅋㅋㅋ','첫번째 인데요 ㅋㅋㅋ',237,2,24,0,0),
+(242,'2019-08-26 00:37:21','아니 ㅋㅋㅋㅋ','첫번째 인데요 ㅋㅋㅋ',237,2,25,0,0),
 (248,'2019-08-26 02:25:08','dsfdsfs관리자에 의해 수정','sdfsd관리자에 의해 수정sdffe',237,1,12,0,0),
 (249,'2019-08-26 15:09:58','zzzcccczzzzzzzzz','zzzzzzzzcccczzzzzzzz',254,1,24,1,1),
 (254,'2019-08-26 15:56:15','zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz','zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz\r\nz\r\nz\r\nz\r\nzzz\r\nz\r\n\r\nz\r\nzz\r\nz\r\nz',237,1,25,0,0),
@@ -69,11 +69,30 @@ insert  into `article`(`id`,`regDate`,`title`,`body`,`memberId`,`boardId`,`view`
 (272,'2019-08-24 22:35:04','zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz','sdfs',254,1,0,0,0),
 (273,'2019-08-23 18:54:50','zzzzzzzzzz','zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz',254,1,0,0,0),
 (274,'2019-08-24 02:15:23','zzzzzzzzz','zzzzzzzz',254,1,0,0,0),
-(275,'2019-08-24 22:35:04','zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz','sdfs',254,1,2,0,0),
+(275,'2019-08-24 22:35:04','zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz','sdfs',254,1,3,0,0),
 (276,'2019-08-27 23:46:10','ㅋㅋㅋㅋㅋㅋㅋ','#제목입니다.',254,2,1,0,0),
 (277,'2019-08-27 23:55:37','zzzzz','<h1>댓글</h1>',254,2,0,1,1),
 (278,'2019-08-27 23:57:34','zzzzzzz','#제목ㅇ빈다.',254,2,2,1,0),
-(279,'2019-08-29 00:39:21','sdf','sdf',237,2,1,1,1);
+(279,'2019-08-29 00:39:21','sdf','sdf',237,2,1,1,1),
+(280,'2019-08-29 23:51:41','<a>zzz</a>','<script>\r\nalert(\'ㅋㅋㅋㅋ\');\r\n</script>',254,2,1,0,0),
+(281,'2019-08-30 00:34:37','zzzzzzzzzzzzzzzzzzzz','zzzzzzz\r\nzzzzzzzzz     zzzzzz\r\nzzzzz\r\nz\r\nzz\r\nz\r\nz\r\nz\r\nzz\r\n\r\nzzz',254,2,1,0,0),
+(282,'2019-08-30 00:35:44','123','456789',254,2,0,0,0),
+(283,'2019-08-30 00:38:12','zzsdfdsfsef','<a>\r\n달라 달라 달라\r\n</a>',254,2,1,0,0),
+(284,'2019-08-30 03:19:20','제발 되라...','*안녕\r\n  *안녕\r\n    *안녕\r\n\r\n###이제부터 코드\r\n``` This is a code block```',254,2,0,0,0),
+(285,'2019-08-30 03:21:22','sdfsdfsd','``` This is a normal paragraph: This is a code block. end code block. ```\r\n* 빨강\r\n  * 녹색\r\n    * 파랑\r\n\r\n+ 빨강\r\n  + 녹색\r\n    + 파랑\r\n\r\n- 빨강\r\n  - 녹색\r\n    - 파랑',254,2,0,0,0),
+(286,'2019-08-30 03:23:10','sdfsdfsfs','```\r\n1. List item one.\r\n+\r\nList item one continued with a second paragraph followed by an\r\nIndented block.\r\n+\r\n.................\r\n$ ls *.sh\r\n$ mv *.sh ~/tmp\r\n.................\r\n+\r\nList item continued with a third paragraph.\r\n\r\n2. List item two continued with an open block.\r\n+\r\n--\r\nThis paragraph is part of the preceding list item.\r\n\r\na. This list is nested and does not require explicit item\r\ncontinuation.\r\n+\r\nThis paragraph is part of the preceding list item.\r\n\r\nb. List item b.\r\n\r\nThis paragraph belongs to item two of the outer list.\r\n--\r\n```\r\n\r\nAnd here is the equivalent in Markdown:\r\n```',254,2,0,0,0),
+(287,'2019-08-30 03:26:51','zzzzzzz','*  Item 1\r\n*  Item 2\r\n*  Item 3\r\n    *  Item 3a\r\n    *  Item 3b\r\n    *  Item 3c\r\n\r\n\r\n*Italic characters* \r\n_Italic characters_\r\n**bold characters**\r\n__bold characters__\r\n~~strikethrough text~~\r\n\r\nParagraph 1\r\n\r\nParagraph 2\r\n\r\n# This is an H1\r\n## This is an H2\r\n###### This is an H6\r\n\r\nThis is also an H1\r\n==================\r\n\r\nThis is also an H2\r\n------------------',254,2,0,0,0),
+(288,'2019-08-30 03:29:25','dfsdfsdfsdf','*Italic     \r\n          characters* \r\n_Italic characters_\r\n**bold characters**\r\n__bold characters__\r\n~~strikethrough text~~\r\n*  Item 1\r\n*  Item 2\r\n*  Item 3\r\n    *  Item 3a\r\n    *  Item 3b\r\n    *  Item 3c\r\n\r\n# This is an H1\r\n## This is an H2\r\n###### This is an H6\r\n\r\nThis is also an H1\r\n==================\r\n\r\nThis is also an H2\r\n------------------\r\n\r\nsfsd\r\nsdfsdf\r\nsdfd\r\nfsd',254,2,0,0,0),
+(289,'2019-08-30 14:47:33','zzzzzzzzzzzz','# 제목 1\r\n## 제목 2\r\n### 제목 3\r\n#### 제목 4\r\n##### 제목 5\r\n###### 제목 6\r\n\r\n\r\n제목 1\r\n======\r\n\r\n제목 2\r\n------\r\n\r\n\r\n이텔릭체는 *별표(asterisks)* 혹은 _언더바(underscore)_를 사용하세요.\r\n두껍게는 **별표(asterisks)** 혹은 __언더바(underscore)__를 사용하세요.\r\n**_이텔릭체_와 두껍게**를 같이 사용할 수 있습니다.\r\n취소선은 ~~물결표시(tilde)~~를 사용하세요.',254,2,0,0,0),
+(290,'2019-08-30 14:49:02','2322323','<u>밑줄</u>은 `<u></u>`를 사용하세요.\r\n\r\n\r\n1. 순서가 필요한 목록\r\n1. 순서가 필요한 목록\r\n  - 순서가 필요하지 않은 목록(서브) \r\n  - 순서가 필요하지 않은 목록(서브) \r\n1. 순서가 필요한 목록\r\n  1. 순서가 필요한 목록(서브)\r\n  1. 순서가 필요한 목록(서브)\r\n1. 순서가 필요한 목록\r\n\r\n- 순서가 필요하지 않은 목록에 사용 가능한 기호\r\n  - 대쉬(hyphen)\r\n  * 별표(asterisks)\r\n  + 더하기(plus sign)\r\n\r\n[GOOGLE](https://google.com)',254,2,0,0,0),
+(291,'2019-08-30 14:58:38','q121','[Dribbble][Dribbble link]\r\n\r\n[GitHub][1]\r\n\r\n문서 안에서 [참조 링크]를 그대로 사용할 수도 있습니다.\r\n\r\n\r\n구글 홈페이지: https://google.com\r\n네이버 홈페이지: \r\n\r\n[Dribbble link]: https://dribbble.com\r\n[1]: https://github.com\r\n[참조 링크]: https://naver.com \"네이버로 이동합니다!\"\r\n\r\n[Dribbble][Dribbble link]\r\n\r\n[GitHub][1]\r\n\r\n문서 안에서 [참조 링크]를 그대로 사용할 수도 있습니다.\r\n\r\n\r\n구글 홈페이지: https://google.com  \r\n\r\n\r\n네이버 홈페이지: \r\n\r\n[Dribbble link]: https://dribbble.com\r\n[1]: https://github.com\r\n[참조 링크]: https://naver.com \"네이버로 이동합니다!\"\r\n```html\r\n<a href=\"https://www.google.co.kr/\" target=\"_blank\">GOOGLE</a>\r\n```\r\n<script>\r\n  alert(\'이거 되나?\');\r\n</script>',254,2,0,0,0),
+(292,'2019-08-30 15:54:05','<만나면 좋은 친구>','ㅋㄴㄹㄴㅇㄹㄴㄹㄴㄹㄴㅇ\r\nㄹㄴ\r\nㄹ\r\nㄴㄹ\r\nㄴㄹ\r\nㄴㄹㄴ\r\nㅇㄹㄴ\r\n\r\nㄹㄴ\r\nㄹ\r\nㄴㄹ\r\nㄴㄹ\r\nㄴㄹ\r\nㄴㅇ\r\nㄹㄴ',254,2,1,0,0),
+(293,'2019-08-30 15:55:04','<script>alert(\'zzz\');</script>','fsfsfsfssdfs',254,2,0,0,0),
+(294,'2019-08-30 15:56:47','<script>alert(\'zzz\');</script>','sdfssfsdfsd',254,2,1,0,0),
+(295,'2019-08-30 15:57:37','<script>alert(\'zzz\');</script>','sdfsdfsdf',254,2,1,0,0),
+(296,'2019-08-30 16:14:31','33333','# 제목1\r\n## 제목2\r\n\r\n절취선\r\n***\r\n\r\n\r\n제목 1\r\n======\r\n\r\n제목 2\r\n------\r\n\r\n이텔릭체는 *별표(asterisks)* 혹은 _언더바(underscore)_를 사용하세요.  \r\n두껍게는 **별표(asterisks)** 혹은 __언더바(underscore)__를 사용하세요.  \r\n**_이텔릭체_와 두껍게**를 같이 사용할 수 있습니다.  \r\n취소선은 ~~물결표시(tilde)~~를 사용하세요.  \r\n<u>밑줄</u>은 `<u></u>`를 사용하세요.\r\n\r\n1. 순서가 필요한 목록\r\n1. 순서가 필요한 목록\r\n  - 순서가 필요하지 않은 목록(서브) \r\n  - 순서가 필요하지 않은 목록(서브) \r\n1. 순서가 필요한 목록\r\n  1. 순서가 필요한 목록(서브)\r\n  1. 순서가 필요한 목록(서브)\r\n1. 순서가 필요한 목록\r\n\r\n- 순서가 필요하지 않은 목록에 사용 가능한 기호\r\n  - 대쉬(hyphen)\r\n  * 별표(asterisks)\r\n  + 더하기(plus sign)\r\n\r\n[GOOGLE](https://google.com)  \r\n\r\n[NAVER](https://naver.com \"링크 설명(title)을 작성하세요.\")  \r\n\r\n[상대적 참조](../users/login)  \r\n\r\n[Dribbble][Dribbble link]  \r\n\r\n[GitHub][1]  \r\n\r\n문서 안에서 [참조 링크]를 그대로 사용할 수도 있습니다.  \r\n\r\n다음과 같이 문서 내 일반 URL이나 꺾쇠 괄호(`< >`, Angle Brackets)안의 URL은 자동으로 링크를 사용합니다.  \r\n구글 홈페이지: https://google.com  \r\n네이버 홈페이지: <https://naver.com>  \r\n\r\n[Dribbble link]: https://dribbble.com  \r\n[1]: https://github.com\r\n[참조 링크]: https://naver.com \"네이버로 이동합니다!\"\r\n\r\n![대체 텍스트(alternative text)를 입력하세요!](http://www.gstatic.com/webp/gallery/5.jpg \"링크 설명(title)을 작성하세요.\")\r\n\r\n![Kayak][logo]\r\n\r\n[logo]: http://www.gstatic.com/webp/gallery/2.jpg \"To go kayaking.\"\r\n\r\n[![Vue](/images/vue.png)](https://kr.vuejs.org/)  \r\n\r\n`background`혹은 `background-image` 속성으로 요소에 배경 이미지를 삽입할 수 있습니다.  \r\n\r\n```html\r\n<a href=\"https://www.google.co.kr/\" target=\"_blank\">GOOGLE</a>\r\n```\r\n\r\n```css\r\n.list > li {\r\n  position: absolute;\r\n  top: 40px;\r\n}\r\n```\r\n\r\n```javascript\r\nfunction func() {\r\n  var a = \'AAA\';\r\n  return a;\r\n}\r\n```\r\n\r\n```bash\r\n$ vim ./~zshrc\r\n```\r\n\r\n```python\r\ns = \"Python syntax highlighting\"\r\nprint s\r\n```\r\n\r\n```\r\nNo language indicated, so no syntax highlighting. \r\nBut let\'s throw in a tag.\r\n```  \r\n\r\n| 값 | 의미 | 기본값 |  \r\n|---|:---:|---:|  \r\n| `static` | 유형(기준) 없음 / 배치 불가능 | `static` |  \r\n| `relative` | 요소 자신을 기준으로 배치 |  |  \r\n| `absolute` | 위치 상 부모(조상)요소를 기준으로 배치 |  |  \r\n| `fixed` | 브라우저 창을 기준으로 배치 |  |  \r\n\r\n값 | 의미 | 기본값  \r\n---|:---:|---:  \r\n`static` | 유형(기준) 없음 / 배치 불가능 | `static`  \r\n`relative` | 요소 **자신**을 기준으로 배치 |  \r\n`absolute` | 위치 상 **_부모_(조상)요소**를 기준으로 배치 |  \r\n`fixed` | **브라우저 창**을 기준으로 배치 |  \r\n\r\n| Header  | Another header |  \r\n|---------|----------------|  \r\n| field 1 | something      |  \r\n| field 2 | something else |  \r\n\r\n인용문(blockQuote)\r\n\r\n> 남의 말이나 글에서 직접 또는 간접으로 따온 문장.\r\n> _(네이버 국어 사전)_\r\n\r\nBREAK!\r\n\r\n> 인용문을 작성하세요!\r\n>> 중첩된 인용문(nested blockquote)을 만들 수 있습니다.\r\n>>> 중중첩된 인용문 1\r\n>>> 중중첩된 인용문 2\r\n>>> 중중첩된 인용문 3  \r\n\r\n<u>마크다운에서 지원하지 않는 기능</u>을 사용할 때 유용하며 대부분 잘 동작합니다.\r\n\r\n<img width=\"150\" src=\"http://www.gstatic.com/webp/gallery/4.jpg\" alt=\"Prunus\" title=\"A Wild Cherry (Prunus avium) in flower\">\r\n\r\n![Prunus](http://www.gstatic.com/webp/gallery/4.jpg)  \r\n\r\n| Hello   `|` You |\r\n| -------- | ---- |\r\n| Foo      | Bar  |',254,2,1,0,0),
+(297,'2019-08-30 17:53:45','ㄴㅇㄹㄴㄹㄷㄹㄴ','# 제목1\r\n\r\n<u>zzzzz</u>\r\n~~안녕하세요~~',254,2,1,0,0),
+(298,'2019-08-30 18:35:21','ㅋㅋㅋㅋㅋㅋㅋㅋㅋ','ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ\r\nㅋㅋㅋㅋㅋㅋㅋ\r\nㅋㅋㅋㅋㅋㅋㅋㅋㅋ\r\nㅋㅋㅋㅋㅋㅋㅋ\r\nㅋㅋㅋㅋㅋㅋㅋㅋ\r\nㅋㅋㅋㅋㅋㅋㅋㅋ\r\nㅋㅋㅋㅋㅋㅋㅋ\r\nㅋㅋㅋㅋㅋㅋ\r\nㅋㅋㅋㅋ\r\nㅋ\r\nㅋ\r\nㅋ\r\nㅋㅋ\r\nㅋ\r\n\r\n\r\n\r\n\r\n\r\n~~ㅋㅋㅋ~~\r\nㅋㅋㅋ',254,2,1,0,0);
 
 /*Table structure for table `articleFile` */
 
@@ -118,12 +137,12 @@ CREATE TABLE `articleReply` (
   KEY `reply_articleId` (`articleId`),
   CONSTRAINT `memberId` FOREIGN KEY (`memberId`) REFERENCES `member` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `reply_articleId` FOREIGN KEY (`articleId`) REFERENCES `article` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=252 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=255 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Data for the table `articleReply` */
 
 insert  into `articleReply`(`id`,`regDate`,`articleId`,`memberId`,`body`,`boardId`,`delStatus`,`blindStatus`) values 
-(100,'2019-08-26 23:01:10',254,254,'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nx\nx\n\nxx\n\nx\nx\n\nx\nx\nx\nx\nxx\n\nxx\nx\nx\nx\nx',1,0,0),
+(100,'2019-08-30 18:58:11',254,254,'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>x<br>x<br><br>xx<br><br>x<br>x<br><br>x<br>x<br>x<br>x<br>xx<br><br>xx<br>x<br>x<br>x<br>x',1,0,0),
 (101,'2019-08-26 23:02:43',249,254,'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz',1,0,0),
 (102,'2019-08-29 01:01:21',279,254,'와 댓글',2,1,0),
 (103,'2019-08-29 01:01:28',279,254,'곧 삭제될 예정',2,1,0),
@@ -131,7 +150,10 @@ insert  into `articleReply`(`id`,`regDate`,`articleId`,`memberId`,`body`,`boardI
 (248,'2019-08-24 20:27:42',248,235,'sdfdsfdfd',1,0,0),
 (249,'2019-08-24 20:31:54',248,237,'sfefsef',1,0,0),
 (250,'2019-08-29 16:38:57',277,237,'ㅇㄹ',2,1,0),
-(251,'2019-08-29 17:03:15',276,237,'dhdh',2,1,1);
+(251,'2019-08-29 17:03:15',276,237,'dhdh',2,1,1),
+(252,'2019-08-30 20:25:32',254,254,'z\nz\nzz\nz\n\nzz\nzzzzzz\nz\n\nzzzz\n\n&amp;lt;br&amp;gt;\n\n&amp;',1,0,0),
+(253,'2019-08-30 20:35:39',254,254,'<ㅠㅠㅠㅠ>\n<ㅋㅋㅋㅋㅋ>\n`네 네네네네`\n\'\'\n/\nㅋ\nㅋ\nㅋㅋ',1,0,0),
+(254,'2019-08-31 00:03:45',298,254,'zzzzz\\n\\n\\n\\n\\n\\n\\n\\n\\n\n\\n\\n\\n\\nzzzzzzzzzzzzzzz',2,0,0);
 
 /*Table structure for table `board` */
 
@@ -163,7 +185,7 @@ CREATE TABLE `letter` (
   PRIMARY KEY (`id`),
   KEY `letter_toMemberId` (`toMemberId`),
   CONSTRAINT `letter_toMemberId` FOREIGN KEY (`toMemberId`) REFERENCES `member` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=170 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=172 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Data for the table `letter` */
 
@@ -256,7 +278,9 @@ insert  into `letter`(`id`,`regDate`,`fromMemberId`,`toMemberId`,`body`) values
 (166,'2019-08-24 22:48:32',254,237,'kl'),
 (167,'2019-08-24 22:49:05',254,237,'g'),
 (168,'2019-08-24 22:51:56',237,254,'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz'),
-(169,'2019-08-29 17:52:11',254,237,'ㅎㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌ');
+(169,'2019-08-29 17:52:11',254,237,'ㅎㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌ'),
+(170,'2019-08-30 23:54:57',237,254,'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz\nz\nz\nzz\nz\nzz\nz\n\n\n\n\n\n\n\n\n\n\nzzzzzzz\n\n\n\n\n\n\nz\nz\n\nz\n\nz\nz\nz\nzz\nz\nz\nz'),
+(171,'2019-08-30 23:58:59',254,237,'zzzzzzzzzzz\nzz\nzzz\nzz\nzzz\nzzz\nzzzz\nzzz\nzzzz\nzzz\nzzzzz\nzzz\nzz');
 
 /*Table structure for table `like` */
 
@@ -361,7 +385,7 @@ CREATE TABLE `report` (
   `body` text COLLATE utf8_unicode_ci NOT NULL,
   `memberId` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Data for the table `report` */
 
@@ -375,7 +399,9 @@ insert  into `report`(`id`,`regDate`,`relType`,`relId`,`body`,`memberId`) values
 (7,'2019-08-29 14:21:52','reply',102,'댓글 너무 재미없음zzzzzzzzzzzzzzzzzzz',235),
 (8,'2019-08-29 17:47:35','article',249,'냥냥공주',254),
 (9,'2019-08-29 17:50:33','article',249,'다시 신고합',254),
-(10,'2019-08-29 17:51:59','article',249,'ㅗㄹ호',254);
+(10,'2019-08-29 17:51:59','article',249,'ㅗㄹ호',254),
+(11,'2019-08-30 23:00:33','article',297,'아니\n이거\n신고\n합니다.',254),
+(12,'2019-08-30 23:08:26','article',298,'gfsdgsfsfsfd',254);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

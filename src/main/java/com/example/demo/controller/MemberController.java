@@ -210,6 +210,7 @@ public class MemberController {
 		if(!Utils.needParamCheck(param, new String[] {"toId"}) || !Utils.isNumeric(param, new String[] {"toId"})) {
 			return Maps.of("msg", "잘못된 접근", "success", false);
 		}
+		
 		Map<String, Object> rs = new HashMap<>();
 		boolean success = false;
 		if(Integer.parseInt((String)param.get("toId")) == (int)session.getAttribute("loginedMemberId")) {
@@ -273,6 +274,7 @@ public class MemberController {
 		if(!Utils.needParamCheck(param, new String[] {"relType", "relId", "body"}) || !Utils.isNumeric(param, new String[] {"relId"})) {
 			return Maps.of("msg", "잘못된 접근", "success", false);
 		}
+		
 		Map<String, Object> rs = new HashMap<>();
 		boolean success = false;
 		

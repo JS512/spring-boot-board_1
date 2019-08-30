@@ -173,7 +173,9 @@ function showMemberReplies(){
 
 //////////////////////////////////////////////////////////////////////
 
-
+function replaceAll(str, searchStr, replaceStr) {
+  return str.split(searchStr).join(replaceStr);
+}
 function encodeSHA1(input){	
    var hash = CryptoJS.SHA1(input.value.trim());
    var result = CryptoJS.enc.Hex.stringify(hash);
@@ -324,7 +326,7 @@ function articleDetail__drawReply(data){
 				<th>작성자</th> <td  class="clickable-contextMenu clickable" data-id="${data.memberId }" data-to="${data.extra.writer }"> ${data.extra.writer}</td>
 			</tr>
 			<tr>
-				<td colspan='2'><pre class="replyBody">${data.body}</pre></td>				
+				<td colspan='2' class="replyBody">${data.body}</td>				
 			</tr>
 			
 		</table>`;	
@@ -470,7 +472,7 @@ function articleDetail__showReplyModifyForm(btn){
 	$("#replyAddForm").hide();
 	
 	$("#replyModifyForm").find("input[name='id']").val(hide.find(".replyId").attr("data-id"));
-	$("#replyModifyForm").find("textarea[name='body']").val(hide.find(".replyBody").html());
+	$("#replyModifyForm").find("textarea[name='body']").html(replaceAll(hide.find(".replyBody").html(), "<br>", "\n"));
 	$("#replyModifyForm").find("textarea[name='body']").focus();	
 	
 }
@@ -747,13 +749,13 @@ function initContextMenu(){
 	$(".clickable-letterContent").click(function(){
 		$(".overlay").show();
 		$(".letter-content").show();
-		$(".content").html("<pre>" + $(this).html() + "</pre>");
+		$(".content").html(replaceAll($(this).html(), "\n", "<br>"));
 	});
 	
 	$(".clickable-reportContent").click(function(){
 		$(".overlay").show();
 		$(".report-content").show();
-		$(".content").html("<pre>" + $(this).html() + "</pre>");
+		$(".content").html(replaceAll($(this).html(), "\n", "<br>"));
 	});
 }
 $(function(){	

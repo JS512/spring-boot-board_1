@@ -9,7 +9,7 @@
   -webkit-animation: spin 1s ease-in-out infinite;
 }
 *{
-	box-sizing:border-box;
+	
 }
 @keyframes spin {
   to { -webkit-transform: rotate(360deg); }
@@ -17,10 +17,7 @@
 @-webkit-keyframes spin {
   to { -webkit-transform: rotate(360deg); }
 }
-pre{
-	white-space: pre-wrap;       /* Since CSS 2.1 */
-	word-break:break-all;    
-}
+
 a{	
 	text-decoration:none;
 	color:inherit;	
@@ -63,11 +60,11 @@ table, th, td{
 	padding:5px;
 	word-break:break-all;	
 }
-.text-overflow-ellipsis{
+.text-overflow-ellipsis{	
 	text-overflow:ellipsis;
-	word-break:break-all;
+	word-break:nowrap;
 	white-space: nowrap;
-	overflow:hidden;	
+	overflow:hidden;		
 }
 .absolute-center{
 	position:absolute;
@@ -130,10 +127,10 @@ table, th, td{
 }
 
 .letter-content, .report-content{
-	padding:10px;	
+	padding:15px;	
 }
 
-.letter-content pre, .report-content pre{
+.letter-content .content, .report-content .content{
 	border:1px solid black;
 	padding:5px;
 	min-width:300px;
@@ -141,7 +138,5 @@ table, th, td{
 	max-width:500px;
 	max-height:500px;
 	overflow-y:scroll;
-}
-.reply{
-	max-width:300px;
+	word-break:break-all;
 }

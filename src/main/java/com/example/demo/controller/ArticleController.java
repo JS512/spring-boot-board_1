@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.HtmlUtils;
 
 import com.example.demo.Utils;
 import com.example.demo.dto.Article;
@@ -56,6 +57,7 @@ public class ArticleController {
 		if(param.get("cPage") == null || param.get("cPage").equals("")) {
 			param.put("cPage", 1);
 		}
+		
 		
 		if(!Utils.needParamCheck(param, new String[] {"boardId", "cPage"}) || !Utils.isNumeric(param, new String[] {"boardId", "cPage"})) {
 			model.addAttribute("historyBack", true);
@@ -107,7 +109,8 @@ public class ArticleController {
 		if(!Utils.needParamCheck(param, new String[] {"boardId"}) || !Utils.isNumeric(param, new String[] {"boardId"})) {
 			model.addAttribute("historyBack", true);
 			return "common/redirect";
-		}
+		}	
+		
 		
 		if(!checkAcceptBoardId(param)) {
 			model.addAttribute("historyBack", true);
@@ -131,6 +134,7 @@ public class ArticleController {
 			model.addAttribute("historyBack", true);
 			return "common/redirect";
 		}
+		
 		if(!checkAcceptBoardId(param)) {
 			model.addAttribute("historyBack", true);
 			model.addAttribute("msg", param.get("msg"));
@@ -165,7 +169,7 @@ public class ArticleController {
 		}else {
 			model.addAttribute("redirectUrl", redirectUrl);
 		}
-		return "common/redirect";
+		return "common/redirect";		
 	}
 	
 	@RequestMapping("/deleteOneArticle")
@@ -240,7 +244,7 @@ public class ArticleController {
 			model.addAttribute("historyBack", true);
 			return "common/redirect";
 		}
-		
+
 		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));
 		if(!checkAcceptBoardId(param) || !checkArticleAuthentication(param)) {
 			model.addAttribute("historyBack", true);
@@ -438,7 +442,8 @@ public class ArticleController {
 		if(!Utils.needParamCheck(param, new String[] {"boardId", "articleId", "id", "body"}) || !Utils.isNumeric(param, new String[] {"boardId", "articleId", "id"})) {			
 			return Maps.of("msg", "잘못된 접근", "success", false);
 		}
-		if(!checkAcceptBoardId(param) || !checkArticleReplyAuthentication(param)) {
+		
+		if(!checkArticleReplyAuthentication(param)) {
 			return Maps.of("msg", param.get("msg"), "success", false);
 		}
 		Map<String, Object> rs = articleReplyService.modifyReplyByIdArticleIdBoardId(param);

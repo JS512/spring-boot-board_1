@@ -53,7 +53,7 @@
 	  	<tr>
 	  		<td>${article.id }</td>
 	  		<td>${article.regDate }</td>
-	  		<td class="text-overflow-ellipsis"><a href="/admin/articleDetail?id=${article.id}&cPage=${param.cPage}&boardId=${article.boardId}">${article.title }</a></td>
+	  		<td class="text-overflow-ellipsis"><a href="/admin/articleDetail?id=${article.id}&cPage=${param.cPage}&boardId=${article.boardId}#article${article.id}">${article.title }</a></td>
 	  		<td class="clickable-contextMenu clickable" data-id="${article.memberId }" data-to="${article.extra.writer }">${article.extra.writer }</td>
 	  		<td>${article.view }</td>
 	  		<td>${article.extra.likeCnt }</td>  	

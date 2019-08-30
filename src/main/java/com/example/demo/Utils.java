@@ -6,8 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class Utils {
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
+import org.springframework.web.util.HtmlUtils;
 
+public class Utils {	
 	public static int getAsInt(Object object) {
 		if (object instanceof Integer) {
 			return (int) object;
@@ -133,4 +136,14 @@ public class Utils {
 
 		return rs;
 	}
+	
+	public static boolean isOnlyText(String text) {		
+		return Jsoup.isValid(text, Whitelist.none());
+	}
+	
+	public static String htmlEscape(String html) {
+		return HtmlUtils.htmlEscape(html);
+	}
+	
+	
 }

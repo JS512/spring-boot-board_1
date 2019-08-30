@@ -364,6 +364,7 @@ public class AdminArticleController {
 		if(!Utils.needParamCheck(param, new String[] {"boardId", "articleId", "body"}) || !Utils.isNumeric(param, new String[] {"boardId", "articleId"})) {			
 			return Maps.of("msg", "잘못된 접근", "success", false);
 		}
+		
 		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));	
 		
 		Map<String, Object> rs = articleReplyService.addReply(param);		
@@ -445,6 +446,7 @@ public class AdminArticleController {
 		if(!Utils.needParamCheck(param, new String[] {"boardId", "articleId", "id", "body"}) || !Utils.isNumeric(param, new String[] {"boardId", "articleId", "id"})) {			
 			return Maps.of("msg", "잘못된 접근", "success", false);
 		}
+		
 		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));
 		Map<String, Object> rs = articleReplyService.modifyReplyByIdArticleIdBoardId(param);
 		
@@ -526,9 +528,11 @@ public class AdminArticleController {
 		if(param.get("cPage") == null || param.get("cPage").equals("")) {
 			param.put("cPage", 1);
 		}
-		if(!Utils.needParamCheck(param, new String[] {"cPage", "memberId"}) || !Utils.isNumeric(param, new String[] {"cPage", "memberId"})) {
+		if(!Utils.isNumeric(param, new String[] {"cPage"})) {
 			model.addAttribute("historyBack", true);
 			return "common/redirect";
+		}else if(!Utils.needParamCheck(param, new String[] {"memberId"}) || !Utils.isNumeric(param, new String[] {"memberId"})) {
+			param.put("memberId", request.getSession().getAttribute("loginedMemberId"));
 		}
 		param.put("role", (String)request.getAttribute("role"));
 		Map<String, Object> rs = articleService.getMemberArticlesByMemberId(param);
@@ -543,9 +547,11 @@ public class AdminArticleController {
 		if(param.get("cPage") == null || param.get("cPage").equals("")) {
 			param.put("cPage", 1);
 		}
-		if(!Utils.needParamCheck(param, new String[] {"cPage", "memberId"}) || !Utils.isNumeric(param, new String[] {"cPage", "memberId"})) {
+		if(!Utils.isNumeric(param, new String[] {"cPage"})) {
 			model.addAttribute("historyBack", true);
 			return "common/redirect";
+		}else if(!Utils.needParamCheck(param, new String[] {"memberId"}) || !Utils.isNumeric(param, new String[] {"memberId"})) {
+			param.put("memberId", request.getSession().getAttribute("loginedMemberId"));
 		}
 		param.put("role", (String)request.getAttribute("role"));
 		Map<String , Object> rs = articleReplyService.getMemberRepliesByMemberId(param);

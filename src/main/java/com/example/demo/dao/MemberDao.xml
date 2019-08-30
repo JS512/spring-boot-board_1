@@ -135,7 +135,9 @@
 		LEFT OUTER JOIN articleReply AS AR
 		ON R.relType = 'reply' AND R.relId = AR.id
 		LEFT OUTER JOIN `member` AS M
-		ON M.id = R.memberId;
+		ON M.id = R.memberId
+		ORDER BY R.id DESC
+		LIMIT #{startNum}, #{perPageNum}
 	</select>
 	
 	<select id="getTotalReportCount" parameterType="map" resultType="Integer">
@@ -168,6 +170,7 @@
 		<id property="regDate" column="regDate"/>
 		<id property="relId" column="relId"/>
 		<id property="relType" column="relType"/>
+		<id property="memberId" column="memberId"/>
 		<id property="body" column="body"/>
 		<association property="extra" javaType="map">
 			<id property="articleId" column="articleId"/>

@@ -54,7 +54,7 @@
 	</tr>
 	<tr>
 		<th>내용</th>
-		<td class="text-overflow-ellipsis"><pre>${article.body }</pre></td>
+		<td>${article.body }</td>
 	</tr>  
   
 </table>

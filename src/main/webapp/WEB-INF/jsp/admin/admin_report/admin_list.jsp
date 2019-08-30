@@ -29,7 +29,7 @@
   		<td>${report.relId}</td>
   		<td>${report.regDate }</td>  		
   		<td class="clickable-contextMenu clickable" data-id="${report.memberId }" data-to="${report.extra.writer }">${report.extra.writer }</td>
-  		<td class="text-overflow-ellipsis clickable-reportContent clickable">${report.body }</td>
+  		<td class="text-overflow-ellipsis clickable-reportContent clickable">${report.originBody }</td>
   		<td><button onclick="report__deleteReport(this);" data-id="${report.id }">삭제</button></td>
   		<td><a href="/admin/articleDetail?id=${report.extra.articleId }&boardId=${report.extra.boardId}#${report.relType}${report.relId}">바로가기</a></td>
   	</tr>

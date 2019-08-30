@@ -22,12 +22,8 @@
 		<th>이메일 인증 :</th>
 		<td>
 			<c:choose>
-				<c:when test="${loginedMember.emailAuthStatus == true}">
-					O
-				</c:when>
-				<c:when test="${loginedMember.emailAuthStatus == false }">
-					X
-				</c:when>
+				<c:when test="${loginedMember.emailAuthStatus == true}">O</c:when>
+				<c:when test="${loginedMember.emailAuthStatus == false }">X</c:when>
 			</c:choose>
 		</td>
 	</tr>
