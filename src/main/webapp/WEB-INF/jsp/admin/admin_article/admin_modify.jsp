@@ -10,7 +10,7 @@
 	<input type="hidden" name="id" value="${param.id }">
 	<input type="hidden" name="boardId" value="${param.boardId }">
 	제목 : <input type="text" name="title" value="${article.title }"><br>
-	내용 : <textarea rows="30" cols="60" name="body" >${article.body}</textarea><br>
+	내용 : <textarea rows="30" cols="60" name="body" >${article.originBody}</textarea><br>
 	<button>작성 완료</button>
 	<a href="javascript:history.back();">취소</a>
 	<button type="button" onclick="articleModify__addFile('body')">파일 추가하기</button>

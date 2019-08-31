@@ -46,8 +46,13 @@ function adminPage__drawMembers(data){
 	  		<td class="clickable-contextMenu clickable" data-id="${member.id }" data-to="${member.loginId}">${member.loginId}</td>
 	  		<td>${member.name}</td>
 	  		<td>${member.email}</td>
-	  		<td>${auth}</td>
-	  		<td><button data-id="${member.id}" onclick="adminPage__deleteMember(this);">회원 삭제</button></td>
+	  		<td>${auth}</td>`;		
+		if(member.delStatus){
+			html += `<td>탈퇴</td>`;
+		}else{
+			html += `<td></td>`;
+		}
+	  	html += `<td><button data-id="${member.id}" onclick="adminPage__deleteMember(this);">회원 삭제</button></td>
   		</tr>`;
 	}
 	$(".memberTable").find("tbody").append(html);	
@@ -81,7 +86,7 @@ function adminArticleList__checkForm(form){
 			
 			alert(data.msg);
 			if(data.success){
-				$("form").find("input[type='checkbox']:checked").parent().parent().remove();
+				$("form").find("input[type='checkbox']:checked").parent().prev().html("관리자에 의해 블라인드 상태");
 			}
 		},
 		"json"
@@ -335,9 +340,11 @@ function articleDetail__drawReply(data){
 		}else{
 			html += `<button type="button" onclick="articleDetail__deleteReply(this);">블라인드</button>`;
 		}
-	html += `<button type="button" onclick="articleDetail__showReplyModifyForm(this);">수정</button>
-			
-		<hr>
+		
+		if(!data.delStatus){
+			html += `<button type="button" onclick="articleDetail__showReplyModifyForm(this);">수정</button>`;
+		}
+	html += `<hr>
 	</div>`;	
 	
 	$(".replyList").prepend(html);	
@@ -362,7 +369,7 @@ function articleDetail__getAllReplies(){
 					articleDetail__getLikes($(this), "reply");					
 				});
 				initContextMenu();
-				moveToId();
+				moveToIdInHTML();
 			}else{
 				$(".replyStatus").html(data.msg);
 			}
@@ -385,9 +392,10 @@ function articleDetail__deleteReply(btn){
 			},
 			function(data){
 				
-				if(data.success){					
+				if(data.success){
+					$(btn).next().remove();
 					$(btn).parent().find("table").prepend('<tr><th>상태</th><td>관리자에 의해 블라인드</td></tr>');
-					$('<button type="button" onclick="articleDetail__deleteReply(this);">블라인드</button>').insertBefore($(btn).next());
+					$('<button type="button" onclick="articleDetail__cancelDeleteReply(this);">블라인드 취소</button>').insertBefore($(btn).next());
 					$(btn).parent().show();
 					$(btn).remove();
 				}else{
@@ -417,7 +425,9 @@ function articleDetail__cancelDeleteReply(btn){
 				alert(data.msg);
 				if(data.success){
 					$(btn).parent().find("table").find("tr").first().remove();
-					$("<button type='button' onclick='articleDetail__deleteReply(this);'>블라인드</button>").insertBefore($(btn).next());
+					$("<button type='button' onclick='articleDetail__showReplyModifyForm(this);'>수정</button>").insertBefore($(btn).next());
+					$("<button type='button' onclick='articleDetail__deleteReply(this);'>블라인드</button>").insertBefore($(btn).next());					
+					
 					$(btn).parent().show();
 					$(btn).remove();
 				}else{
@@ -678,7 +688,45 @@ function checkLetterForm(form){
 		"json"
 	);
 }
+function letter_getMemberLetterList(id, memberId){
+	$.post("/member/getMemberLetterList",
+		{			
+			memberId : memberId
+		},
+		function(data){
+			$(".letter-content").find(".content").html("");
+			if(data.success){								
+				for(var i=0 ;i < data.letters.length ;i++){
+					letter_drawLetterList(data.letters[i], memberId);
+				}
+				$(".letter-content").children().show();
+				moveToIdInContainer("#letter"+id);
+			}else{
+				alert(data.msg);
+				$(".letter-content").find(".close").trigger();
+			}
+			$(".letter-content").find(".loading").hide();
+		},
+		"json"
+	);
+}
 
+function letter_drawLetterList(letter, memberId){
+	var filtered = replaceAll(letter.body, "\n", "<br>");
+	var html;
+	if(letter.fromMemberId != memberId){
+		html = `<div class="position-right width-half">`;
+	}else{
+		html = `<div class="position-left width-half">`;
+	}
+	html +=`			
+			<div id="letter${letter.id}" class="padding-normal border-normal">${filtered}</div>
+			<small>${letter.regDate}</small>			
+		</div>
+		
+	`;
+	$(".letter-content").find(".content").append(html);
+}
 function letter__deleteLetter(btn){
 	
 	if(!confirm("삭제 하시겠습니까?")){
@@ -699,11 +747,14 @@ function letter__deleteLetter(btn){
 		}
 	)
 }
-
-function moveToId(){	
-	var id = location.hash;	
+function moveToIdInHTML(){
+	var id ;
+	
+	id = location.hash;
+	
 	if(id.length){
-		var offset = $(id).offset();
+		var offset;		
+		offset = $(id).offset();		
 		$('html').animate({scrollTop : offset.top}, 400,function(){
 			for(var i=0 ;i<2 ;i++){
 				$(id).animate({	opacity: "0.20"	}, 500).animate({opacity:"1.0"}, 500);
@@ -712,6 +763,22 @@ function moveToId(){
 		
 	}
 }
+function moveToIdInContainer(toId, topPos){	
+	var id = toId;	
+	
+	if(id.length){
+		$(".content").scrollTop(0);
+		var top = $(id).offset().top - $(".content").offset().top;
+		
+		$(".content").animate({scrollTop : top}, 400,function(){
+			for(var i=0 ;i<2 ;i++){
+				$(id).animate({	opacity: "0.20"	}, 500).animate({opacity:"1.0"}, 500);
+			}
+		});
+	}
+}
+
+
 function initGetReply(){
 	if($(".replyList").length){
 		articleDetail__getAllReplies();
@@ -748,8 +815,10 @@ function initContextMenu(){
 	
 	$(".clickable-letterContent").click(function(){
 		$(".overlay").show();
+		$(".letter-content").children().hide();
+		$(".letter-content").find(".loading").show();
 		$(".letter-content").show();
-		$(".content").html(replaceAll($(this).html(), "\n", "<br>"));
+		letter_getMemberLetterList($(this).attr("data-id"), $(this).attr("data-memberId"));
 	});
 	
 	$(".clickable-reportContent").click(function(){

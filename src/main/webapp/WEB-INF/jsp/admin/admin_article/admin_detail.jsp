@@ -12,7 +12,9 @@
 <c:if test="${article.blindStatus }">
 	<a href="javascript:articleDetail__cancelDeleteArticleCheck(${article.id }, ${param.boardId })">블라인드 취소 하기</a>
 </c:if>
-<a href="javascript:articleDetail__modifyArticleCheck(${article.id }, ${param.boardId })">수정하기</a>
+<c:if test="${!article.delStatus }">
+	<a href="javascript:articleDetail__modifyArticleCheck(${article.id }, ${param.boardId })">수정하기</a>
+</c:if>
 
 <input type="hidden" id="boardId" value="${article.boardId}">
 

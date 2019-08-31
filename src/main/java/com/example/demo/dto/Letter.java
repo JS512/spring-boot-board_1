@@ -17,6 +17,7 @@ public class Letter {
 	private int fromMemberId;
 	private int toMemberId;
 	private String body;
+	private boolean delStatus;
 	private Map<String, Object> extra;
 	
 	public String getBody() {

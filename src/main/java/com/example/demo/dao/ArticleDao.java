@@ -6,7 +6,6 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.example.demo.dto.Article;
-import com.example.demo.dto.ArticleReply;
 import com.example.demo.dto.Like;
 
 @Mapper

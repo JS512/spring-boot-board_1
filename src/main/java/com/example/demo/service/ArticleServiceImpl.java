@@ -239,11 +239,11 @@ public class ArticleServiceImpl implements ArticleService{
 		String resultCode = "";
 		try {
 			articleDao.cancelDeleteOneArticle(param);	
-			msg = "게시물 삭제 성공";
+			msg = "블라인드 취소 성공";
 			resultCode = "S-1";
 			
 		}catch(Exception e) {
-			msg = "게시물 삭제 실패";
+			msg = "블라인드 취소 실패";
 			resultCode = "F-1";
 			e.printStackTrace();
 		}

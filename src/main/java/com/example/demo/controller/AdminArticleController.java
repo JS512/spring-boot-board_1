@@ -32,9 +32,6 @@ import com.example.demo.dto.ArticleFile;
 import com.example.demo.service.ArticleFileService;
 import com.example.demo.service.ArticleReplyService;
 import com.example.demo.service.ArticleService;
-import com.example.demo.service.MemberService;
-
-import jline.internal.Log;
 
 @Controller
 @RequestMapping("/admin")
@@ -45,8 +42,7 @@ public class AdminArticleController {
 	private ArticleFileService articleFileService;
 	@Autowired
 	private ArticleReplyService articleReplyService;
-	@Autowired
-	private MemberService memberService;
+	
 	@Value("${custom.uploadDir}")
 	private String uploadDir;
 	
@@ -78,7 +74,7 @@ public class AdminArticleController {
 			param.put("cPage", 1);
 		}
 		
-		if(!Utils.needParamCheck(param, new String[] {"boardId", "cPage"}) || !Utils.isNumeric(param, new String[] {"boardId", "cPage"})) {
+		if(!Utils.needParamCheck(param, new String[] {"id", "boardId", "cPage"}) || !Utils.isNumeric(param, new String[] {"id", "boardId", "cPage"})) {
 			model.addAttribute("historyBack", true);
 			return "common/redirect";
 		}
@@ -145,8 +141,7 @@ public class AdminArticleController {
 		}
 		
 		return "common/redirect";		
-	}
-	
+	}	
 	
 	
 	@RequestMapping("/deleteOneArticle")
@@ -166,7 +161,7 @@ public class AdminArticleController {
 		if(resultCode.startsWith("S-")) {
 			param.remove("role");
 			StringBuffer redirectUrl = new StringBuffer();
-			redirectUrl.append("/admin/articleList?");
+			redirectUrl.append("/admin/articleDetail?");
 			for(String key : param.keySet()) {
 				redirectUrl.append(key + "=" + param.get(key) + "&");
 			}
@@ -508,9 +503,11 @@ public class AdminArticleController {
 	@RequestMapping("/deleteCheckedArticle")
 	@ResponseBody
 	public Map<String, Object> deleteCheckedArticle(@RequestParam Map<String, Object> param,
-													@RequestParam(value="id[]") List<Integer> ids){
+													@RequestParam(value="id[]") List<Integer> ids,
+													HttpServletRequest request){
 		
 		param.put("ids", ids);
+		param.put("role", request.getAttribute("role"));
 		Map<String, Object> rs = articleService.deleteCheckedArticle(param);		
 				
 		boolean success = false;

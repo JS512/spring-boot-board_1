@@ -15,17 +15,17 @@
 	
 	<select id="doubleCheckEmail" parameterType="map" resultType="Integer">
 		SELECT COUNT(id) FROM `member`
-		WHERE email = #{email}
+		WHERE email = #{email} AND delStatus != TRUE
 	</select>
 	
 	<select id="doubleCheckLoginId" parameterType="map" resultType="Integer">
 		SELECT COUNT(id) FROM `member`
-		WHERE loginId = #{loginId}
+		WHERE loginId = #{loginId} AND delStatus != TRUE
 	</select>
 	
 	<select id="getOneMemberByAuthKeyEmail" parameterType="map" resultType="Integer">
 		SELECT COUNT(*) FROM `member`
-		WHERE email = #{email} AND authKey = #{authKey}
+		WHERE email = #{email} AND authKey = #{authKey} AND delStatus != TRUE
 	</select>
 	
 	<update id="memberEmailAuth" parameterType="map">
@@ -36,27 +36,28 @@
 	
 	<select id="getOneMemberByLoginIdPw" parameterType="map" resultMap="member">
 		SELECT * FROM `member`
-		WHERE loginId = #{loginId} AND loginPw = #{loginPw}
+		WHERE loginId = #{loginId} AND loginPw = #{loginPw} AND delStatus != TRUE
 	</select>
 	
 	<select id="getOneMemberById" parameterType="Integer" resultMap="member">
 		SELECT * FROM `member`
-		WHERE id = #{loginedMemberId}
+		WHERE id = #{loginedMemberId} AND delStatus != TRUE
 	</select>
 	
-	<delete id="deleteOneMember" parameterType="Integer">
-		DELETE FROM `member`
+	<update id="deleteOneMember" parameterType="Integer">
+		UPDATE `member`
+		SET delStatus = TRUE
 		WHERE id = #{loginedMemberId}
-	</delete>
+	</update>
 	
 	<select id="findLoginId" parameterType="map" resultType="string">
 		SELECT loginId FROM `member`
-		WHERE name = #{name} AND email = #{email}
+		WHERE name = #{name} AND email = #{email} AND delStatus != TRUE
 	</select>
 	
 	<select id="findLoginPw" parameterType="map" resultType="string">
 		SELECT email FROM `member`
-		WHERE loginId = #{loginId} AND email = #{email}
+		WHERE loginId = #{loginId} AND email = #{email} AND delStatus != TRUE
 	</select>
 	
 	<update id="changeTempPw" parameterType="map">
@@ -67,7 +68,7 @@
 	
 	<select id="getOneMemberByIdPw" parameterType="map" resultType="member">
 		SELECT * FROM `member`
-		WHERE id = #{loginedMemberId} AND loginPw = #{origin_loginPw}
+		WHERE id = #{loginedMemberId} AND loginPw = #{origin_loginPw} AND delStatus != TRUE
 	</select>
 	
 	<update id="changeLoginPw" parameterType="map">
@@ -98,20 +99,22 @@
 		SELECT L.*, IFNULL(M.loginId ,'존재하지 않는 사용자') AS writer FROM
 		`letter` AS L
 		LEFT OUTER JOIN `member` AS M
-		ON M.id = L.fromMemberId 
-		WHERE toMemberId = #{loginedMemberId}
+		ON M.id = L.fromMemberId AND M.delStatus != TRUE
+		WHERE toMemberId = #{loginedMemberId} AND L.delStatus = FALSE
+		ORDER BY L.id DESC
 		LIMIT #{startNum}, #{perPageNum}
 	</select>
 	
 	<select id="getTotalLetterCount" parameterType="map" resultType="Integer">
 		SELECT COUNT(*) FROM letter
-		WHERE toMemberId = #{loginedMemberId}
+		WHERE toMemberId = #{loginedMemberId} AND delStatus = FALSE		
 	</select>
 	
-	<delete id="deleteOneLetterById" parameterType="Integer">
-		DELETE FROM letter
+	<update id="deleteOneLetterById" parameterType="Integer">
+		UPDATE letter
+		SET delStatus = TRUE
 		WHERE id = #{id}
-	</delete>
+	</update>
 	
 	<select id="getOneLetterById" parameterType="Integer" resultMap="letter">
 		SELECT * FROM letter
@@ -144,12 +147,18 @@
 		SELECT COUNT(*) FROM report		
 	</select>
 	
+	<select id="getMemberLetterList" parameterType="map" resultMap="letter">
+		SELECT * FROM letter
+		WHERE (toMemberId = #{loginedMemberId} AND fromMemberId = #{memberId}) OR (toMemberId = #{memberId} AND fromMemberId = #{loginedMemberId})		 
+	</select>
+	
 	<resultMap id="letter" type="com.example.demo.dto.Letter">
 		<id property="id" column="id"/>
 		<id property="regDate" column="regDate"/>
 		<id property="fromMemberId" column="fromMemberId"/>
 		<id property="toMemberId" column="toMemberId"/>
 		<id property="body" column="body"/>
+		<id property="delStatus" column="delStatus"/>
 		<association property="extra" javaType="map">
 			<id property="writer" column="writer"></id>
 		</association>		
@@ -163,6 +172,7 @@
 		<id property="email" column="email"/>
 		<id property="authKey" column="authKey"/>
 		<id property="emailAuthStatus" column="emailAuthStatus"/>
+		<id property="delStatus" column="delStatus"/>
 	</resultMap>
 	
 	<resultMap id="report" type="com.example.demo.dto.Report">

@@ -14,7 +14,8 @@
 	    <th>이름</th>
 	    <th>이메일</th>
 	    <th>이메일 인증</th>
-	    <th>비고</th>
+	    <th>상태</th>	    
+	    <th>비고</th>	    
 	  </tr>
   </thead>
   <tbody>  	

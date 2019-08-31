@@ -70,12 +70,13 @@ public class Utils {
 		return true;
 	}
 	
-	public static boolean isNumeric(Map<String, Object> param, String...str) {
-
+	public static boolean isNumeric(Map<String, Object> param, String...str) {		
 		for(int i=0 ;i<str.length ;i++) {
-			String s = String.valueOf(param.get(str[i]));
+			String s = String.valueOf(param.get(str[i]));			
 			if(s != null) {
-				if ( s.length() == 0 || !s.chars().allMatch(Character::isDigit)) {	        	
+				if ( s.length() == 0 || !s.chars().allMatch(Character::isDigit)) {
+					System.out.println(s == null);
+					System.out.println(s.length());
 		            return false;
 		        }	        
 			}

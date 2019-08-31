@@ -16,7 +16,7 @@
 		SELECT AR.*, IFNULL(M.loginId, '존재하지 않는 사용자') AS writer
 		FROM articleReply AS AR
 		LEFT OUTER JOIN `member` AS M
-		ON M.id = AR.memberId
+		ON M.id = AR.memberId AND M.delStatus != TRUE
 		WHERE AR.articleId = #{articleId} AND AR.boardId = #{boardId}		
 	</select>
 	

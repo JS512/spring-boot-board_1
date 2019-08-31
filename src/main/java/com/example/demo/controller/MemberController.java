@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -15,11 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.Utils;
-import com.example.demo.dto.Article;
 import com.example.demo.dto.Letter;
 import com.example.demo.service.MemberService;
-
-import jline.internal.Log;
 
 @Controller
 @RequestMapping("/member")
@@ -291,6 +287,24 @@ public class MemberController {
 		
 	}
 	
+	@RequestMapping("/getMemberLetterList")
+	@ResponseBody
+	public Map<String, Object> getMemberLetterList(@RequestParam Map<String, Object> param, HttpSession session){
+		if(!Utils.needParamCheck(param, new String[] {"memberId"}) || !Utils.isNumeric(param, new String[] {"memberId"})) {
+			return Maps.of("msg", "잘못된 접근", "success", false);
+		}
+		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));
+		Map<String, Object> rs = memberService.getMemberLetterList(param);
+		
+		String resultCode = (String)rs.get("resultCode");
+		boolean success = false;
+		if(resultCode.startsWith("S-")) {
+			success = true;
+		}
+		
+		return Maps.of("msg", rs.get("msg"), "success", success, "letters", rs.get("letters"));
+	}
+	
 	
 	private boolean checkLetterAuthentication(Map<String, Object> param) {
 		Letter letter = memberService.getOneLetterById(param);
@@ -301,6 +315,8 @@ public class MemberController {
 		}else if(letter.getToMemberId() != (int)param.get("loginedMemberId")){
 			msg = "권한이 없습니다.";
 			
+		}else if(letter.isDelStatus()) {
+			msg = "삭제된 쪽지 입니다.";
 		}else {
 			return true;
 		}

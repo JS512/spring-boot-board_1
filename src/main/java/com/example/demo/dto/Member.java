@@ -15,4 +15,5 @@ public class Member {
 	private String email;
 	private String authKey;
 	private boolean emailAuthStatus;
+	private boolean delStatus;
 }

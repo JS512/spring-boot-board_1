@@ -17,7 +17,7 @@
   		<td>${letter.id }</td>
   		<td>${letter.regDate }</td>  		
   		<td class="clickable-contextMenu clickable" data-id="${letter.fromMemberId }" data-to="${letter.extra.writer }">${letter.extra.writer }</td>
-  		<td class="text-overflow-ellipsis clickable-letterContent clickable">${letter.originBody }</td>
+  		<td data-id="${letter.id}" data-memberId="${letter.fromMemberId }" class="text-overflow-ellipsis clickable-letterContent clickable">${letter.originBody }</td>
   		<td><button onclick="letter__deleteLetter(this);" data-id="${letter.id }">삭제</button></td>
   			
   	</tr>
@@ -41,6 +41,7 @@
 	<div class="text-align-right">
 		<div class="close">	</div>
 	</div>
+	<div class="loading" hidden></div>
 	<div class="content"></div>
 </div>
 <%@ include file="../part/foot.jspf" %>

@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.dao.ArticleDao;
 import com.example.demo.dao.ArticleFileDao;
-import com.example.demo.dao.MemberDao;
 import com.example.demo.dto.Article;
 import com.example.demo.dto.ArticleFile;
 
@@ -24,9 +23,7 @@ public class ArticleFileServiceImpl implements ArticleFileService{
 	@Autowired
 	private ArticleFileDao articleFileDao;
 	@Autowired
-	private ArticleDao articleDao;
-	@Autowired
-	private MemberDao memberDao;
+	private ArticleDao articleDao;	
 	@Value("${custom.uploadDir}")
 	private String uploadDir;
 	

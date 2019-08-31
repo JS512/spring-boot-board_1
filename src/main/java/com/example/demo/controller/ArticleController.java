@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.HtmlUtils;
 
 import com.example.demo.Utils;
 import com.example.demo.dto.Article;
@@ -34,7 +33,6 @@ import com.example.demo.dto.ArticleReply;
 import com.example.demo.service.ArticleFileService;
 import com.example.demo.service.ArticleReplyService;
 import com.example.demo.service.ArticleService;
-import com.example.demo.service.MemberService;
 
 import groovy.util.logging.Slf4j;
 import jline.internal.Log;
@@ -81,11 +79,11 @@ public class ArticleController {
 			param.put("cPage", 1);
 		}
 		
-		if(!Utils.needParamCheck(param, new String[] {"boardId", "cPage"}) || !Utils.isNumeric(param, new String[] {"boardId", "cPage"})) {
+		if(!Utils.needParamCheck(param, new String[] {"id", "cPage", "boardId"}) || !Utils.isNumeric(param, new String[] {"id","boardId", "cPage"})) {			
 			model.addAttribute("historyBack", true);
 			return "common/redirect";
 		}
-		if(checkArticleIsBlind(param)) {
+		if(!checkArticleIsAccepted(param)) {
 			model.addAttribute("msg", param.get("msg"));
 			model.addAttribute("historyBack", true);
 			return "common/redirect";
@@ -154,7 +152,7 @@ public class ArticleController {
 			return "common/redirect";
 		}
 		redirectUrl = "/article/detail?id="+param.get("id")+"&boardId="+param.get("boardId");
-		
+		Log.info(redirectUrl);
 		if(types != null) {		
 			
 			rs = articleFileService.addArticleFiles(param, files, types, types2);
@@ -164,6 +162,7 @@ public class ArticleController {
 			if(resultCode.startsWith("S-")) {			
 				model.addAttribute("redirectUrl", redirectUrl);
 			}else {
+				
 				model.addAttribute("historyBack", true);
 			}
 		}else {
@@ -192,6 +191,7 @@ public class ArticleController {
 		String resultCode = (String) rs.get("resultCode");
 		
 		if(resultCode.startsWith("S-")) {
+			param.remove("role");
 			StringBuffer redirectUrl = new StringBuffer();
 			redirectUrl.append("/article/list?");
 			for(String key : param.keySet()) {
@@ -605,9 +605,9 @@ public class ArticleController {
 			msg = "존재하지 않는 댓글 입니다.";
 			
 		}else if(reply.isBlindStatus()){
-			msg = "관리자에 의해서 블라인드 처리된 게시물 입니다.";
+			msg = "관리자에 의해서 블라인드 처리된 댓글 입니다.";
 		}else if(reply.isDelStatus()){
-			msg = "삭제된 게시물 입니다.";
+			msg = "삭제된 댓글 입니다.";
 			
 		}else if(reply.getMemberId() != (int)param.get("loginedMemberId")){
 			msg = "권한이 없습니다.";
@@ -619,20 +619,21 @@ public class ArticleController {
 		return false;
 	}
 	
-	private boolean checkArticleIsBlind(Map<String, Object> param) {
+	private boolean checkArticleIsAccepted(Map<String, Object> param) {
 		Article article = articleService.getOneArticleById(param);		
 		String msg = null;
 		
-		if(article == null) {
-			msg = "존재하지 않는 게시물 입니다.";
-			
-		}else if(article.isBlindStatus()){
+		if(article == null) {			
+			msg = "존재하지 않는 게시물 입니다.";			
+		}else if(article.isBlindStatus()){			
 			msg = "관리자에 의해서 블라인드 처리된 게시물 입니다.";
+		}else if(article.isDelStatus()) {			
+			msg = "삭제된 게시물 입니다.";
 		}else {
-			return false;
+			return true;
 		}
 		param.put("msg", msg);
-		return true;
+		return false;
 	}
 	
 }

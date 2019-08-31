@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import java.util.List;
 import java.util.Map;
 
 import com.example.demo.dto.Letter;
@@ -46,6 +45,8 @@ public interface MemberService {
 
 	public Map<String, Object> sendReport(Map<String, Object> param);
 
-	public Map<String, Object> getAllReports(Map<String, Object> param);	
+	public Map<String, Object> getAllReports(Map<String, Object> param);
+
+	public Map<String, Object> getMemberLetterList(Map<String, Object> param);	
 
 }

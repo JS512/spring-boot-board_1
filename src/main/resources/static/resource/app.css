@@ -8,23 +8,36 @@
   animation: spin 1s ease-in-out infinite;
   -webkit-animation: spin 1s ease-in-out infinite;
 }
-*{
-	
-}
 @keyframes spin {
   to { -webkit-transform: rotate(360deg); }
 }
 @-webkit-keyframes spin {
   to { -webkit-transform: rotate(360deg); }
 }
-
+img{
+	max-width:100%;
+}
 a{	
 	text-decoration:none;
 	color:inherit;	
 	padding:0 5px;
 }
+.width-half{
+	max-width:50%;
+}
+.position-right{
+	margin-right:0;
+	margin-left:auto;
+}
+.position-left{
+	margin-right:auto;
+	margin-left:0;
+}
 .nav_page li{
 	display:inline-block;
+}
+.padding-normal{
+	padding:5px;
 }
 .border-normal{
 	border:1px solid black;
@@ -95,6 +108,7 @@ table, th, td{
 }
 
 .profile, .letter, .report{	
+	position: fixed;
 	padding:5px;
 	padding-bottom:10px;
 }
@@ -133,7 +147,7 @@ table, th, td{
 .letter-content .content, .report-content .content{
 	border:1px solid black;
 	padding:5px;
-	min-width:300px;
+	min-width:500px;
 	min-height:300px;
 	max-width:500px;
 	max-height:500px;

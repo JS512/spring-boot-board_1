@@ -189,7 +189,7 @@ function articleDetail__getAllReplies(){
 					articleDetail__getLikes($(this), "reply");					
 				});
 				initContextMenu();				
-				moveToId();
+				moveToIdInHTML();
 			}else{
 				$(".replyStatus").html(data.msg);
 			}
@@ -659,6 +659,46 @@ function checkReportForm(form){
 	);
 }
 
+function letter_getMemberLetterList(id, memberId){
+	$.post("/member/getMemberLetterList",
+		{			
+			memberId : memberId
+		},
+		function(data){
+			$(".letter-content").find(".content").html("");
+			if(data.success){								
+				for(var i=0 ;i < data.letters.length ;i++){
+					letter_drawLetterList(data.letters[i], memberId);
+				}
+				$(".letter-content").children().show();
+				moveToIdInContainer("#letter"+id);
+			}else{
+				alert(data.msg);
+				$(".letter-content").find(".close").trigger();
+			}
+			$(".letter-content").find(".loading").hide();
+		},
+		"json"
+	);
+}
+
+function letter_drawLetterList(letter, memberId){
+	var filtered = replaceAll(letter.body, "\n", "<br>");
+	var html;
+	if(letter.fromMemberId != memberId){
+		html = `<div class="position-right width-half">`;
+	}else{
+		html = `<div class="position-left width-half">`;
+	}
+	html +=`			
+			<div id="letter${letter.id}" class="padding-normal border-normal">${filtered}</div>
+			<small>${letter.regDate}</small>			
+		</div>
+		
+	`;
+	$(".letter-content").find(".content").append(html);
+}
+
 
 function letter__deleteLetter(btn){
 	
@@ -739,21 +779,41 @@ function initContextMenu(){
 	
 	$(".clickable-letterContent").click(function(){
 		$(".overlay").show();
+		$(".letter-content").children().hide();
+		$(".letter-content").find(".loading").show();
 		$(".letter-content").show();
-		$(".content").html(replaceAll($(this).html(), "\n", "<br>"));
+		letter_getMemberLetterList($(this).attr("data-id"), $(this).attr("data-memberId"));
 	});
 }
 
-function moveToId(){	
-	var id = location.hash;	
+function moveToIdInHTML(){
+	var id ;
+	
+	id = location.hash;
+	
 	if(id.length){
-		var offset = $(id).offset();
+		var offset;		
+		offset = $(id).offset();		
 		$('html').animate({scrollTop : offset.top}, 400,function(){
 			for(var i=0 ;i<2 ;i++){
 				$(id).animate({	opacity: "0.20"	}, 500).animate({opacity:"1.0"}, 500);
 			}
 		});
 		
+	}
+}
+function moveToIdInContainer(toId, topPos){	
+	var id = toId;	
+	
+	if(id.length){
+		$(".content").scrollTop(0);
+		var top = $(id).offset().top - $(".content").offset().top;
+		
+		$(".content").animate({scrollTop : top}, 400,function(){
+			for(var i=0 ;i<2 ;i++){
+				$(id).animate({	opacity: "0.20"	}, 500).animate({opacity:"1.0"}, 500);
+			}
+		});
 	}
 }
 $(function(){	

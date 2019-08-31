@@ -7,7 +7,7 @@
 		SELECT A.*, IFNULL(M.loginId, '존재하지 않는 사용자') AS writer, IFNULL(SUM(L.val),0) AS likeCnt
 		FROM article AS A
 		LEFT OUTER JOIN `member` AS M
-		ON M.id = A.memberId
+		ON M.id = A.memberId AND M.delStatus != TRUE
 		LEFT OUTER JOIN `like` AS L
 		ON L.relType = 'article' AND L.relId = A.id
 		WHERE A.boardId = #{boardId}
@@ -58,7 +58,7 @@
 		SELECT A.*, IFNULL(M.loginId, '존재하지 않는 사용자') AS writer
 		FROM article AS A
 		LEFT OUTER JOIN `member` AS M
-		ON M.id = A.memberId
+		ON M.id = A.memberId AND M.delStatus != TRUE
 		WHERE A.id = #{id} AND A.boardId = #{boardId}
 	</select>
 	

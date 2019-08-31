@@ -294,7 +294,7 @@ public class MemberServiceImpl implements MemberService{
 		
 		try {
 			Member member = memberDao.getOneMemberById(Integer.parseInt((String)param.get("toId")));
-			if(member == null) {
+			if(member == null || member.isDelStatus()) {
 				msg = "존재하지 않는 사용자";
 				resultCode = "F-1";
 			}else {
@@ -377,6 +377,21 @@ public class MemberServiceImpl implements MemberService{
 			e.printStackTrace();
 		}
 		return Maps.of("page", page, "reports", reports);
+	}
+	
+	public Map<String, Object> getMemberLetterList(Map<String, Object> param){
+		List<Letter> letters = null;
+		String msg = "";
+		String resultCode = "";
+		try {
+			letters = memberDao.getMemberLetterList(param);
+			resultCode = "S-1";
+		} catch (Exception e) {
+			msg = "오류";
+			resultCode = "F-1";
+			e.printStackTrace();			
+		}
+		return Maps.of("msg", msg,"resultCode", resultCode, "letters", letters);
 	}
 
 }

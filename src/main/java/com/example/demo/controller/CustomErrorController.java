@@ -8,8 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import jline.internal.Log;
-
 @Controller
 public class CustomErrorController implements ErrorController{
 	private final String PATH = "/error";    

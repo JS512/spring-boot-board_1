@@ -60,4 +60,6 @@ public interface MemberDao {
 	public List<Report> getAllReports(Map<String, Object> param);
 
 	public int getTotalReportCount(Map<String, Object> param);
+
+	public List<Letter> getMemberLetterList(Map<String, Object> param);
 }
