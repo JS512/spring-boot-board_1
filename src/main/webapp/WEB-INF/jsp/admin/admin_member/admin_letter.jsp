@@ -4,25 +4,51 @@
 <%@ include file="../admin_part/admin_head.jspf" %>
 <h1>${title}</h1>
 
+<form action="/admin/letterList">
+	<select name="searchType">
+		<option value="all">모두</option>
+		<option value="receive">수신</option>
+		<option value="send">송신</option>
+	</select>
+	<c:if test="${param.searchType != null && param.searchType != '' }">
+		<script>
+			$("select[name='searchType']").val("${param.searchType}");
+		</script>
+	</c:if>
+	<button>검색</button>
+</form>
+
 <table>
   <tr>
     <th>번호</th>
+    <th>송/수신</th>
     <th>날짜</th>    
-    <th>작성자</th>
-    <th>내용</th>
-    <th>비고</th>
+    <th>송/수신자</th>
+    <th>내용</th>    
   </tr>
   <c:forEach items="${letters}" var="letter">
   	<tr>
   		<td>${letter.id }</td>
+  		<td>
+	  		<c:if test="${letter.fromMemberId == loginedMemberId }">
+	  			송신
+	  		</c:if>
+	  		<c:if test="${letter.toMemberId == loginedMemberId }">
+	  			수신
+	  		</c:if>
+  		</td>
   		<td>${letter.regDate }</td>  		
   		<td class="clickable-contextMenu clickable" data-id="${letter.fromMemberId }" data-to="${letter.extra.writer }">${letter.extra.writer }</td>
-  		<td data-id="${letter.id}" data-memberId="${letter.fromMemberId }" class="text-overflow-ellipsis clickable-letterContent clickable">${letter.originBody }</td>
-  		<td><button onclick="letter__deleteLetter(this);" data-id="${letter.id }">삭제</button></td>  			
+  		<c:if test="${letter.fromMemberId == loginedMemberId }">
+  			<td data-id="${letter.id}" data-memberId="${letter.toMemberId }" class="text-overflow-ellipsis clickable-letterContent clickable">${letter.originBody }</td>
+  		</c:if>
+  		<c:if test="${letter.toMemberId == loginedMemberId }">
+  			<td data-id="${letter.id}" data-memberId="${letter.fromMemberId }" class="text-overflow-ellipsis clickable-letterContent clickable">${letter.originBody }</td>
+  		</c:if>  		  			
   	</tr>
   </c:forEach>
 </table>
-<c:out value="${url }"/>
+
 <ul>
 	<c:if test="${page.prev }">
 		<li><a href="/admin/letterList?cPage=${page.startPage-1}"><</a></li>
@@ -41,5 +67,9 @@
 		<div class="close">	</div>
 	</div>
 	<div class="content"></div>
+	<form onsubmit="letter_sendReply(this); return false;">
+		<textarea name="body"></textarea>
+		<button>전송</button>
+	</form>
 </div>
 <%@ include file="../admin_part/admin_foot.jspf" %>

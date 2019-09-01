@@ -17,6 +17,8 @@ import com.example.demo.Utils;
 import com.example.demo.dto.Letter;
 import com.example.demo.service.MemberService;
 
+import jline.internal.Log;
+
 @Controller
 @RequestMapping("/member")
 public class MemberController {
@@ -203,6 +205,7 @@ public class MemberController {
 	@RequestMapping("/sendLetter")
 	@ResponseBody
 	public Map<String, Object> sendLetter(@RequestParam Map<String, Object> param, HttpSession session) {
+		
 		if(!Utils.needParamCheck(param, new String[] {"toId"}) || !Utils.isNumeric(param, new String[] {"toId"})) {
 			return Maps.of("msg", "잘못된 접근", "success", false);
 		}
@@ -243,16 +246,18 @@ public class MemberController {
 	
 	@RequestMapping("/deleteLetter")
 	@ResponseBody
-	public Map<String, Object> deleteLetter(@RequestParam Map<String, Object> param, HttpSession session) {
+	public Map<String, Object> deleteLetter(@RequestParam Map<String, Object> param, HttpSession session) {		
 		param.put("loginedMemberId", (int)session.getAttribute("loginedMemberId"));
-		if(!Utils.needParamCheck(param, new String[] {"id"}) || !Utils.isNumeric(param, new String[] {"id"})) {
+		
+		if(!Utils.needParamCheck(param, new String[] {"id"}) || !Utils.isNumeric(param, new String[] {"id"})) {			
 			return Maps.of("msg", "잘못된 접근", "success", false);
 		}
-		if(!checkLetterAuthentication(param)) {
+		
+		if(!checkLetterAuthentication(param)) {			
 			return Maps.of("msg", param.get("msg"), "success", false);
 		}
-		Map<String, Object> rs = memberService.deleteLetter(param);
 		
+		Map<String, Object> rs = memberService.deleteLetter(param);		
 		boolean success = false;
 		String resultCode = (String) rs.get("resultCode");		
 		
@@ -293,7 +298,7 @@ public class MemberController {
 		if(!Utils.needParamCheck(param, new String[] {"memberId"}) || !Utils.isNumeric(param, new String[] {"memberId"})) {
 			return Maps.of("msg", "잘못된 접근", "success", false);
 		}
-		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));
+		param.put("loginedMemberId", (int)session.getAttribute("loginedMemberId"));
 		Map<String, Object> rs = memberService.getMemberLetterList(param);
 		
 		String resultCode = (String)rs.get("resultCode");
@@ -307,16 +312,18 @@ public class MemberController {
 	
 	
 	private boolean checkLetterAuthentication(Map<String, Object> param) {
-		Letter letter = memberService.getOneLetterById(param);
+		
+		Letter letter = memberService.getOneLetterById(param);		
 		String msg = null;
+		
 		if(letter == null) {
 			msg = "존재하지 않는 쪽지 입니다.";
 			
-		}else if(letter.getToMemberId() != (int)param.get("loginedMemberId")){
+		}else if(letter.getFromMemberId() != (int)param.get("loginedMemberId")){
 			msg = "권한이 없습니다.";
 			
-		}else if(letter.isDelStatus()) {
-			msg = "삭제된 쪽지 입니다.";
+		}else if(letter.isViewStatus()){
+			msg = "상대방이 읽은 상태 입니다.";
 		}else {
 			return true;
 		}

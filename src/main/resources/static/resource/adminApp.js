@@ -1,3 +1,9 @@
+var finalLetterId = 0;
+var	moveScroll = false;
+var clickedMemberId;
+var clickedMemberLoginId;
+var getLetter;
+var hide;
 function adminPage__getAllMembers(){
 	if($(".memberTable").length){
 		$.post("/admin/getAllMembers",
@@ -469,7 +475,7 @@ function articleDetail__modifyReply(form){
 	);
 }
 
-var hide;
+
 function articleDetail__showReplyModifyForm(btn){
 	
 	if(hide != null)
@@ -605,8 +611,6 @@ function adminMemberChangeLoginPw__checkForm(form){
 	form.submit();
 }
 
-var clickedMemberId;
-var clickedMemberLoginId;
 function showContextMenu(x, y){
 	
 	if($("#memberId").val() == clickedMemberId){
@@ -689,18 +693,32 @@ function checkLetterForm(form){
 	);
 }
 function letter_getMemberLetterList(id, memberId){
-	$.post("/member/getMemberLetterList",
-		{			
-			memberId : memberId
-		},
-		function(data){
-			$(".letter-content").find(".content").html("");
-			if(data.success){								
-				for(var i=0 ;i < data.letters.length ;i++){
-					letter_drawLetterList(data.letters[i], memberId);
-				}
-				$(".letter-content").children().show();
-				moveToIdInContainer("#letter"+id);
+	$.post("/admin/getMemberLetterList",
+	{			
+		finalLetterId : finalLetterId,
+		memberId : memberId
+	},
+	function(data){						
+		if(data.success){				
+			for(var i=0 ;i < data.letters.length ;i++){
+				letter_drawLetterList(data.letters[i], memberId);					
+			}				
+			
+			$(".letter-content").children().show();
+			if(!moveScroll){					
+				if(finalLetterId != 0){
+					moveToIdInContainer("#letter" + data.letters[data.letters.length - 1].id);
+				}else{
+					moveToIdInContainer("#letter" + id);
+				}					
+				moveScroll = true;
+			}
+			if(data.letters.length){
+				finalLetterId = data.letters[data.letters.length - 1].id;
+			}
+			getLetter = setTimeout(function() {
+				letter_getMemberLetterList(id, memberId);
+			}, 1000);
 			}else{
 				alert(data.msg);
 				$(".letter-content").find(".close").trigger();
@@ -720,10 +738,18 @@ function letter_drawLetterList(letter, memberId){
 		html = `<div class="position-left width-half">`;
 	}
 	html +=`			
-			<div id="letter${letter.id}" class="padding-normal border-normal">${filtered}</div>
-			<small>${letter.regDate}</small>			
-		</div>
-		
+		<div id="letter${letter.id}" class="padding-normal border-normal">${filtered}</div>
+		<small> ${letter.regDate} `;
+	if(letter.fromMemberId != memberId){		
+		if(!letter.viewStatus){
+			html +=  `[읽지 않음]</small>  <button type="button" onclick="letter__deleteLetter(this);" data-id="${letter.id }">삭제</button>`;			
+		}else{
+			html +=  `[읽음]</small>`;
+		}
+	}
+	
+	html +=`
+		</div>		
 	`;
 	$(".letter-content").find(".content").append(html);
 }
@@ -747,6 +773,33 @@ function letter__deleteLetter(btn){
 		}
 	)
 }
+
+function letter_sendReply(form){
+	if(!checkEmpty(form.body)){
+		alert("빈칸을 채워주세요.");
+		return ;
+	}	
+	$(form).find("button").attr("disabled", true);
+	
+	$.post("/admin/sendLetter",
+		{
+			toId : clickedMemberId,
+			body : form.body.value
+		},
+		function(data){
+				
+			if(data.success){
+				form.body.value = "";
+				moveScroll = false;
+			}else{
+				alert(data.msg);
+			}
+			
+			$(form).find("button").attr("disabled", false);
+		},
+		"json"
+	);
+}
 function moveToIdInHTML(){
 	var id ;
 	
@@ -763,18 +816,15 @@ function moveToIdInHTML(){
 		
 	}
 }
-function moveToIdInContainer(toId, topPos){	
+function moveToIdInContainer(toId){	
 	var id = toId;	
 	
-	if(id.length){
-		$(".content").scrollTop(0);
-		var top = $(id).offset().top - $(".content").offset().top;
+	if(id.length){	
 		
-		$(".content").animate({scrollTop : top}, 400,function(){
-			for(var i=0 ;i<2 ;i++){
-				$(id).animate({	opacity: "0.20"	}, 500).animate({opacity:"1.0"}, 500);
-			}
-		});
+		$(".content").scrollTop(0);
+		var top = $(id).offset().top - $(".content").offset().top - ($(".content").height() - $(id).parent().height());
+		
+		$(".content").stop().scrollTop(top);
 	}
 }
 
@@ -793,6 +843,11 @@ function initContextMenu(){
 	$(".close").click(function(){
 		close(this);
 		$(".overlay").hide();
+		finalLetterId = 0;
+		moveScroll = false;		
+		if(getLetter != null){
+			clearTimeout(getLetter);
+		}
 	});
 	
 	$(".clickable-contextMenu").click(function(e){		
@@ -810,6 +865,11 @@ function initContextMenu(){
 	$(".overlay").click(function(){
 		hideOverlay();
 		$(".letter-content").hide();
+		finalLetterId = 0;
+		moveScroll = false;		
+		if(getLetter != null){
+			clearTimeout(getLetter);
+		}
 	});	
 	
 	
@@ -817,8 +877,10 @@ function initContextMenu(){
 		$(".overlay").show();
 		$(".letter-content").children().hide();
 		$(".letter-content").find(".loading").show();
-		$(".letter-content").show();
-		letter_getMemberLetterList($(this).attr("data-id"), $(this).attr("data-memberId"));
+		$(".letter-content").find(".content").html("");
+		$(".letter-content").show();		
+		clickedMemberId = $(this).attr("data-memberId");
+		letter_getMemberLetterList($(this).attr("data-id"), $(this).attr("data-memberId"));				
 	});
 	
 	$(".clickable-reportContent").click(function(){

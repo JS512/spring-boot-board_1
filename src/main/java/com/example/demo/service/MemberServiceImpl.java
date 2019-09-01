@@ -17,6 +17,8 @@ import com.example.demo.dto.Member;
 import com.example.demo.dto.Report;
 import com.example.demo.handler.MailHandler;
 
+import jline.internal.Log;
+
 @Service
 public class MemberServiceImpl implements MemberService{
 	@Autowired
@@ -323,14 +325,13 @@ public class MemberServiceImpl implements MemberService{
 	
 	public Map<String, Object> deleteLetter(Map<String, Object> param){
 		String msg = "";
-		String resultCode = "";
-		
+		String resultCode = "";		
 		try {
 			Letter letter = memberDao.getOneLetterById(Integer.parseInt((String)param.get("id")));
 			if(letter == null) {
 				msg = "존재하지 않는 정보";
 				resultCode = "F-1";
-			}else if(letter.getToMemberId() != (int)param.get("loginedMemberId")){				
+			}else if(letter.getFromMemberId() != (int)param.get("loginedMemberId")){				
 				msg = "권한이 없는 사용자";
 				resultCode = "F-1";
 			}else {
@@ -347,7 +348,7 @@ public class MemberServiceImpl implements MemberService{
 	}
 	
 	public Letter getOneLetterById(Map<String, Object> param) {
-		return memberDao.getOneLetterById((int)param.get("id"));
+		return memberDao.getOneLetterById(Integer.parseInt((String)param.get("id")));
 	}
 	
 	public Map<String, Object> sendReport(Map<String, Object> param){
@@ -385,6 +386,7 @@ public class MemberServiceImpl implements MemberService{
 		String resultCode = "";
 		try {
 			letters = memberDao.getMemberLetterList(param);
+			memberDao.updateMemberLetterView(param);
 			resultCode = "S-1";
 		} catch (Exception e) {
 			msg = "오류";

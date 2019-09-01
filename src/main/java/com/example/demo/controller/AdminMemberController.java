@@ -230,8 +230,8 @@ public class AdminMemberController {
 		}else if(letter.getToMemberId() != (int)param.get("loginedMemberId")){
 			msg = "권한이 없습니다.";
 			
-		}else if(letter.isDelStatus()) {
-			msg = "삭제된 쪽지 입니다.";
+		}else if(letter.isViewStatus()){
+			msg = "상대방이 읽은 상태 입니다.";
 		}else {
 			return true;
 		}

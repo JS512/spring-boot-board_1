@@ -99,22 +99,37 @@
 		SELECT L.*, IFNULL(M.loginId ,'존재하지 않는 사용자') AS writer FROM
 		`letter` AS L
 		LEFT OUTER JOIN `member` AS M
-		ON M.id = L.fromMemberId AND M.delStatus != TRUE
-		WHERE toMemberId = #{loginedMemberId} AND L.delStatus = FALSE
+		ON IF(L.fromMemberId = #{loginedMemberId}, M.id = L.toMemberId, M.id = L.fromMemberId) AND M.delStatus != TRUE
+		WHERE 1=1
+		<if test="searchType != null and searchType != ''">
+			<if test="searchType == 'all'"> AND (toMemberId = #{loginedMemberId} OR fromMemberId= #{loginedMemberId}) </if>
+			<if test="searchType == 'receive'"> AND toMemberId = #{loginedMemberId} </if>
+			<if test="searchType == 'send'"> AND fromMemberId = #{loginedMemberId} </if>
+		</if>
+		<if test="searchType == null or searchType == ''">
+			AND (toMemberId = #{loginedMemberId} OR fromMemberId= #{loginedMemberId})
+		</if>
 		ORDER BY L.id DESC
 		LIMIT #{startNum}, #{perPageNum}
 	</select>
 	
 	<select id="getTotalLetterCount" parameterType="map" resultType="Integer">
 		SELECT COUNT(*) FROM letter
-		WHERE toMemberId = #{loginedMemberId} AND delStatus = FALSE		
+		WHERE 1=1
+		<if test="searchType != null and searchType != ''">
+			<if test="searchType == 'all'"> AND (toMemberId = #{loginedMemberId} OR fromMemberId= #{loginedMemberId}) </if>
+			<if test="searchType == 'receive'"> AND toMemberId = #{loginedMemberId} </if>
+			<if test="searchType == 'send'"> AND fromMemberId = #{loginedMemberId} </if>
+		</if>
+		<if test="searchType == null or searchType == ''">
+			AND (toMemberId = #{loginedMemberId} OR fromMemberId= #{loginedMemberId})
+		</if>		
 	</select>
 	
-	<update id="deleteOneLetterById" parameterType="Integer">
-		UPDATE letter
-		SET delStatus = TRUE
+	<delete id="deleteOneLetterById" parameterType="Integer">
+		DELETE FROM letter		
 		WHERE id = #{id}
-	</update>
+	</delete>
 	
 	<select id="getOneLetterById" parameterType="Integer" resultMap="letter">
 		SELECT * FROM letter
@@ -149,16 +164,28 @@
 	
 	<select id="getMemberLetterList" parameterType="map" resultMap="letter">
 		SELECT * FROM letter
-		WHERE (toMemberId = #{loginedMemberId} AND fromMemberId = #{memberId}) OR (toMemberId = #{memberId} AND fromMemberId = #{loginedMemberId})		 
+		WHERE ( (toMemberId = #{loginedMemberId} AND fromMemberId = #{memberId}) OR (toMemberId = #{memberId} AND fromMemberId = #{loginedMemberId}) )
+		<if test="finalLetterId != null and finalLetterId != ''">
+			AND id > #{finalLetterId}
+		</if>		 
 	</select>
+	
+	<update id="updateMemberLetterView" parameterType="map">
+		UPDATE letter
+		SET viewStatus = TRUE
+		WHERE toMemberId = #{loginedMemberId} AND fromMemberId = #{memberId}
+		<if test="finalLetterId != null and finalLetterId != ''">
+			AND id > #{finalLetterId}
+		</if>
+	</update>
 	
 	<resultMap id="letter" type="com.example.demo.dto.Letter">
 		<id property="id" column="id"/>
 		<id property="regDate" column="regDate"/>
 		<id property="fromMemberId" column="fromMemberId"/>
 		<id property="toMemberId" column="toMemberId"/>
-		<id property="body" column="body"/>
-		<id property="delStatus" column="delStatus"/>
+		<id property="body" column="body"/>		
+		<id property="viewStatus" column="viewStatus"/>
 		<association property="extra" javaType="map">
 			<id property="writer" column="writer"></id>
 		</association>		

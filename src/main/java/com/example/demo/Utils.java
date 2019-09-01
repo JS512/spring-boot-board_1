@@ -10,100 +10,100 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import org.springframework.web.util.HtmlUtils;
 
-public class Utils {	
+public class Utils {
 	public static int getAsInt(Object object) {
 		if (object instanceof Integer) {
 			return (int) object;
 		} else if (object instanceof String) {
 			try {
 				return Integer.parseInt((String) object);
-			}catch(Exception e) {
+			} catch (Exception e) {
 				return -1;
 			}
 		}
 
 		return -1;
 	}
-	
+
 	public static String getTempKey(int length) {
-		if(length == -1) {
+		if (length == -1) {
 			length = 30;
 		}
-		
+
 		StringBuffer buffer = new StringBuffer();
-		while(buffer.length() < length) {
+		while (buffer.length() < length) {
 			Random r = new Random();
 			int key = r.nextInt(75) + 48;
-			if( (48<key && key<57) || (65<key && 90>key) || (97<key && 122>key)) {
-				buffer.append((char)key);
+			if ((48 < key && key < 57) || (65 < key && 90 > key) || (97 < key && 122 > key)) {
+				buffer.append((char) key);
 			}
 		}
-		
+
 		return buffer.toString();
 	}
-	
+
 	public static String getEncodedSHA1(String value) {
 		String sha1 = null;
 		try {
 			MessageDigest digest = MessageDigest.getInstance("SHA-1");
 			digest.reset();
 			digest.update(value.getBytes("utf8"));
-			sha1 = String.format("%040x", new BigInteger(1, digest.digest()));			
-		}catch(Exception e) {
+			sha1 = String.format("%040x", new BigInteger(1, digest.digest()));
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return sha1;
 	}
-	
-	public static boolean needParamCheck(Map<String, Object> param, String...checkParams) {
-		for(int i=0 ;i<checkParams.length ;i++) {
-			if(!param.containsKey(checkParams[i])) {
+
+	public static boolean needParamCheck(Map<String, Object> param, String... checkParams) {
+		for (int i = 0; i < checkParams.length; i++) {
+			if (!param.containsKey(checkParams[i])) {
 				return false;
-			}else {
-				if(param.get(checkParams[i]) == null) {
+			} else {
+				if (param.get(checkParams[i]) == null) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	public static boolean isNumeric(Map<String, Object> param, String... str) {
+		
+		for (int i = 0; i < str.length; i++) {
+			String s = String.valueOf(param.get(str[i]));			
+			if (s != null) {				
+				if (s.length() == 0 || !s.chars().allMatch(Character::isDigit)) {
 					return false;
 				}
 			}
 		}
 		
+
 		return true;
+
 	}
-	
-	public static boolean isNumeric(Map<String, Object> param, String...str) {		
-		for(int i=0 ;i<str.length ;i++) {
-			String s = String.valueOf(param.get(str[i]));			
-			if(s != null) {
-				if ( s.length() == 0 || !s.chars().allMatch(Character::isDigit)) {
-					System.out.println(s == null);
-					System.out.println(s.length());
-		            return false;
-		        }	        
-			}
-		}
 
-        return true;
-
-    }
-	
-	public static boolean isBoolean(Map<String, Object> param, String...str) {
+	public static boolean isBoolean(Map<String, Object> param, String... str) {
 
 		try {
-			for(int i=0 ;i<str.length ;i++) {
+			for (int i = 0; i < str.length; i++) {
 				String s = String.valueOf(param.get(str[i]));
-				if(s != null) {
-					if ( s.length() == 0 || Boolean.parseBoolean(s)) {	        	
-			            return false;
+				if (s != null) {
+					if (s.length() == 0 || Boolean.parseBoolean(s)) {
+						return false;
 					}
 				}
 			}
-		}catch(Exception e) {
+		} catch (Exception e) {
 //			e.printStackTrace();
 			return false;
 		}
-        return true;
-    }
-	
+		return true;
+	}
+
 	public static Map<String, Object> calcData(Map<String, Object> param, int total) {
 		Map<String, Object> rs = new HashMap<>();
 
@@ -123,7 +123,7 @@ public class Utils {
 		if (endPage > limitPage) {
 			endPage = limitPage;
 		}
-		
+
 		prev = startPage == 1 ? false : true;
 		next = endPage == limitPage ? false : true;
 
@@ -137,14 +137,13 @@ public class Utils {
 
 		return rs;
 	}
-	
-	public static boolean isOnlyText(String text) {		
+
+	public static boolean isOnlyText(String text) {
 		return Jsoup.isValid(text, Whitelist.none());
 	}
-	
+
 	public static String htmlEscape(String html) {
 		return HtmlUtils.htmlEscape(html);
 	}
-	
-	
+
 }

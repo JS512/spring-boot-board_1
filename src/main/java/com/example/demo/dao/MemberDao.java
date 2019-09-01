@@ -62,4 +62,6 @@ public interface MemberDao {
 	public int getTotalReportCount(Map<String, Object> param);
 
 	public List<Letter> getMemberLetterList(Map<String, Object> param);
+
+	public void updateMemberLetterView(Map<String, Object> param);
 }
