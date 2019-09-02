@@ -19,8 +19,7 @@
 		<script type="text/javascript" src="http://jsgetip.appspot.com"></script>
 		
 		<script src="/resource/app.js"></script>
-		<link rel="stylesheet" href="/resource/app.css">
-		<link rel="stylesheet" href="/resource/markdown.css">
+		<link rel="stylesheet" href="/resource/app.css">		
 		<title>${title}</title>
 	</head>
 	<body>

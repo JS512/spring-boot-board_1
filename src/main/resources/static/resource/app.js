@@ -667,7 +667,6 @@ function checkReportForm(form){
 function letter_getMemberLetterList(id, memberId){	
 	$.post("/member/getMemberLetterList",
 		{			
-			finalLetterId : finalLetterId,
 			memberId : memberId
 		},
 		function(data){						
@@ -677,19 +676,13 @@ function letter_getMemberLetterList(id, memberId){
 				}				
 				
 				$(".letter-content").children().show();
-				if(!moveScroll){					
-					if(finalLetterId != 0){
-						moveToIdInContainer("#letter" + data.letters[data.letters.length - 1].id);
-					}else{
-						moveToIdInContainer("#letter" + id);
-					}					
-					moveScroll = true;
-				}
+				moveToIdInContainer("#letter" + id);
+
 				if(data.letters.length){
 					finalLetterId = data.letters[data.letters.length - 1].id;
 				}
 				getLetter = setTimeout(function() {
-					letter_getMemberLetterList(id, memberId);
+					letter_getNewLetters(memberId);
 				}, 1000);
 			}else{
 				alert(data.msg);
@@ -699,6 +692,38 @@ function letter_getMemberLetterList(id, memberId){
 		},
 		"json"
 	);
+}
+
+function letter_getNewLetters(memberId){
+	$.post("/member/getMemberLetterList",
+			{
+				finalLetterId : finalLetterId,
+				memberId : memberId
+			},
+			function(data){						
+				if(data.success){				
+					for(var i=0 ;i < data.letters.length ;i++){
+						letter_drawLetterList(data.letters[i], memberId);					
+					}					
+										
+					if(!moveScroll){			
+						if(data.letters.length){
+							finalLetterId = data.letters[data.letters.length - 1].id;
+							moveToIdInContainer("#letter" + data.letters[data.letters.length - 1].id);
+							moveScroll = true;
+						}						
+						
+					}
+					
+					getLetter = setTimeout(function() {
+						letter_getNewLetters(memberId);
+					}, 1000);
+				}else{
+					alert(data.msg);					
+				}				
+			},
+			"json"
+		);
 }
 
 function letter_drawLetterList(letter, memberId){
