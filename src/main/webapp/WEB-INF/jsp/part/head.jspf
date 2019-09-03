@@ -24,7 +24,9 @@
 	</head>
 	<body>
 		<c:if test="${isLogined }">
-			<p>현재 ${loginedMemberLoginId }님이 로그인중...</p>
+			<div class="member-status margin-normal">
+				<img class="profile-img" src="/member/showImg"><p>현재 ${loginedMemberLoginId }님이 로그인중...</p>
+			</div>
 		</c:if>
 		
 		<a href="/article/list?boardId=1">공지사항</a>

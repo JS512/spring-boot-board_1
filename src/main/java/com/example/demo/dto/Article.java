@@ -12,6 +12,7 @@ import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.MutableDataSet;
 
+import jline.internal.Log;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,14 +38,16 @@ public class Article {
 		
         options.set(Parser.EXTENSIONS, Arrays.asList(TablesExtension.create(), StrikethroughExtension.create()));
 
-        // uncomment to convert soft-breaks to hard breaks
-        options.set(HtmlRenderer.SOFT_BREAK, "<br />\n");
+//        options.set(HtmlRenderer.SOFT_BREAK, "<br>\n");
+        options.set(Parser.HARD_LINE_BREAK_LIMIT, true);
 
         Parser parser = Parser.builder(options).build();
         HtmlRenderer renderer = HtmlRenderer.builder(options).escapeHtml(true).build();
 
         Node document = parser.parse(body);
         body = renderer.render(document);
+        
+        Log.info(body);
         
 		return body;		
 	}

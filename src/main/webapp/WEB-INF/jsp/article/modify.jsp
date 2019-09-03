@@ -21,7 +21,7 @@
 			수정하기 : <input class="modify" type="checkbox" name="modify" onclick="articleModify__check(this);"><br>
 			<div class="modifyFile" hidden>
 				<input type="hidden" name="modifyFileId" value="${file.id }">
-				<input type="file" name="modifyFile" onchange="checkFileTypeImg(this);">
+				<input class="checkFileType" type="file" name="modifyFile">
 				<input class="type2" type="hidden" name="modifyType2" value="">				
 			</div>
 		</div>

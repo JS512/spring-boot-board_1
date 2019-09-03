@@ -1,20 +1,33 @@
 package com.example.demo.controller;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.groovy.util.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.Utils;
 import com.example.demo.dto.Letter;
+import com.example.demo.dto.MemberProfileImg;
 import com.example.demo.service.MemberService;
 
 @Controller
@@ -22,7 +35,8 @@ import com.example.demo.service.MemberService;
 public class AdminMemberController {
 	@Autowired
 	private MemberService memberService;	
-	
+	@Value("${custom.profileImgDir}")
+	public String profileImgDir;
 	
 	@RequestMapping("/adminMemberPage")
 	public String adminPage() {
@@ -219,6 +233,81 @@ public class AdminMemberController {
 		}
 		
 		return Maps.of("msg", rs.get("msg"), "success", success, "letters", rs.get("letters"));
+	}
+	
+	@RequestMapping("/modifyMemberProfileImg")
+	@ResponseBody
+	public Map<String, Object> modifyMemberProfileImg(@RequestParam(value="deleteProfileImg", required=false) Object delete,
+			@RequestParam(value="modifyProfileImg", required=false) Object modify,
+            @RequestParam(value="profileImg", required=false) MultipartFile profileImg,
+            HttpServletRequest request){
+		
+		if(delete == null && modify == null) {			
+			return Maps.of("msg","잘못된 접근");
+		}
+		Map<String, Object> param = new HashMap<>();
+		HttpSession session = request.getSession();
+		param.put("loginedMemberId", (int)session.getAttribute("loginedMemberId"));
+		param.put("memberLoginId", request.getAttribute("loginedMemberLoginId"));
+		
+		Map<String, Object> rs = null;
+		boolean success = false;
+		String resultCode = "";
+		if(delete != null) {
+			rs = memberService.deleteMemberProfileImg(param);
+		}else if(profileImg != null) {			
+			param.put("profileImg", profileImg);
+			rs = memberService.modifyMemberProfileImg(param);
+		}
+		resultCode = (String)rs.get("resultCode");
+		if(resultCode.startsWith("S-")) {
+			success = true;
+		}
+		
+		return Maps.of("msg", rs.get("msg"), "success", success);
+	}
+	
+	@RequestMapping("/showProfileImg")
+	@ResponseBody
+	public ResponseEntity<Resource> showImg(@RequestParam Map<String, Object> param, HttpServletRequest request){		
+		HttpSession session = request.getSession();
+		if(param.get("memberId") != null) {
+			param.put("loginedMemberId", Integer.parseInt((String)param.get("memberId")));
+		}else {
+			param.put("loginedMemberId", (int)session.getAttribute("loginedMemberId"));
+		}
+		
+		
+		MemberProfileImg img = memberService.getMemberProfileImg(param);
+		File target = null;
+		
+		if(img != null) {
+			target = new File(profileImgDir, img.getFileName());
+		}else {
+			target = new File(profileImgDir, Utils.basicProfileImg);
+		}
+		
+		HttpHeaders header = new HttpHeaders();		
+		Resource rs = null;
+		
+		
+		try {				
+			String mimeType = Files.probeContentType(Paths.get(target.getAbsolutePath()));			
+			
+			if(mimeType == null) {
+				mimeType = "octet-stream";
+			}
+			
+			rs = new UrlResource(target.toURI());				
+							
+			header.setContentType(MediaType.parseMediaType(mimeType));				
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return new ResponseEntity<Resource>(rs, header, HttpStatus.OK);
 	}
 	
 	private boolean checkLetterAuthentication(Map<String, Object> param) {

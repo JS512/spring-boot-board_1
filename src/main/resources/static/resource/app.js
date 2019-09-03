@@ -1,7 +1,8 @@
-var finalLetterId = 0;
+var lastLetterId = 0;
 var	moveScroll = false;
 var clickedMemberId;
 var clickedMemberLoginId;
+var lastSendLetterId = 0;
 var getLetter;
 var hide;
 function replaceAll(str, searchStr, replaceStr) {
@@ -462,6 +463,7 @@ function memberJoin__resetLoginId(){
 }
 
 function memberLogin__checkForm(form){
+	
 	if(!checkEmpty(form.loginId) || !checkEmpty(form.temp_loginPw))
 	{
 		alert("빈칸없이 채워주세요");
@@ -477,6 +479,66 @@ function memberMyPage__withdrawal(){
 	if(confirm("정말 탈퇴 하시겠습니까?")){
 		location.href = "/member/withdrawal";
 	}
+}
+
+function memberMyPage__toggleProfileImg(checkbox){
+	if(checkbox.checked){
+		$(checkbox).parent().siblings("label").find("input[type='checkbox']").attr("disabled", true);
+		if($(checkbox).attr("name") == 'modifyProfileImg'){
+			$(checkbox).siblings("input[type='file']").show();
+		}		
+	}else{
+		$(checkbox).parent().siblings("label").find("input[type='checkbox']").attr("disabled", false);
+		if($(checkbox).attr("name") == 'modifyProfileImg'){
+			$(checkbox).siblings("input[type='file']").val("");
+			$(checkbox).siblings("input[type='file']").hide();
+		}
+	}
+}
+
+function memberMyPage__modifyMemberProfileImg(form){
+	var select;	
+	var msg = "한 개이상 선택해 주세요";
+	$(form).find("input[type='checkbox']").each(function(index, item){
+		if($(item).is(":checked")){
+			if($(item).attr("name") == "modifyProfileImg"){
+				if(!form.profileImg.value.length){
+					msg = "파일을 선택해 주세요";					
+				}else{
+					select = true;
+				}
+			}else{
+				select = true;
+			}
+		}
+	});
+	if(!select){
+		alert(msg);
+		return ;
+	}
+	$(form).find("button").attr("disabled", true);
+	
+	var formData = new FormData(form);
+	
+	$.ajax({
+		type:"POST",
+		enctype:"multipart/form-data",
+		url:'/member/modifyMemberProfileImg',
+		data:formData,
+		processData: false, //prevent jQuery from automatically transforming the data into a query string
+        contentType: false,
+        cache:false,
+        success:function(data){ 
+        	alert(data.msg);
+        	if(data.success){
+        		location.reload();
+        	}
+        },
+        complete:function(data){
+        	$(form).find("input[type='checkbox']:checked").trigger('click');     	
+        	$(form).find("button").attr("disabled", false);
+        }
+	});	
 }
 
 function memberFindLoginId__checkForm(form){
@@ -565,8 +627,12 @@ function showProfile(){
 		function(data){
 			if(data.success){				
 				var member = data.member;
-				var html = `이름 : ${member.name}<br>
-							이메일 : ${member.email}`;
+				var html = `<img class="profile-img" src="/member/showImg?memberId=${clickedMemberId}">
+							<div>
+							이름 : ${member.name}<br>
+							이메일 : ${member.email}
+							</div>`;
+				
 				$(".profile-content").html(html);
 				$(".loading").hide();
 			}else{
@@ -664,25 +730,24 @@ function checkReportForm(form){
 	);
 }
 
-function letter_getMemberLetterList(id, memberId){	
+function letter__getMemberLetterList(id, memberId){	
 	$.post("/member/getMemberLetterList",
 		{			
 			memberId : memberId
 		},
 		function(data){						
 			if(data.success){				
+				
 				for(var i=0 ;i < data.letters.length ;i++){
-					letter_drawLetterList(data.letters[i], memberId);					
+					letter__drawLetterList(data.letters[i], memberId);					
 				}				
 				
 				$(".letter-content").children().show();
 				moveToIdInContainer("#letter" + id);
-
-				if(data.letters.length){
-					finalLetterId = data.letters[data.letters.length - 1].id;
-				}
+				
+				
 				getLetter = setTimeout(function() {
-					letter_getNewLetters(memberId);
+					letter__getNewLetters(memberId);
 				}, 1000);
 			}else{
 				alert(data.msg);
@@ -694,29 +759,33 @@ function letter_getMemberLetterList(id, memberId){
 	);
 }
 
-function letter_getNewLetters(memberId){
+function letter__getNewLetters(memberId){
 	$.post("/member/getMemberLetterList",
 			{
-				finalLetterId : finalLetterId,
+				lastSendLetterId : lastSendLetterId,
+				lastLetterId : lastLetterId,
 				memberId : memberId
 			},
 			function(data){						
-				if(data.success){				
+				if(data.success){
+					
 					for(var i=0 ;i < data.letters.length ;i++){
-						letter_drawLetterList(data.letters[i], memberId);					
-					}					
+						letter__drawLetterList(data.letters[i], memberId);
+						if(data.letters[i].id == lastSendLetterId && data.letters[i].viewStatus){
+							letter_updateViewStatus();
+						}
+					}		
+					
 										
 					if(!moveScroll){			
-						if(data.letters.length){
-							finalLetterId = data.letters[data.letters.length - 1].id;
+						if(data.letters.length > 1){							
 							moveToIdInContainer("#letter" + data.letters[data.letters.length - 1].id);
 							moveScroll = true;
-						}						
-						
+						}
 					}
 					
 					getLetter = setTimeout(function() {
-						letter_getNewLetters(memberId);
+						letter__getNewLetters(memberId);
 					}, 1000);
 				}else{
 					alert(data.msg);					
@@ -726,29 +795,39 @@ function letter_getNewLetters(memberId){
 		);
 }
 
-function letter_drawLetterList(letter, memberId){
-	var filtered = replaceAll(letter.body, "\n", "<br>");
-	var html;
-	if(letter.fromMemberId != memberId){
-		html = `<div class="position-right width-half">`;
-	}else{
-		html = `<div class="position-left width-half">`;
-	}
-	html +=`			
-			<div id="letter${letter.id}" class="padding-normal border-normal">${filtered}</div>
-			<small> ${letter.regDate} `;
-	if(letter.fromMemberId != memberId){		
-		if(!letter.viewStatus){
-			html +=  `[읽지 않음]</small>  <button type="button" onclick="letter__deleteLetter(this);" data-id="${letter.id }">삭제</button>`;			
+function letter__drawLetterList(letter, memberId){
+	
+	if(lastSendLetterId != letter.id){		
+		var filtered = replaceAll(letter.body, "\n", "<br>");
+		var html;
+		if(letter.fromMemberId != memberId){
+			html = `<div class="position-right width-half">`;
 		}else{
-			html +=  `[읽음]</small>`;
+			html = `<div class="position-left width-half">`;
 		}
+		html +=`			
+				<div id="letter${letter.id}" class="padding-normal border-normal">${filtered}</div>
+				<small> ${letter.regDate}</small>`;
+		if(letter.fromMemberId != memberId){
+			lastSendLetterId = letter.id;
+			if(!letter.viewStatus){
+				html +=  `<small class="letter-viewStatus">[읽지 않음]</small> <button class="letter-deleteBtn"  type="button" onclick="letter__deleteLetter(this);" data-id="${letter.id }">삭제</button>`;			
+			}else{
+				html +=  `<small>[읽음]</small>`;
+			}
+		}	
+		html +=`
+			</div>		
+		`;
+		$(".letter-content").find(".content").append(html);
+		lastLetterId = letter.id;
 	}
 	
-	html +=`
-		</div>		
-	`;
-	$(".letter-content").find(".content").append(html);
+}
+
+function letter_updateViewStatus(){
+	$(".letter-viewStatus").removeClass("letter-viewStatus").html("[읽음]");
+	$(".letter-deleteBtn").remove();
 }
 
 
@@ -774,7 +853,7 @@ function letter__deleteLetter(btn){
 }
 
 
-function letter_sendReply(form){
+function letter__sendReply(form){
 	if(!checkEmpty(form.body)){
 		alert("빈칸을 채워주세요.");
 		return ;
@@ -837,7 +916,7 @@ function initContextMenu(){
 	$(".close").click(function(){
 		close(this);
 		$(".overlay").hide();
-		finalLetterId = 0;
+		lastLetterId = 0;
 		moveScroll = false;		
 		if(getLetter != null){
 			clearTimeout(getLetter);
@@ -859,7 +938,7 @@ function initContextMenu(){
 	$(".overlay").click(function(){
 		hideOverlay();
 		$(".letter-content").hide();
-		finalLetterId = 0;
+		lastLetterId = 0;
 		moveScroll = false;		
 		if(getLetter != null){
 			clearTimeout(getLetter);
@@ -872,9 +951,11 @@ function initContextMenu(){
 		$(".letter-content").children().hide();
 		$(".letter-content").find(".loading").show();
 		$(".letter-content").find(".content").html("");
+		$(".letter-content").find(".targetMember").html("<strong>"+$(this).prev().attr("data-to")+"</strong> 와 대화중...");
 		$(".letter-content").show();		
 		clickedMemberId = $(this).attr("data-memberId");
-		letter_getMemberLetterList($(this).attr("data-id"), $(this).attr("data-memberId"));				
+		
+		letter__getMemberLetterList($(this).attr("data-id"), $(this).attr("data-memberId"));				
 	});
 }
 
@@ -908,6 +989,11 @@ function moveToIdInContainer(toId){
 $(function(){	
 	initGetReply();
 	initContextMenu();	
-	
+	if($(".checkFileType").length){
+		$(".checkFileType").change(function(){
+			checkFileTypeImg(this);
+		});
+	}
 	$("input").attr("maxlength", "50");	
 })
+

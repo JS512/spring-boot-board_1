@@ -31,7 +31,7 @@
 	<update id="memberEmailAuth" parameterType="map">
 		UPDATE `member`
 		SET emailAuthStatus = TRUE
-		WHERE email = #{email} AND authKey = #{authKey}
+		WHERE email = #{email} AND authKey = #{authKey} AND delStatus != TRUE
 	</update>
 	
 	<select id="getOneMemberByLoginIdPw" parameterType="map" resultMap="member">
@@ -74,7 +74,7 @@
 	<update id="changeLoginPw" parameterType="map">
 		UPDATE `member`
 		SET loginPw = #{loginPw}
-		WHERE id = #{loginedMemberId} AND loginPw = #{origin_loginPw}
+		WHERE id = #{loginedMemberId} AND loginPw = #{origin_loginPw} AND delStatus != TRUE
 	</update>
 	
 	<select id="getMemberRole" parameterType="Integer" resultType="string">
@@ -165,8 +165,11 @@
 	<select id="getMemberLetterList" parameterType="map" resultMap="letter">
 		SELECT * FROM letter
 		WHERE ( (toMemberId = #{loginedMemberId} AND fromMemberId = #{memberId}) OR (toMemberId = #{memberId} AND fromMemberId = #{loginedMemberId}) )
-		<if test="finalLetterId != null and finalLetterId != ''">
-			AND id > #{finalLetterId}
+		<if test="lastLetterId != null and lastLetterId != ''">
+			AND (id > #{lastLetterId}
+		</if>
+		<if test="lastSendLetterId != null and lastSendLetterId != ''">
+			OR id = #{lastSendLetterId})
 		</if>		 
 	</select>
 	
@@ -174,10 +177,34 @@
 		UPDATE letter
 		SET viewStatus = TRUE
 		WHERE toMemberId = #{loginedMemberId} AND fromMemberId = #{memberId}
-		<if test="finalLetterId != null and finalLetterId != ''">
-			AND id > #{finalLetterId}
-		</if>
+		<if test="lastLetterId != null and lastLetterId != ''">
+			AND id >= #{lastLetterId}
+		</if>				
 	</update>
+	
+	<select id="getMemberProfileImg" parameterType="map" resultType="MemberProfileImg">
+		SELECT * FROM memberProfileImg
+		WHERE memberId = #{loginedMemberId}
+	</select>
+	
+	<delete id="deleteMemberProfileImg" parameterType="map">
+		DELETE FROM memberProfileImg
+		WHERE memberId = #{loginedMemberId}
+	</delete>
+	
+	<update id="modifyMemberProfileImg" parameterType="map">
+		UPDATE memberProfileImg
+		SET  regDate = NOW(),
+		fileName = #{fileName}
+		WHERE memberId = #{loginedMemberId}
+	</update>
+	
+	<insert id="addMemberProfileImg" parameterType="map">
+		INSERT INTO memberProfileImg
+		SET regDate = NOW(),
+		memberId = #{loginedMemberId},
+		fileName = #{fileName}
+	</insert>
 	
 	<resultMap id="letter" type="com.example.demo.dto.Letter">
 		<id property="id" column="id"/>

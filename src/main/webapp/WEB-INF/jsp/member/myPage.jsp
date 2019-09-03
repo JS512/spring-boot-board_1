@@ -7,6 +7,19 @@
 <h2>회원 정보</h2>
 <table>
 	<tr>
+		<th colspan="2">
+			<img class="profile-img" src="/member/showImg">
+			<form onsubmit="memberMyPage__modifyMemberProfileImg(this); return false;">
+				<label>기본 이미지로 변경 : <input type="checkbox" name="deleteProfileImg" onclick="memberMyPage__toggleProfileImg(this);" value="1"></label><br>
+				<label> 이미지 선택 : <input type="checkbox" name="modifyProfileImg" onclick="memberMyPage__toggleProfileImg(this);" ><br>
+					<input class="checkFileType" type="file" name="profileImg" hidden><br>				
+				</label>
+				<button>변경</button>
+			</form>
+		</th>
+		
+	</tr>
+	<tr>
 		<th>아이디 : </th>
 		<td> ${loginedMember.loginId }</td>
 	</tr>

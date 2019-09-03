@@ -152,7 +152,7 @@ public class ArticleController {
 			return "common/redirect";
 		}
 		redirectUrl = "/article/detail?id="+param.get("id")+"&boardId="+param.get("boardId");
-		Log.info(redirectUrl);
+		
 		if(types != null) {		
 			
 			rs = articleFileService.addArticleFiles(param, files, types, types2);
@@ -327,6 +327,7 @@ public class ArticleController {
 				rs = new UrlResource(target.toURI());
 				
 				header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+ rs.getFilename() +"\"");
+				header.add(HttpHeaders.TRANSFER_ENCODING, "binary");
 				header.setCacheControl("no-cache");
 				header.setContentType(MediaType.parseMediaType(mimeType));
 				

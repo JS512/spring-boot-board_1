@@ -1,5 +1,8 @@
 package com.example.demo.service;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -7,13 +10,16 @@ import javax.mail.MessagingException;
 
 import org.apache.groovy.util.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.Utils;
 import com.example.demo.dao.MemberDao;
 import com.example.demo.dto.Letter;
 import com.example.demo.dto.Member;
+import com.example.demo.dto.MemberProfileImg;
 import com.example.demo.dto.Report;
 import com.example.demo.handler.MailHandler;
 
@@ -24,7 +30,9 @@ public class MemberServiceImpl implements MemberService{
 	@Autowired
 	private MemberDao memberDao;
 	@Autowired
-	private JavaMailSender sender;
+	private JavaMailSender sender;	
+	@Value("${custom.profileImgDir}")
+	public String profileImgDir;
 	
 	public Map<String, Object> addMember(Map<String, Object> param){
 		String msg = "";
@@ -394,6 +402,86 @@ public class MemberServiceImpl implements MemberService{
 			e.printStackTrace();			
 		}
 		return Maps.of("msg", msg,"resultCode", resultCode, "letters", letters);
+	}
+	
+	public Map<String, Object> deleteMemberProfileImg(Map<String, Object> param){
+				
+		String msg = "";
+		String resultCode = "";
+		try {
+			MemberProfileImg img = memberDao.getMemberProfileImg(param);
+			if(img == null) {
+				msg = "지정되어 있는 프로필이 없습니다.";
+				resultCode = "F-1";				
+			}else {
+				deleteProfileImg(img.getFileName());
+				memberDao.deleteMemberProfileImg(param);
+				resultCode = "S-1";
+				msg = "삭제 성공";
+			}
+		} catch (Exception e) {
+			msg = "오류";
+			resultCode = "F-1";
+			e.printStackTrace();			
+		}
+		return Maps.of("msg", msg,"resultCode", resultCode);
+	}
+
+	public Map<String, Object> modifyMemberProfileImg(Map<String, Object> param){		
+		String msg = "";
+		String resultCode = "";
+		try {
+			MemberProfileImg img = memberDao.getMemberProfileImg(param);
+			MultipartFile file = (MultipartFile)param.get("profileImg");			
+			param.put("fileName", param.get("memberLoginId") + "-" + file.getOriginalFilename());
+			if(img != null) {
+				deleteProfileImg(img.getFileName());
+				addProfileImg(file, (String)param.get("memberLoginId"));
+				memberDao.modifyMemberProfileImg(param);
+			}else {								
+				addProfileImg(file, (String)param.get("memberLoginId"));
+				memberDao.addMemberProfileImg(param);
+			}
+			msg = "변경 성공";
+			resultCode = "S-1";
+		} catch (Exception e) {
+			msg = "오류";
+			resultCode = "F-1";
+			e.printStackTrace();			
+		}
+		return Maps.of("msg", msg,"resultCode", resultCode);
+	}
+	
+	public MemberProfileImg getMemberProfileImg(Map<String, Object> param){
+		return memberDao.getMemberProfileImg(param);
+	}
+	
+	public void deleteProfileImg(String fileName) {
+		File target = new File(profileImgDir, fileName);
+		if(target.exists()) {
+			target.delete();
+		}
+	}
+
+	public void addProfileImg(MultipartFile file, String memberLoginId) throws IOException {
+		File target = new File(profileImgDir, memberLoginId + "-" + file.getOriginalFilename());
+		FileOutputStream fos = new FileOutputStream(target);
+		
+		try {			
+			fos.write(file.getBytes());			
+			fos.close();
+		}catch(Exception e) {
+			
+		}finally {
+			if(fos != null) {
+				try {
+					fos.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}		
 	}
 
 }

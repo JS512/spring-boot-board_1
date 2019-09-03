@@ -1,5 +1,6 @@
 custom:
   uploadDir: C:/Users/home/Desktop/ljs/java/springUploads
+  profileImgDir: C:/Users/home/Desktop/ljs/java/springProfileUploads
 server:
   port: 8082  
 mybatis:

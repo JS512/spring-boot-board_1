@@ -1,5 +1,8 @@
 package com.example.demo;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.util.HashMap;
@@ -8,9 +11,15 @@ import java.util.Random;
 
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.HtmlUtils;
 
 public class Utils {
+	@Value("${custom.profileImgDir}")
+	public static String profileImgDir;
+	public static String basicProfileImg = "/basic_profile_img.png";
+	
 	public static int getAsInt(Object object) {
 		if (object instanceof Integer) {
 			return (int) object;
@@ -145,5 +154,6 @@ public class Utils {
 	public static String htmlEscape(String html) {
 		return HtmlUtils.htmlEscape(html);
 	}
-
+	
+	
 }

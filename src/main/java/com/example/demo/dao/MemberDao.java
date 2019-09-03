@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.example.demo.dto.ArticleReply;
 import com.example.demo.dto.Letter;
 import com.example.demo.dto.Member;
+import com.example.demo.dto.MemberProfileImg;
 import com.example.demo.dto.Report;
 
 @Mapper
@@ -64,4 +65,12 @@ public interface MemberDao {
 	public List<Letter> getMemberLetterList(Map<String, Object> param);
 
 	public void updateMemberLetterView(Map<String, Object> param);
+
+	public MemberProfileImg getMemberProfileImg(Map<String, Object> param);
+
+	public void deleteMemberProfileImg(Map<String, Object> param);
+
+	public void modifyMemberProfileImg(Map<String, Object> param);
+
+	public void addMemberProfileImg(Map<String, Object> param);
 }

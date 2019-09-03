@@ -158,3 +158,18 @@ table, th, td{
 	overflow-y:scroll;
 	word-break:break-all;
 }
+.profile-img{
+	border:1px solid red;
+	border-radius:10%;	
+	width:100px;
+	height:auto;
+}
+
+.member-status p{
+	display:inline-block;
+	margin-left:10px;	
+}
+.member-status .profile-img{	
+	vertical-align:middle;
+	width:50px;	
+}

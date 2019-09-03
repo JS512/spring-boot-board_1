@@ -67,7 +67,7 @@
 		<div class="close">	</div>
 	</div>
 	<div class="content"></div>
-	<form onsubmit="letter_sendReply(this); return false;">
+	<form onsubmit="letter__sendReply(this); return false;">
 		<textarea name="body"></textarea>
 		<button>전송</button>
 	</form>

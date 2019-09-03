@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.example.demo.dto.Letter;
 import com.example.demo.dto.Member;
+import com.example.demo.dto.MemberProfileImg;
 
 public interface MemberService {
 
@@ -47,6 +48,12 @@ public interface MemberService {
 
 	public Map<String, Object> getAllReports(Map<String, Object> param);
 
-	public Map<String, Object> getMemberLetterList(Map<String, Object> param);	
+	public Map<String, Object> getMemberLetterList(Map<String, Object> param);
+
+	public Map<String, Object> deleteMemberProfileImg(Map<String, Object> param);
+
+	public Map<String, Object> modifyMemberProfileImg(Map<String, Object> param);
+
+	public MemberProfileImg getMemberProfileImg(Map<String, Object> param);	
 
 }

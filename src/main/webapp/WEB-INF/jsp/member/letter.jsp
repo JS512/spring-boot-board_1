@@ -38,11 +38,13 @@
 	  		</c:if>
   		</td>
   		<td>${letter.regDate }</td>  		
-  		<td class="clickable-contextMenu clickable" data-id="${letter.fromMemberId }" data-to="${letter.extra.writer }">${letter.extra.writer }</td>  		
+  		  		
   		<c:if test="${letter.fromMemberId == loginedMemberId }">
+  			<td class="clickable-contextMenu clickable" data-id="${letter.toMemberId }" data-to="${letter.extra.writer }">${letter.extra.writer }</td>
   			<td data-id="${letter.id}" data-memberId="${letter.toMemberId }" class="text-overflow-ellipsis clickable-letterContent clickable">${letter.originBody }</td>
   		</c:if>
   		<c:if test="${letter.toMemberId == loginedMemberId }">
+  			<td class="clickable-contextMenu clickable" data-id="${letter.fromMemberId }" data-to="${letter.extra.writer }">${letter.extra.writer }</td>
   			<td data-id="${letter.id}" data-memberId="${letter.fromMemberId }" class="text-overflow-ellipsis clickable-letterContent clickable">${letter.originBody }</td>
   		</c:if>  		  		
   	</tr>
@@ -67,8 +69,9 @@
 		<div class="close">	</div>
 	</div>
 	<div class="loading" hidden></div>
+	<div class="targetMember"></div>
 	<div class="content"></div>
-	<form onsubmit="letter_sendReply(this); return false;">
+	<form onsubmit="letter__sendReply(this); return false;">
 		<textarea name="body"></textarea>
 		<button>전송</button>
 	</form>
