@@ -98,7 +98,7 @@ insert  into `article`(`id`,`regDate`,`title`,`body`,`memberId`,`boardId`,`view`
 (304,'2019-09-01 00:46:06','sffsef','zzzzzzzzzzzzzz  \r\nzzzzzz  \r\nzzzzz  \r\nzzzzzzz  \r\n\r\n\r\n\r\n~~sfsdfsfsdf~~',237,2,1,0,0),
 (305,'2019-09-01 00:46:38','fsef','zzzzzzz  \r\nzzzzzzzzzzzz  \r\nzzzzz  \r\nzzzzzzzzzzzzzzzzz  \r\n\r\n\r\n~~dsfsd~~',254,2,1,0,0),
 (306,'2019-09-03 21:11:31','33333','# 마크다운\r\n## 마크다운 사용한 것..  \r\nㅎㅎ  \r\n---\r\n***\r\nㄴㄷㄴㅅㄴㄷ\r\nㄴㄷㄹㄴㄷㄹㄷㄴ  \r\nㄴㄹㄴㄷㄹㄷㄴ  \r\nㄹㄴㄷㄹㄴㄷㄹ\r\n~~지우기~~\r\nㄴㄷㄹㄴㄷㄹ  ㄷㄴㄹㄴㄷㄹㄷ  ㄴㄷㄹㄴㄷ',263,2,1,0,0),
-(307,'2019-09-03 21:15:11','ㄹㄴㄷㄹ','ㄴㄷㄹㄴㄷㄹ    ㄴㄷㄹㄴㄷㄹㄴㄷ    ㄴㄹㄴㄷㄹㄴㄷㄹㄷㄴ    ㄴㄷㄹㄴㄷㄹㄷㄴ    ㄴㄷㄹㄴㄷㄹㄷ\r\n\r\nㄴㄹㄷㄴㄹ\r\n\r\nㄴㄷㄹㄴㄷㄹ\r\n\r\nㄴㄷㄹㄴㄷ\r\n\r\nㄴㄷㄹㄴㄷㄹ  \r\n  \r\n\r\n  sef  \r\n  \r\n\r\nㄴㄹㄷㄴㄹ',263,2,0,0,0);
+(307,'2019-09-03 21:15:11','ㄹㄴㄷㄹ','ㄴㄷㄹㄴㄷㄹ    ㄴㄷㄹㄴㄷㄹㄴㄷ    ㄴㄹㄴㄷㄹㄴㄷㄹㄷㄴ    ㄴㄷㄹㄴㄷㄹㄷㄴ    ㄴㄷㄹㄴㄷㄹㄷ\r\n\r\nㄴㄹㄷㄴㄹ\r\n\r\nㄴㄷㄹㄴㄷㄹ\r\n\r\nㄴㄷㄹㄴㄷ\r\n\r\nㄴㄷㄹㄴㄷㄹ  \r\n  \r\n\r\n  sef  \r\n  \r\n\r\nㄴㄹㄷㄴㄹ',263,2,1,0,0);
 
 /*Table structure for table `articleFile` */
 
@@ -438,7 +438,7 @@ CREATE TABLE `member` (
   `emailAuthStatus` tinyint(1) NOT NULL DEFAULT 0,
   `delStatus` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`,`loginId`,`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=264 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=267 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Data for the table `member` */
 
@@ -467,7 +467,10 @@ insert  into `member`(`id`,`regDate`,`loginId`,`loginPw`,`name`,`email`,`authKey
 (260,'2019-08-31 17:30:56','abc','a9993e364706816aba3e25717850c26c9cd0d89d','abc','abc@abc.abc','uWMdVIwIUQvTCINPCX62e3TJI86u8Y',0,1),
 (261,'2019-08-31 18:30:38','aab','40b904fd8852297daeaeb426b1bca46fd2454aa3','aab','ab@fd.dfod','4iSCvfU66QXkCJSM4mbEsqQD8ROigR',0,0),
 (262,'2019-09-03 21:04:02','ccd','6b6efb9b042cd8fb7e3f7bd6130c49cbbb216bde','ccd','ccd@ccd.ccd','YkqvrIjtcHMHUnrlfJFKgVqPbyY8Dr',0,1),
-(263,'2019-09-03 21:05:44','ccd','6b6efb9b042cd8fb7e3f7bd6130c49cbbb216bde','ccd','ccd@ccd.ccd','kwp84UIVLV5geR8Wl7I5xg2xViGN8v',0,0);
+(263,'2019-09-03 21:05:44','ccd','6b6efb9b042cd8fb7e3f7bd6130c49cbbb216bde','ccd','ccd@ccd.ccd','kwp84UIVLV5geR8Wl7I5xg2xViGN8v',0,0),
+(264,'2019-09-18 18:49:07','user1','b3daa77b4c04a9551b8781d03191fe098f325e67','홍길동','ssd357@naver.com','klCBHgK68CUEWmOxUIKt8PpNErnWMh',1,0),
+(265,'2019-09-18 19:23:33','user2','a1881c06eec96db9901c7bbfe41c42a3f08e9cb4','김철수','123@abc.abc','JSYjeI5prTrEcTxlt7riFCJkDvPGUj',0,0),
+(266,'2019-09-18 19:24:19','admin','d033e22ae348aeb5660fc2140aec35850c4da997','김학수','admin@page.com','Wn5yfBP7rWX2m48dElvW2R3Ov1BXI6',0,0);
 
 /*Table structure for table `memberAttr` */
 
@@ -480,13 +483,14 @@ CREATE TABLE `memberAttr` (
   `attrName` char(20) COLLATE utf8_unicode_ci NOT NULL,
   `attrValue` blob NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Data for the table `memberAttr` */
 
 insert  into `memberAttr`(`id`,`regDate`,`memberId`,`attrName`,`attrValue`) values 
 (1,'2019-08-06 16:44:26',222,'ROLE','admin'),
-(2,'2019-08-06 19:21:42',237,'ROLE','admin');
+(2,'2019-08-06 19:21:42',237,'ROLE','admin'),
+(3,'2019-09-05 20:32:45',266,'role','admin');
 
 /*Table structure for table `memberProfileImg` */
 

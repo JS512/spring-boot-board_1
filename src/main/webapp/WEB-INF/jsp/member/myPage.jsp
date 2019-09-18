@@ -8,7 +8,7 @@
 <table>
 	<tr>
 		<th colspan="2">
-			<img class="profile-img" src="/member/showImg">
+			<img class="profile-img" src="/member/showProfileImg">
 			<form onsubmit="memberMyPage__modifyMemberProfileImg(this); return false;">
 				<label>기본 이미지로 변경 : <input type="checkbox" name="deleteProfileImg" onclick="memberMyPage__toggleProfileImg(this);" value="1"></label><br>
 				<label> 이미지 선택 : <input type="checkbox" name="modifyProfileImg" onclick="memberMyPage__toggleProfileImg(this);" ><br>

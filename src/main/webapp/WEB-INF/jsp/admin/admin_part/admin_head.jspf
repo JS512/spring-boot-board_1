@@ -21,7 +21,9 @@
 		<title>${title}</title>
 	</head>
 	<body>
-		
+		<div class="member-status margin-normal">
+			<img class="profile-img" src="/admin/showProfileImg"><p>현재 ${loginedMemberLoginId }님이 로그인중...</p>
+		</div>
 		<a href="/admin/articleList?boardId=1">공지사항</a>
 		<a href="/admin/articleList?boardId=2">자유게시판</a>
 		<a href="/">홈</a>

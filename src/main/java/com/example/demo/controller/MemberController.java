@@ -351,7 +351,7 @@ public class MemberController {
 		return Maps.of("msg", rs.get("msg"));
 	}
 	
-	@RequestMapping("/showImg")
+	@RequestMapping("/showProfileImg")
 	@ResponseBody
 	public ResponseEntity<Resource> showImg(@RequestParam Map<String, Object> param, HttpServletRequest request){		
 		HttpSession session = request.getSession();
