@@ -547,7 +547,7 @@ function memberFindLoginId__checkForm(form){
 		return ;
 	}
 	$(form).find("button").attr("disabled", true);
-	$("div").html("<h1>찾는중..</h1>");
+	$(".findLoginId").html("<h1>찾는중..</h1>");
 	$.get("/member/doFindLoginId",
 		{
 			name : form.name.value.trim(),
@@ -555,9 +555,9 @@ function memberFindLoginId__checkForm(form){
 		},
 		function(data){
 			if(data.success){
-				$("div").html("<h2>아이디</h2>" + data.msg);
+				$(".findLoginId").html("<h2>아이디</h2>" + data.msg);
 			}else{
-				$("div").html("");
+				$(".findLoginId").html("");
 				alert(data.msg);
 			}
 			

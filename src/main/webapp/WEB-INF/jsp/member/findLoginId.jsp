@@ -12,7 +12,7 @@
 	
 	<button>찾기</button>
 </form>
-<div>
+<div class="findLoginId">
 </div>
 
 <%@ include file="../part/foot.jspf" %>
