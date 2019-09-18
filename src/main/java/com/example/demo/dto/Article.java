@@ -37,17 +37,14 @@ public class Article {
 		MutableDataSet options = new MutableDataSet();
 		
         options.set(Parser.EXTENSIONS, Arrays.asList(TablesExtension.create(), StrikethroughExtension.create()));
-
-//        options.set(HtmlRenderer.SOFT_BREAK, "<br>\n");
         options.set(Parser.HARD_LINE_BREAK_LIMIT, true);
 
         Parser parser = Parser.builder(options).build();
         HtmlRenderer renderer = HtmlRenderer.builder(options).escapeHtml(true).build();
 
         Node document = parser.parse(body);
-        body = renderer.render(document);
+        body = renderer.render(document);   
         
-        Log.info(body);
         
 		return body;		
 	}

@@ -627,7 +627,7 @@ function showProfile(){
 		function(data){
 			if(data.success){				
 				var member = data.member;
-				var html = `<img class="profile-img" src="/member/showImg?memberId=${clickedMemberId}">
+				var html = `<img class="profile-img" src="/member/showProfileImg?memberId=${clickedMemberId}">
 							<div>
 							이름 : ${member.name}<br>
 							이메일 : ${member.email}
