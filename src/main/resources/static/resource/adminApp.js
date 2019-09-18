@@ -964,6 +964,7 @@ function initContextMenu(){
 	$(".overlay").click(function(){
 		hideOverlay();
 		$(".letter-content").hide();
+		$(".report-content").hide();
 		lastLetterId = 0;
 		moveScroll = false;		
 		if(getLetter != null){
