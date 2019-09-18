@@ -484,8 +484,7 @@ public class ArticleController {
 	@ResponseBody
 	public Map<String, Object> updateLike(@RequestParam Map<String, Object> param, HttpSession session){
 		
-		if(!Utils.needParamCheck(param, new String[] {"boardId", "relId", "val", "type"}) || !Utils.isNumeric(param, new String[] {"boardId", "relId"})
-				|| !Utils.isBoolean(param, new String[] {"val"})) {			
+		if(!Utils.needParamCheck(param, new String[] {"boardId", "relId", "val", "type"}) || !Utils.isNumeric(param, new String[] {"boardId", "relId"})	) {			
 			return Maps.of("msg", "잘못된 접근", "success", false);
 		}
 		param.put("loginedMemberId", session.getAttribute("loginedMemberId"));		
