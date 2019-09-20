@@ -98,7 +98,7 @@ insert  into `article`(`id`,`regDate`,`title`,`body`,`memberId`,`boardId`,`view`
 (304,'2019-09-01 00:46:06','sffsef','zzzzzzzzzzzzzz  \r\nzzzzzz  \r\nzzzzz  \r\nzzzzzzz  \r\n\r\n\r\n\r\n~~sfsdfsfsdf~~',237,2,1,0,0),
 (305,'2019-09-01 00:46:38','fsef','zzzzzzz  \r\nzzzzzzzzzzzz  \r\nzzzzz  \r\nzzzzzzzzzzzzzzzzz  \r\n\r\n\r\n~~dsfsd~~',254,2,1,0,0),
 (306,'2019-09-03 21:11:31','33333','# 마크다운\r\n## 마크다운 사용한 것..  \r\nㅎㅎ  \r\n---\r\n***\r\nㄴㄷㄴㅅㄴㄷ\r\nㄴㄷㄹㄴㄷㄹㄷㄴ  \r\nㄴㄹㄴㄷㄹㄷㄴ  \r\nㄹㄴㄷㄹㄴㄷㄹ\r\n~~지우기~~\r\nㄴㄷㄹㄴㄷㄹ  ㄷㄴㄹㄴㄷㄹㄷ  ㄴㄷㄹㄴㄷ',263,2,1,0,0),
-(307,'2019-09-03 21:15:11','ㄹㄴㄷㄹ','ㄴㄷㄹㄴㄷㄹ    ㄴㄷㄹㄴㄷㄹㄴㄷ    ㄴㄹㄴㄷㄹㄴㄷㄹㄷㄴ    ㄴㄷㄹㄴㄷㄹㄷㄴ    ㄴㄷㄹㄴㄷㄹㄷ\r\n\r\nㄴㄹㄷㄴㄹ\r\n\r\nㄴㄷㄹㄴㄷㄹ\r\n\r\nㄴㄷㄹㄴㄷ\r\n\r\nㄴㄷㄹㄴㄷㄹ  \r\n  \r\n\r\n  sef  \r\n  \r\n\r\nㄴㄹㄷㄴㄹ',263,2,1,0,0);
+(307,'2019-09-03 21:15:11','ㄹㄴㄷㄹ','ㄴㄷㄹㄴㄷㄹ    ㄴㄷㄹㄴㄷㄹㄴㄷ    ㄴㄹㄴㄷㄹㄴㄷㄹㄷㄴ    ㄴㄷㄹㄴㄷㄹㄷㄴ    ㄴㄷㄹㄴㄷㄹㄷ\r\n\r\nㄴㄹㄷㄴㄹ\r\n\r\nㄴㄷㄹㄴㄷㄹ\r\n\r\nㄴㄷㄹㄴㄷ\r\n\r\nㄴㄷㄹㄴㄷㄹ  \r\n  \r\n\r\n  sef  \r\n  \r\n\r\nㄴㄹㄷㄴㄹ',263,2,2,0,0);
 
 /*Table structure for table `articleFile` */
 
@@ -146,7 +146,7 @@ CREATE TABLE `articleReply` (
   KEY `reply_articleId` (`articleId`),
   CONSTRAINT `memberId` FOREIGN KEY (`memberId`) REFERENCES `member` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `reply_articleId` FOREIGN KEY (`articleId`) REFERENCES `article` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=259 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=265 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Data for the table `articleReply` */
 
@@ -166,7 +166,13 @@ insert  into `articleReply`(`id`,`regDate`,`articleId`,`memberId`,`body`,`boardI
 (255,'2019-08-31 19:56:33',302,260,'dfsdfdd\nd\nf\nd\nd\nd\nd\nd',2,0,0),
 (256,'2019-08-31 17:31:15',298,260,'sfsefsef',2,0,0),
 (257,'2019-08-31 17:31:41',298,260,'아 수정 중입니다.ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',2,0,0),
-(258,'2019-08-31 19:52:57',302,254,'ggsrgrdg',2,1,0);
+(258,'2019-08-31 19:52:57',302,254,'ggsrgrdg',2,1,0),
+(259,'2019-09-18 20:25:24',296,264,'댓글 1',2,1,0),
+(260,'2019-09-18 20:36:54',307,264,'ㅎㅇㄱ',2,0,0),
+(261,'2019-09-18 20:48:16',296,264,'댓글 내용 입니다.',2,0,0),
+(262,'2019-09-20 17:55:51',307,264,'user1의 댓글',2,0,0),
+(263,'2019-09-20 17:56:13',307,264,'user1의 두번째 댓글',2,0,0),
+(264,'2019-09-20 18:11:40',307,264,'댓글 달게요..ㅎ.',2,0,0);
 
 /*Table structure for table `board` */
 
@@ -199,7 +205,7 @@ CREATE TABLE `letter` (
   PRIMARY KEY (`id`),
   KEY `letter_toMemberId` (`toMemberId`),
   CONSTRAINT `letter_toMemberId` FOREIGN KEY (`toMemberId`) REFERENCES `member` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=268 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=271 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Data for the table `letter` */
 
@@ -389,7 +395,10 @@ insert  into `letter`(`id`,`regDate`,`fromMemberId`,`toMemberId`,`body`,`viewSta
 (264,'2019-09-03 16:54:32',237,261,'아니 ㅋㅋㅋ',1),
 (265,'2019-09-03 16:54:36',237,261,'ㅠㅠㅠ 머하세요',1),
 (266,'2019-09-03 16:54:47',261,237,'오오',1),
-(267,'2019-09-03 20:51:43',261,254,'ㅋㄴㄷㄹ',1);
+(267,'2019-09-03 20:51:43',261,254,'ㅋㄴㄷㄹ',1),
+(268,'2019-09-18 21:14:35',265,264,'안녕하세요!!!\nuser2 입ㄴ다.',1),
+(269,'2019-09-18 21:15:17',264,265,'넵!!\n안녕하세요!',0),
+(270,'2019-09-18 21:15:26',264,265,'헛헛헛',0);
 
 /*Table structure for table `like` */
 
@@ -405,7 +414,7 @@ CREATE TABLE `like` (
   PRIMARY KEY (`id`),
   KEY `like_memberId` (`memberId`),
   CONSTRAINT `like_memberId` FOREIGN KEY (`memberId`) REFERENCES `member` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=95 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=latin1;
 
 /*Data for the table `like` */
 
@@ -421,7 +430,11 @@ insert  into `like`(`id`,`regDate`,`relType`,`relId`,`memberId`,`val`) values
 (91,'2019-08-26 17:20:07','article',254,237,-1),
 (92,'2019-08-26 17:59:18','article',250,254,1),
 (93,'2019-08-26 17:59:37','article',253,254,1),
-(94,'2019-08-27 15:50:39','article',249,254,-1);
+(94,'2019-08-27 15:50:39','article',249,254,-1),
+(98,'2019-09-18 20:43:14','article',296,264,-1),
+(100,'2019-09-18 20:37:00','reply',260,264,-1),
+(101,'2019-09-18 20:37:03','article',307,264,1),
+(102,'2019-09-20 17:55:55','reply',262,264,1);
 
 /*Table structure for table `member` */
 
@@ -437,40 +450,41 @@ CREATE TABLE `member` (
   `authKey` char(30) COLLATE utf8_unicode_ci NOT NULL,
   `emailAuthStatus` tinyint(1) NOT NULL DEFAULT 0,
   `delStatus` tinyint(1) NOT NULL DEFAULT 0,
+  `exp` int(10) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`,`loginId`,`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=267 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=268 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Data for the table `member` */
 
-insert  into `member`(`id`,`regDate`,`loginId`,`loginPw`,`name`,`email`,`authKey`,`emailAuthStatus`,`delStatus`) values 
-(226,'2019-08-06 18:00:32','ddd','9c969ddf454079e3d439973bbab63ea6233e4087','ddd','ddd@ddd.ddd','pqf318YTaCvatS8FSx70xB6VqzDb7A',0,0),
-(228,'2019-08-06 18:03:09','eee','637a81ed8e8217bb01c15c67c39b43b0ab4e20f1','eee','eee@eee.eee','0qeOFvnbTgn1OCL3zPJCFRiysNRZ8B',1,0),
-(230,'2019-08-06 18:08:04','fff','f6949a8c7d5b90b4a698660bbfb9431503fbb995','fff','fff@fff.fff','s9ckpV4iu06I3SXLtq3opCcdLr3KHB',0,0),
-(231,'2019-08-06 18:22:04','ggg','07dcd371560bc43c48f56a2f55739ac66741d59d','ggg','ggg@ggg.ggg','jBHavd0ggVcYpPFVWdgtNlPCNkLX4b',0,0),
-(232,'2019-08-06 18:23:01','hhh','effdb5f96a28acd2eb19dcb15d8f43af762bd0ae','hhh','hhh@hhh.hhh','LoOhXDR0uiFfGhFwKJcyrTkkbqqYD7',0,0),
-(233,'2019-08-06 18:23:36','iii','425ffc1422dc4f32528bd9fd5af355fdb5c96192','iii','iii@iii.iii','5FFudc2HRMRY0Akp1NnQbtnAlzGvp7',0,0),
-(234,'2019-08-06 18:24:29','kkk','5150d2104c8cd974b27fad3f25ec4e8098bb7bbe','kkk','kkk@kkk.kkk','llu0fgG7pqSAMw8ScNwhWFZ8CzFd5w',0,0),
-(235,'2019-08-06 18:25:59','nnn','7f88bb68e14d386d89af3cf317f6f7af1d39246c','nnn','nnn@nnn.nnn','gTWwSpJMv90yvXs3e6V31aRyJRIHpE',0,0),
-(236,'2019-08-06 18:27:06','qqq','a056c8d05ae9ac6ca180bc991b93b7ffe37563e0','qqq','qqq@qqq.qqq','a6t5XGWpaf8CbGqYpXtZZuucc9H332',0,0),
-(237,'2019-08-06 18:28:46','www','c50267b906a652f2142cfab006e215c9f6fdc8a0','www','www@www.www','II6P5nx741kUeFg6isl8pGGJsfUmS2',0,0),
-(239,'2019-08-22 16:18:37','123','123','123','123@123.123','1234545',0,0),
-(240,'2019-08-22 16:49:01','1233','123','123','123@123.123','1234545',0,0),
-(243,'2019-08-22 18:12:20','ㅁㅁㅁ','ㅁㅁㅁ','ㅊㅊㅊ','shdzl@naver.com5','yMX1UkJ6QUq3GDgiuIQIUY4V8m2Uwx',0,0),
-(245,'2019-08-22 18:15:35','ㅠㅠㅠ12','9844f81e1408f6ecb932137d33bed7cfdcf518a3','ㅠㅠㅠ','ssd357@naver.com12','6t7BLVmHbT3wVVBEkBFmsslbWVBk3J',0,0),
-(246,'2019-08-22 18:18:32','ㅁㄴㅇ','9844f81e1408f6ecb932137d33bed7cfdcf518a3','ㅁㄴㅇ','asf@sfsf.sdf','ksKfblOc1JDbhOQl2gqPg1QhEGO417',0,0),
-(248,'2019-08-22 18:49:11','yyy','9844f81e1408f6ecb932137d33bed7cfdcf518a3','yyy','yyy@yyy.yyy','XQeNMcNGirpRRsmcjgdFlhSwuB8mIO',0,0),
-(250,'2019-08-22 23:47:05','ㅁㅁㅁㅁㅁ','9844f81e1408f6ecb932137d33bed7cfdcf518a3','ㅁㅁㅁㅁㅁ','sdf@naver.com','83M7UQUOc4WxOkhLH8S5tHPBXqPdLg',0,0),
-(251,'2019-08-22 23:48:40','1231212','9844f81e1408f6ecb932137d33bed7cfdcf518a3','1231232','sdf@naver.com1','14FFLlu4UxTTkj7xUdxisXJc76PMoP',0,0),
-(254,'2019-08-23 00:06:01','nnnn','07962e32beac4da179b30c06f1c1e71bd220f782','nnnn','nnnn@nnnn.nnnn','7kP1UDDm1P6NiUpfXKOGhrRqFwqkBg',0,0),
-(257,'2019-08-25 23:24:15','1234','7110eda4d09e062aa5e4a390b0a572ac0d2c0220','1234','123@123.1233','SYoVJpBMSoenR4f5SoIr8uHcCnbXd7',0,0),
-(259,'2019-08-31 17:02:06','zzz','40fa37ec00c761c7dbb6ebdee6d4a260b922f5f4','zzz','zzz@zzz.zzz','kyEdC2sjK3wRVWXIPiC7kCyimLoQPp',0,1),
-(260,'2019-08-31 17:30:56','abc','a9993e364706816aba3e25717850c26c9cd0d89d','abc','abc@abc.abc','uWMdVIwIUQvTCINPCX62e3TJI86u8Y',0,1),
-(261,'2019-08-31 18:30:38','aab','40b904fd8852297daeaeb426b1bca46fd2454aa3','aab','ab@fd.dfod','4iSCvfU66QXkCJSM4mbEsqQD8ROigR',0,0),
-(262,'2019-09-03 21:04:02','ccd','6b6efb9b042cd8fb7e3f7bd6130c49cbbb216bde','ccd','ccd@ccd.ccd','YkqvrIjtcHMHUnrlfJFKgVqPbyY8Dr',0,1),
-(263,'2019-09-03 21:05:44','ccd','6b6efb9b042cd8fb7e3f7bd6130c49cbbb216bde','ccd','ccd@ccd.ccd','kwp84UIVLV5geR8Wl7I5xg2xViGN8v',0,0),
-(264,'2019-09-18 18:49:07','user1','b3daa77b4c04a9551b8781d03191fe098f325e67','홍길동','ssd357@naver.com','klCBHgK68CUEWmOxUIKt8PpNErnWMh',1,0),
-(265,'2019-09-18 19:23:33','user2','a1881c06eec96db9901c7bbfe41c42a3f08e9cb4','김철수','123@abc.abc','JSYjeI5prTrEcTxlt7riFCJkDvPGUj',0,0),
-(266,'2019-09-18 19:24:19','admin','d033e22ae348aeb5660fc2140aec35850c4da997','김학수','admin@page.com','Wn5yfBP7rWX2m48dElvW2R3Ov1BXI6',0,0);
+insert  into `member`(`id`,`regDate`,`loginId`,`loginPw`,`name`,`email`,`authKey`,`emailAuthStatus`,`delStatus`,`exp`) values 
+(226,'2019-08-06 18:00:32','ddd','9c969ddf454079e3d439973bbab63ea6233e4087','ddd','ddd@ddd.ddd','pqf318YTaCvatS8FSx70xB6VqzDb7A',0,0,0),
+(228,'2019-08-06 18:03:09','eee','637a81ed8e8217bb01c15c67c39b43b0ab4e20f1','eee','eee@eee.eee','0qeOFvnbTgn1OCL3zPJCFRiysNRZ8B',1,0,0),
+(230,'2019-08-06 18:08:04','fff','f6949a8c7d5b90b4a698660bbfb9431503fbb995','fff','fff@fff.fff','s9ckpV4iu06I3SXLtq3opCcdLr3KHB',0,0,0),
+(231,'2019-08-06 18:22:04','ggg','07dcd371560bc43c48f56a2f55739ac66741d59d','ggg','ggg@ggg.ggg','jBHavd0ggVcYpPFVWdgtNlPCNkLX4b',0,0,0),
+(232,'2019-08-06 18:23:01','hhh','effdb5f96a28acd2eb19dcb15d8f43af762bd0ae','hhh','hhh@hhh.hhh','LoOhXDR0uiFfGhFwKJcyrTkkbqqYD7',0,0,0),
+(233,'2019-08-06 18:23:36','iii','425ffc1422dc4f32528bd9fd5af355fdb5c96192','iii','iii@iii.iii','5FFudc2HRMRY0Akp1NnQbtnAlzGvp7',0,0,0),
+(234,'2019-08-06 18:24:29','kkk','5150d2104c8cd974b27fad3f25ec4e8098bb7bbe','kkk','kkk@kkk.kkk','llu0fgG7pqSAMw8ScNwhWFZ8CzFd5w',0,0,0),
+(235,'2019-08-06 18:25:59','nnn','7f88bb68e14d386d89af3cf317f6f7af1d39246c','nnn','nnn@nnn.nnn','gTWwSpJMv90yvXs3e6V31aRyJRIHpE',0,0,0),
+(236,'2019-08-06 18:27:06','qqq','a056c8d05ae9ac6ca180bc991b93b7ffe37563e0','qqq','qqq@qqq.qqq','a6t5XGWpaf8CbGqYpXtZZuucc9H332',0,0,0),
+(237,'2019-08-06 18:28:46','www','c50267b906a652f2142cfab006e215c9f6fdc8a0','www','www@www.www','II6P5nx741kUeFg6isl8pGGJsfUmS2',0,0,0),
+(239,'2019-08-22 16:18:37','123','123','123','123@123.123','1234545',0,0,0),
+(240,'2019-08-22 16:49:01','1233','123','123','123@123.123','1234545',0,0,0),
+(243,'2019-08-22 18:12:20','ㅁㅁㅁ','ㅁㅁㅁ','ㅊㅊㅊ','shdzl@naver.com5','yMX1UkJ6QUq3GDgiuIQIUY4V8m2Uwx',0,0,0),
+(245,'2019-08-22 18:15:35','ㅠㅠㅠ12','9844f81e1408f6ecb932137d33bed7cfdcf518a3','ㅠㅠㅠ','ssd357@naver.com12','6t7BLVmHbT3wVVBEkBFmsslbWVBk3J',0,0,0),
+(246,'2019-08-22 18:18:32','ㅁㄴㅇ','9844f81e1408f6ecb932137d33bed7cfdcf518a3','ㅁㄴㅇ','asf@sfsf.sdf','ksKfblOc1JDbhOQl2gqPg1QhEGO417',0,0,0),
+(248,'2019-08-22 18:49:11','yyy','9844f81e1408f6ecb932137d33bed7cfdcf518a3','yyy','yyy@yyy.yyy','XQeNMcNGirpRRsmcjgdFlhSwuB8mIO',0,0,0),
+(250,'2019-08-22 23:47:05','ㅁㅁㅁㅁㅁ','9844f81e1408f6ecb932137d33bed7cfdcf518a3','ㅁㅁㅁㅁㅁ','sdf@naver.com','83M7UQUOc4WxOkhLH8S5tHPBXqPdLg',0,0,0),
+(251,'2019-08-22 23:48:40','1231212','9844f81e1408f6ecb932137d33bed7cfdcf518a3','1231232','sdf@naver.com1','14FFLlu4UxTTkj7xUdxisXJc76PMoP',0,0,0),
+(254,'2019-08-23 00:06:01','nnnn','07962e32beac4da179b30c06f1c1e71bd220f782','nnnn','nnnn@nnnn.nnnn','7kP1UDDm1P6NiUpfXKOGhrRqFwqkBg',0,0,0),
+(257,'2019-08-25 23:24:15','1234','7110eda4d09e062aa5e4a390b0a572ac0d2c0220','1234','123@123.1233','SYoVJpBMSoenR4f5SoIr8uHcCnbXd7',0,0,0),
+(259,'2019-08-31 17:02:06','zzz','40fa37ec00c761c7dbb6ebdee6d4a260b922f5f4','zzz','zzz@zzz.zzz','kyEdC2sjK3wRVWXIPiC7kCyimLoQPp',0,1,0),
+(260,'2019-08-31 17:30:56','abc','a9993e364706816aba3e25717850c26c9cd0d89d','abc','abc@abc.abc','uWMdVIwIUQvTCINPCX62e3TJI86u8Y',0,1,0),
+(261,'2019-08-31 18:30:38','aab','40b904fd8852297daeaeb426b1bca46fd2454aa3','aab','ab@fd.dfod','4iSCvfU66QXkCJSM4mbEsqQD8ROigR',0,0,0),
+(262,'2019-09-03 21:04:02','ccd','6b6efb9b042cd8fb7e3f7bd6130c49cbbb216bde','ccd','ccd@ccd.ccd','YkqvrIjtcHMHUnrlfJFKgVqPbyY8Dr',0,1,0),
+(263,'2019-09-03 21:05:44','ccd','6b6efb9b042cd8fb7e3f7bd6130c49cbbb216bde','ccd','ccd@ccd.ccd','kwp84UIVLV5geR8Wl7I5xg2xViGN8v',0,0,0),
+(264,'2019-09-18 18:49:07','user1','b3daa77b4c04a9551b8781d03191fe098f325e67','홍길동','ssd357@naver.com','klCBHgK68CUEWmOxUIKt8PpNErnWMh',1,0,1),
+(265,'2019-09-18 19:23:33','user2','a1881c06eec96db9901c7bbfe41c42a3f08e9cb4','김철수','123@abc.abc','JSYjeI5prTrEcTxlt7riFCJkDvPGUj',0,0,0),
+(266,'2019-09-18 19:24:19','admin','d033e22ae348aeb5660fc2140aec35850c4da997','김학수','admin@page.com','Wn5yfBP7rWX2m48dElvW2R3Ov1BXI6',0,0,0);
 
 /*Table structure for table `memberAttr` */
 

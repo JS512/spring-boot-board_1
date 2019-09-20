@@ -42,10 +42,10 @@ public class ArticleServiceImpl implements ArticleService{
 		String msg = "";
 		String resultCode = "";
 		try {
-				articleDao.addOneArticle(param);
-				msg = "게시물 등록 성공";
-				resultCode = "S-1";
-
+			articleDao.addOneArticle(param);	
+			memberDao.updateMemberExp(param);
+			msg = "게시물 등록 성공";
+			resultCode = "S-1";
 		}catch(Exception e) {
 			msg = "게시물 등록 실패";
 			resultCode = "F-1";

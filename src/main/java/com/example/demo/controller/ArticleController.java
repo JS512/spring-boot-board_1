@@ -143,7 +143,7 @@ public class ArticleController {
 		String redirectUrl = "";
 		Map<String, Object> rs = null;		
 		
-		rs = articleService.addOneArticle(param);	
+		rs = articleService.addOneArticle(param);
 		resultCode = (String) rs.get("resultCode");
 		model.addAttribute("msg", rs.get("msg"));
 		

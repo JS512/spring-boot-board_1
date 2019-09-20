@@ -43,8 +43,7 @@ public class Article {
         HtmlRenderer renderer = HtmlRenderer.builder(options).escapeHtml(true).build();
 
         Node document = parser.parse(body);
-        body = renderer.render(document);   
-        
+        body = renderer.render(document);        
         
 		return body;		
 	}

@@ -16,4 +16,5 @@ public class Member {
 	private String authKey;
 	private boolean emailAuthStatus;
 	private boolean delStatus;
+	private int exp;
 }

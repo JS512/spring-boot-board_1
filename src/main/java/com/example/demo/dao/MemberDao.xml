@@ -206,6 +206,13 @@
 		fileName = #{fileName}
 	</insert>
 	
+	<update id="updateMemberExp" parameterType="map">
+		UPDATE `member`
+		SET `exp` = `exp`+1
+		WHERE id = #{loginedMemberId}
+	</update>
+	
+	
 	<resultMap id="letter" type="com.example.demo.dto.Letter">
 		<id property="id" column="id"/>
 		<id property="regDate" column="regDate"/>
@@ -227,6 +234,7 @@
 		<id property="authKey" column="authKey"/>
 		<id property="emailAuthStatus" column="emailAuthStatus"/>
 		<id property="delStatus" column="delStatus"/>
+		<id property="exp" column="exp"/>
 	</resultMap>
 	
 	<resultMap id="report" type="com.example.demo.dto.Report">

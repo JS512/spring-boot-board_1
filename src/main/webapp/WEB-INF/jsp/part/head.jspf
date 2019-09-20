@@ -25,7 +25,8 @@
 	<body>
 		<c:if test="${isLogined }">
 			<div class="member-status margin-normal">
-				<img class="profile-img" src="/member/showProfileImg"><p>현재 ${loginedMemberLoginId }님이 로그인중...</p>
+				<img class="profile-img" src="/member/showProfileImg">
+				<p>현재 ${loginedMemberLoginId }님이 로그인중... [활동점수 : ${loginedMember.exp}]</p>
 			</div>
 		</c:if>
 		

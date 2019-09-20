@@ -73,4 +73,7 @@ public interface MemberDao {
 	public void modifyMemberProfileImg(Map<String, Object> param);
 
 	public void addMemberProfileImg(Map<String, Object> param);
+
+	public void updateMemberExp(Map<String, Object> param);
+	
 }

@@ -38,6 +38,7 @@ public class ArticleReplyServiceImpl implements ArticleReplyService{
 			}else {				
 				articleReplyDao.addReply(param);
 				reply = articleReplyDao.getOneArticleOneReplyByIdArticleIdBoardId(param);
+				memberDao.updateMemberExp(param);
 				msg = "댓글이 추가 되었습니다.";
 				resultCode = "S-1";
 			}
