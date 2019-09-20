@@ -100,7 +100,7 @@ public class AdminMemberController {
 	
 	@RequestMapping("/changeLoginPw")
 	public String changeLoginPw() {
-		return "admin/admin_member/adim_changeLoginPw";
+		return "admin/admin_member/admin_changeLoginPw";
 	}
 	
 	@RequestMapping("/doChangeLoginPw")

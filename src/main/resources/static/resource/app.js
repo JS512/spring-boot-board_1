@@ -5,6 +5,15 @@ var clickedMemberLoginId;
 var lastSendLetterId = 0;
 var getLetter;
 var hide;
+
+function checkLoginId(input){
+	var unAvaliablePattern = /[`~!@\#$%^&*\()\-=+'"\\|;:<>.,?/{}[\]]/;
+	return !unAvaliablePattern.test(input.value);
+}
+function checkLoginPw(input){
+	var unAvaliablePattern = /[`()=+'"\\|;:<>.,?/{}[\]]/;
+	return !unAvaliablePattern.test(input.value);
+}
 function replaceAll(str, searchStr, replaceStr) {
   return str.split(searchStr).join(replaceStr);
 }
@@ -388,7 +397,18 @@ function memberJoin__checkForm(form){
 	{
 		alert("빈칸없이 채워주세요");
 		return ;
-	}	
+	}
+	
+	if(!checkLoginId(form.loginId)){		
+		alert("아이디에 사용할수 없는 문자가 들어있습니다.\n(특수문자 '_'만 사용가능)");
+		return ;
+	}
+	
+	if(!checkLoginPw(form.temp_loginPw)){
+		alert("비밀번호에 사용할 수 없는 특수문자가 들어있습니다.\n" +
+				"(특수문자 !, @, #, $, %, ^, &, * 만 사용가능)");
+		return ;
+	}
 	
 	if(!checkEmailPattern(form.email)){
 		alert("이메일 형식에 맞지 않습니다.");
@@ -416,6 +436,11 @@ function memberJoin__loginIdDoubleCheck(btn){
 		return ;
 	}
 	
+	if(!checkLoginId(form.loginId)){		
+		alert("아이디에 사용할수 없는 문자가 들어있습니다.\n(특수문자 '_'만 사용가능)");
+		return ;
+	}
+	
 	$.get("/member/loginIdDoubleCheck",
 		{
 			loginId : loginId
@@ -439,6 +464,8 @@ function memberJoin__emailDoubleCheck(btn){
 		alert("이메일 형식에 맞지 않습니다.");
 		return ;
 	}
+	
+	
 	
 	$.get("/member/emailDoubleCheck",
 		{
@@ -467,6 +494,17 @@ function memberLogin__checkForm(form){
 	if(!checkEmpty(form.loginId) || !checkEmpty(form.temp_loginPw))
 	{
 		alert("빈칸없이 채워주세요");
+		return ;
+	}
+	
+	if(!checkLoginId(form.loginId)){		
+		alert("아이디에 사용할수 없는 문자가 들어있습니다.\n(특수문자 '_'만 사용가능)");
+		return ;
+	}
+	
+	if(!checkLoginPw(form.temp_loginPw)){
+		alert("비밀번호에 사용할 수 없는 특수문자가 들어있습니다.\n" +
+				"(특수문자 !, @, #, $, %, ^, &, * 만 사용가능)");
 		return ;
 	}
 	
@@ -589,6 +627,12 @@ function memberFindLoginPw__checkForm(form){
 function memberChangeLoginPw__checkForm(form){
 	if(!checkEmpty(form.temp_origin_loginPw) || !checkEmpty(form.temp_loginPw)){
 		alert("빈칸을 채워주세요");
+		return ;
+	}
+	
+	if(!checkLoginPw(form.temp_loginPw)){
+		alert("비밀번호에 사용할 수 없는 특수문자가 들어있습니다.\n" +
+				"(특수문자 !, @, #, $, %, ^, &, * 만 사용가능)");
 		return ;
 	}
 	
