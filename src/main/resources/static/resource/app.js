@@ -14,6 +14,14 @@ function checkLoginPw(input){
 	var unAvaliablePattern = /[`()=+'"\\|;:<>.,?/{}[\]]/;
 	return !unAvaliablePattern.test(input.value);
 }
+function checkName(input){
+	var unAvaliablePattern = /[`~!@\#$%^&*\()\-_=+'"\\|;:<>.,?/{}[\]]/;
+	return !unAvaliablePattern.test(input.value);
+}
+function checkEmail(input){
+	var unAvaliablePattern = /[`~!\#$%^&*\()\=+'"\\|;:<>.,?/{}[\]]/;
+	return !unAvaliablePattern.test(input.value);
+}
 function replaceAll(str, searchStr, replaceStr) {
   return str.split(searchStr).join(replaceStr);
 }
@@ -407,6 +415,17 @@ function memberJoin__checkForm(form){
 	if(!checkLoginPw(form.temp_loginPw)){
 		alert("비밀번호에 사용할 수 없는 특수문자가 들어있습니다.\n" +
 				"(특수문자 !, @, #, $, %, ^, &, * 만 사용가능)");
+		return ;
+	}
+	
+	if(!checkName(form.name)){
+		alert("이름에 특수문자가 들어있습니다.");
+		return ;
+	}
+	
+	if(!checkEmail(form.email)){
+		alert("이메일에 사용할 수 없는 특수문자가 들어있습니다.\n" +
+		"(특수문자 -, _ 만 사용가능)");
 		return ;
 	}
 	
