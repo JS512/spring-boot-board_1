@@ -6,21 +6,21 @@ var lastSendLetterId = 0;
 var getLetter;
 var hide;
 
-function checkLoginId(input){
+function checkLoginId(text){
 	var unAvaliablePattern = /[`~!@\#$%^&*\()\-=+'"\\|;:<>.,?/{}[\]]/;
-	return !unAvaliablePattern.test(input.value);
+	return !unAvaliablePattern.test(text);
 }
-function checkLoginPw(input){
+function checkLoginPw(text){
 	var unAvaliablePattern = /[`()=+'"\\|;:<>.,?/{}[\]]/;
-	return !unAvaliablePattern.test(input.value);
+	return !unAvaliablePattern.test(text);
 }
-function checkName(input){
+function checkName(text){
 	var unAvaliablePattern = /[`~!@\#$%^&*\()\-_=+'"\\|;:<>.,?/{}[\]]/;
-	return !unAvaliablePattern.test(input.value);
+	return !unAvaliablePattern.test(text);
 }
-function checkEmail(input){
-	var unAvaliablePattern = /[`~!\#$%^&*\()\=+'"\\|;:<>.,?/{}[\]]/;
-	return !unAvaliablePattern.test(input.value);
+function checkEmail(text){
+	var unAvaliablePattern = /[`~!\#$%^&*\()\=+'"\\|;:<>,?/{}[\]]/;
+	return !unAvaliablePattern.test(text);
 }
 function replaceAll(str, searchStr, replaceStr) {
   return str.split(searchStr).join(replaceStr);
@@ -407,23 +407,23 @@ function memberJoin__checkForm(form){
 		return ;
 	}
 	
-	if(!checkLoginId(form.loginId)){		
+	if(!checkLoginId(form.loginId.value)){		
 		alert("아이디에 사용할수 없는 문자가 들어있습니다.\n(특수문자 '_'만 사용가능)");
 		return ;
 	}
 	
-	if(!checkLoginPw(form.temp_loginPw)){
+	if(!checkLoginPw(form.temp_loginPw.value)){
 		alert("비밀번호에 사용할 수 없는 특수문자가 들어있습니다.\n" +
 				"(특수문자 !, @, #, $, %, ^, &, * 만 사용가능)");
 		return ;
 	}
 	
-	if(!checkName(form.name)){
+	if(!checkName(form.name.value)){
 		alert("이름에 특수문자가 들어있습니다.");
 		return ;
 	}
 	
-	if(!checkEmail(form.email)){
+	if(!checkEmail(form.email.value)){
 		alert("이메일에 사용할 수 없는 특수문자가 들어있습니다.\n" +
 		"(특수문자 -, _ 만 사용가능)");
 		return ;
@@ -455,7 +455,7 @@ function memberJoin__loginIdDoubleCheck(btn){
 		return ;
 	}
 	
-	if(!checkLoginId(form.loginId)){		
+	if(!checkLoginId(loginId)){		
 		alert("아이디에 사용할수 없는 문자가 들어있습니다.\n(특수문자 '_'만 사용가능)");
 		return ;
 	}
@@ -484,7 +484,11 @@ function memberJoin__emailDoubleCheck(btn){
 		return ;
 	}
 	
-	
+	if(!checkEmail(email)){
+		alert("이메일에 사용할 수 없는 특수문자가 들어있습니다.\n" +
+		"(특수문자 -, _ 만 사용가능)");
+		return ;
+	}
 	
 	$.get("/member/emailDoubleCheck",
 		{

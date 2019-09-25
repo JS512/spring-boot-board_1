@@ -290,20 +290,21 @@ public class AdminMemberController {
 		HttpHeaders header = new HttpHeaders();		
 		Resource rs = null;
 		
-		
-		try {				
-			String mimeType = Files.probeContentType(Paths.get(target.getAbsolutePath()));			
-			
-			if(mimeType == null) {
-				mimeType = "octet-stream";
+		if(target.exists()) {
+			try {				
+				String mimeType = Files.probeContentType(Paths.get(target.getAbsolutePath()));			
+				
+				if(mimeType == null) {
+					mimeType = "octet-stream";
+				}
+				
+				rs = new UrlResource(target.toURI());				
+								
+				header.setContentType(MediaType.parseMediaType(mimeType));				
+				
+			}catch(Exception e) {
+				e.printStackTrace();
 			}
-			
-			rs = new UrlResource(target.toURI());				
-							
-			header.setContentType(MediaType.parseMediaType(mimeType));				
-			
-		}catch(Exception e) {
-			e.printStackTrace();
 		}
 		
 		

@@ -1,30 +1,50 @@
+custom:
+  uploadDir: /steadyjs/uploadImgs
+  profileImgDir: /steadyjs/uploadProfileImgs
+server:
+  port: 8080
 mybatis:
   type-aliases-package: com.example.demo.dto
-spring:
+spring:  
+  datasource:
+    username: ''
+    password: ''
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/steadyjs?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC&useSSL=FALSE
+  profiles:
+    active: default
   mvc:
     view:
       prefix: /WEB-INF/jsp/
-      suffix: .jsp  
+      suffix: .jsp
   servlet:
     multipart:
       enabled: true
       max-file-size: 100MB
       max-request-size: 100MB      
-
+  mail:
+    host: ''
+    port: 587
+    username: ''
+    password: ''
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 ---
-#개발환경
+#개발
 custom:
   uploadDir: C:/Users/home/Desktop/ljs/java/springUploads
   profileImgDir: C:/Users/home/Desktop/ljs/java/springProfileUploads
-server:
-  port: 8082
 spring:
-  profiles: local
+  profiles: dev
   datasource:
     username: root
     password: ''
-    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    url: jdbc:log4jdbc:mysql://127.0.0.1:3306/a2?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy    
+    url: jdbc:log4jdbc:mysql://localhost:3306/steadyjs?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC&useSSL=FALSE        
   mail:
     host: smtp.gmail.com
     port: 587
@@ -36,31 +56,3 @@ spring:
           auth: true
           starttls:
             enable: true
----
-#운영환경
-custom:
-  uploadDir: /uploadImgs
-  profileImgDir: /uploadProfileImgs
-server:
-  port: 8080
-spring:
-  profiles: production
-  datasource:
-    username: jangka44
-    password: sbs123414
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/story?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ''
-    password: ''
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-logging:
-  level:
-    root: info
