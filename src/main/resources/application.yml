@@ -7,10 +7,10 @@ mybatis:
   type-aliases-package: com.example.demo.dto
 spring:  
   datasource:
-    username: ''
-    password: ''
+    username: jangka44
+    password: myall2400!%A
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/steadyjs?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC&useSSL=FALSE
+    url: jdbc:mysql://localhost:3306/story?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC&useSSL=FALSE
   profiles:
     active: default
   mvc:
@@ -25,8 +25,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ''
-    password: ''
+    username: js230023@gmail.com
+    password: qexxlfdqsusnaprm
     properties:
       mail:
         smtp:
