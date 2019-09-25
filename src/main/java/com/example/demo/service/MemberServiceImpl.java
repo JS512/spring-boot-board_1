@@ -65,12 +65,12 @@ public class MemberServiceImpl implements MemberService{
 			
 			
 			MailHandler mail = new MailHandler(sender);
-			mail.setFrom("0000000");
+			mail.setFrom("atory");
 			mail.setTo(memberMail);
-			mail.setSubject("js페이지 회원가입 인증 메일");
+			mail.setSubject("atory 페이지 회원가입 인증 메일");
 			mail.setText(new StringBuffer().append("<h1>회원가입 인증메일입니다.</h1>")
 					.append("<p>밑의 링크를 클릭하면 메일이 인증 됩니다.</p>")
-					.append("<a href='http://localhost:8082/member/auth?email="+memberMail)
+					.append("<a href='http://www.atory.kr/member/auth?email="+memberMail)
 					.append("&authKey="+authKey+"' target='_blank'>메일 인증 링크</a>")
 					.toString()
 					);

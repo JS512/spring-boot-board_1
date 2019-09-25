@@ -520,12 +520,12 @@ function memberLogin__checkForm(form){
 		return ;
 	}
 	
-	if(!checkLoginId(form.loginId)){		
+	if(!checkLoginId(form.loginId.value)){		
 		alert("아이디에 사용할수 없는 문자가 들어있습니다.\n(특수문자 '_'만 사용가능)");
 		return ;
 	}
 	
-	if(!checkLoginPw(form.temp_loginPw)){
+	if(!checkLoginPw(form.temp_loginPw.value)){
 		alert("비밀번호에 사용할 수 없는 특수문자가 들어있습니다.\n" +
 				"(특수문자 !, @, #, $, %, ^, &, * 만 사용가능)");
 		return ;
@@ -653,7 +653,7 @@ function memberChangeLoginPw__checkForm(form){
 		return ;
 	}
 	
-	if(!checkLoginPw(form.temp_loginPw)){
+	if(!checkLoginPw(form.temp_loginPw.value)){
 		alert("비밀번호에 사용할 수 없는 특수문자가 들어있습니다.\n" +
 				"(특수문자 !, @, #, $, %, ^, &, * 만 사용가능)");
 		return ;
